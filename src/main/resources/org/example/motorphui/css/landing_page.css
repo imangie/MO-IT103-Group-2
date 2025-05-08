@@ -1,18 +1,21 @@
 /* root colors */
 
 :root {
---primary-color: #055AD6; /* Blue */
+    --primary-color: #055AD6; /* Blue */
 }
 
-/*
+
 .root {
+    -fx-background-image: url("/images/MotorPHBackground.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+
 }
-*/
 
 #motorph_title {
--fx-font-family: "Poppins";
--fx-font-size: 96px;
--fx-font-weight: bold;
--fx-font-color: blue;
+    -fx-font-family: "Poppins";
+    -fx-font-size: 96px;
+    -fx-font-weight: bold;
 }
 

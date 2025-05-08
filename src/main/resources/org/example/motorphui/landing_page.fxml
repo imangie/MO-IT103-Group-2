@@ -5,18 +5,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" styleClass="landing_page.css" stylesheets="@css/landing_page.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.LandingPageController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" stylesheets="@css/landing_page.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.LandingPageController">
    <children>
       <Label fx:id="motorph_title" layoutX="508.0" layoutY="191.0" text="MotorPH" />
-      <Button fx:id="employees_button" layoutX="540.0" layoutY="487.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="400.0" text="Employees" onAction="#handleEmployeeButton">
+      <Button fx:id="employees_button" layoutX="540.0" layoutY="487.0" mnemonicParsing="false" onAction="#handleEmployeeButton" prefHeight="46.0" prefWidth="400.0" text="Employees">
          <font>
             <Font name="Poppins Regular" size="20.0" />
          </font></Button>
-      <Button fx:id="hr_button" layoutX="540.0" layoutY="573.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="400.0" text="Human Resources" onAction="#handleHRButton">
+      <Button fx:id="hr_button" layoutX="540.0" layoutY="573.0" mnemonicParsing="false" onAction="#handleHRButton" prefHeight="46.0" prefWidth="400.0" text="Human Resources">
          <font>
             <Font name="Poppins Regular" size="20.0" />
          </font></Button>
-      <Button fx:id="exit_button" layoutX="540.0" layoutY="655.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="400.0" text="Exit" onAction="#handleExitButton">
+      <Button fx:id="exit_button" layoutX="540.0" layoutY="655.0" mnemonicParsing="false" onAction="#handleExitButton" prefHeight="46.0" prefWidth="400.0" text="Exit">
          <font>
             <Font name="Poppins Regular" size="20.0" />
          </font></Button>

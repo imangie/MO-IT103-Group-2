@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 
 public class LandingPageController {
@@ -58,5 +59,20 @@ public class LandingPageController {
     private void handleExitButton() {
         Stage stage = (Stage) exit_button.getScene().getWindow();
         stage.close(); //closes the application
+    }
+    @FXML
+    public void initialize() {
+        try {
+            String imagePath = "/org/example/motorphui/images/MotorPHBackground.jpg";
+            InputStream stream = getClass().getResourceAsStream(imagePath);
+            if (stream == null) {
+                System.out.println("Image not found at: " + imagePath);
+            } else {
+                System.out.println("Image found successfully!");
+                stream.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
