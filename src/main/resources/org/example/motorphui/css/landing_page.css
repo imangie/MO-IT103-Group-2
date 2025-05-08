@@ -1,0 +1,18 @@
+/* root colors */
+
+:root {
+--primary-color: #055AD6; /* Blue */
+}
+
+/*
+.root {
+}
+*/
+
+#motorph_title {
+-fx-font-family: "Poppins";
+-fx-font-size: 96px;
+-fx-font-weight: bold;
+-fx-font-color: blue;
+}
+
