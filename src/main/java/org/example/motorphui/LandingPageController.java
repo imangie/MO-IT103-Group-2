@@ -63,7 +63,7 @@ public class LandingPageController {
     @FXML
     public void initialize() {
         try {
-            String imagePath = "/org/example/motorphui/images/MotorPHBackground.jpg";
+            String imagePath = "/org/example/motorphui/images/LandingPage1.jpg";
             InputStream stream = getClass().getResourceAsStream(imagePath);
             if (stream == null) {
                 System.out.println("Image not found at: " + imagePath);

@@ -4,13 +4,9 @@
     --primary-color: #055AD6; /* Blue */
 }
 
-
 .root {
-    -fx-background-image: url("/images/MotorPHBackground.jpg");
+    -fx-background-image: url("../images/LandingPageBG2.png");
     -fx-background-size: cover;
-    -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
-
 }
 
 #motorph_title {
