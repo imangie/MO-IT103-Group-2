@@ -1,8 +1,9 @@
 /* root colors */
 
-:root {
-    --primary-color: #055AD6; /* Blue */
-}
+/* :root {
+    --primary-color: #C5172E;
+    --secondary-color: F51835
+    */
 
 .root {
     -fx-background-image: url("../images/LandingPageBG2.png");
@@ -15,3 +16,29 @@
     -fx-font-weight: bold;
 }
 
+#employees_button {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#employees_button:hover {
+    -fx-background-color: #F51835;
+}
+
+#hr_button {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#hr_button:hover {
+    -fx-background-color: #F51835;
+}
+
+#exit_button {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#exit_button:hover {
+    -fx-background-color: #F51835;
+}
