@@ -14,7 +14,7 @@ public class MainApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("landing_page.fxml"));
         Scene scene = new Scene(fxmlLoader.load()); //
 
-        stage.setTitle("MotorPH Landing Page");
+        stage.setTitle("MotorPH");
 
         // Set the scene for the stage (window) and show it
         stage.setScene(scene);
