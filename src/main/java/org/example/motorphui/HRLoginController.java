@@ -58,6 +58,15 @@ public class HRLoginController {
 
             Stage stage = (Stage) login_button.getScene().getWindow();
             Scene scene = new Scene(root);
+
+            // Set minimum dimensions instead of fixed
+            stage.setMinWidth(1440);
+            stage.setMinHeight(1024);
+
+            // Make sure the window starts at these dimensions
+            stage.setWidth(1440);
+            stage.setHeight(1024);
+
             stage.setScene(scene);
             stage.show();
 

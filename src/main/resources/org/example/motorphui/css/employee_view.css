@@ -1,0 +1,36 @@
+.root {
+    -fx-background-color: #F2F4F7;
+}
+
+#emp_table {
+    -fx-pref-width: 1030px;
+    -fx-pref-height: 714px;
+
+}
+
+#viewandupdate_button:hover {
+    -fx-background-color: #F51835;
+}
+
+#viewandupdate_button {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#addemp_button:hover {
+    -fx-background-color: #F51835;
+}
+
+#addemp_button {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#deleteemp_button:hover {
+    -fx-background-color: #F51835;
+}
+
+#deleteemp_button {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}

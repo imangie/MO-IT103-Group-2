@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="1024" prefWidth="1141.0" minWidth="1141.0" minHeight="1024.0" stylesheets="@css/employee_view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.EmployeeViewController">
+
+   <children>
+      <Label fx:id="emp_info_label" layoutX="20.0" layoutY="35.0" text="Employee's Information">
+         <font>
+            <Font name="Poppins Bold" size="36.0" />
+         </font>
+      </Label>
+
+      <TableView fx:id="emp_table" layoutY="119.0" prefHeight="754.0" prefWidth="784.0" AnchorPane.bottomAnchor="151.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="337.0" AnchorPane.topAnchor="119.0">
+         <columns>
+            <TableColumn prefWidth="100.0" text="Employee #" />
+            <TableColumn prefWidth="100.0" text="Last Name" />
+            <TableColumn prefWidth="100.0" text="First Name" />
+            <TableColumn prefWidth="100.0" text="SSS #" />
+            <TableColumn prefWidth="100.0" text="PhilHealth #" />
+            <TableColumn prefWidth="100.0" text="TIN #" />
+            <TableColumn prefWidth="100.0" text="Pag-Ibig #" />
+         </columns>
+      </TableView>
+
+      <Button fx:id="viewandupdate_button" layoutX="20.0" layoutY="894.0" prefHeight="36.0" prefWidth="255.0" text="View and Update" AnchorPane.bottomAnchor="94.0" AnchorPane.leftAnchor="20.0">
+         <font>
+            <Font name="Poppins Bold" size="16.0" />
+         </font></Button>
+
+      <Button fx:id="addemp_button" layoutX="300.0" layoutY="894.0" prefHeight="36.0" prefWidth="255.0" text="Add Employee" AnchorPane.bottomAnchor="94.0" AnchorPane.leftAnchor="300.0">
+         <font>
+            <Font name="Poppins Bold" size="16.0" />
+         </font></Button>
+
+      <Button fx:id="deleteemp_button" layoutX="580.0" layoutY="894.0" prefHeight="36.0" prefWidth="255.0" text="Delete Employee" AnchorPane.bottomAnchor="94.0" AnchorPane.leftAnchor="580.0">
+         <font>
+            <Font name="Poppins Bold" size="16.0" />
+         </font></Button>
+   </children>
+</AnchorPane>
