@@ -10,24 +10,24 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HRDashboardController {
+public class HRDashboard {
 
     @FXML
     private AnchorPane contentPane;
     @FXML
-    private Button emp_button, payroll_button, leave_button;
+    private Button emp_button, payroll_button, leave_button, attendance_button;
     @FXML
     private Button logout_button;
 
     @FXML
     public void initialize() {
-        loadView("employee_view.fxml");
+        loadView("hr_employee_view.fxml");
         setActiveButton(emp_button);
     }
 
     @FXML
     private void onEmployeesClicked() {
-        loadView("employee_view.fxml");
+        loadView("hr_employee_view.fxml");
         setActiveButton(emp_button);
     }
 
@@ -41,6 +41,12 @@ public class HRDashboardController {
     private void onLeaveClicked() {
         loadView("leave_management.fxml");
         setActiveButton(leave_button);
+    }
+
+    @FXML
+    private void onAttendanceClicked() {
+        loadView("hr_attendance.fxml");
+        setActiveButton(attendance_button);
     }
 
     private void loadView(String fxml) {
@@ -63,6 +69,8 @@ public class HRDashboardController {
         emp_button.getStyleClass().remove("menu-button-active");
         payroll_button.getStyleClass().remove("menu-button-active");
         leave_button.getStyleClass().remove("menu-button-active");
+        logout_button.getStyleClass().remove("menu-button-active");
+        attendance_button.getStyleClass().remove("menu-button-active");
 
         if (!active.getStyleClass().contains("menu-button-active")) {
             active.getStyleClass().add("menu-button-active");

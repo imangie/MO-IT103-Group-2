@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class EmployeeLoginController {
+public class EmployeeLogin {
     @FXML
     private Button login_button;
 
@@ -57,6 +57,15 @@ public class EmployeeLoginController {
 
             Stage stage = (Stage) login_button.getScene().getWindow();
             Scene scene = new Scene(root);
+
+            // Set minimum dimensions instead of fixed
+            stage.setMinWidth(1440);
+            stage.setMinHeight(1024);
+
+            // Make sure the window starts at these dimensions
+            stage.setWidth(1440);
+            stage.setHeight(1024);
+
             stage.setScene(scene);
             stage.show();
 

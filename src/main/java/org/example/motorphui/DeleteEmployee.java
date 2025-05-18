@@ -1,4 +1,4 @@
 package org.example.motorphui;
 
-public class PayslipController {
+public class DeleteEmployee {
 }

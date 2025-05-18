@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class HRLoginController {
+public class HRLogin {
 
     @FXML
     private Button login_button;

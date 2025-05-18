@@ -2,32 +2,22 @@
     -fx-background-color: #F2F4F7;
 }
 
-#viewandupdate_button:hover {
+#approve_button:hover {
     -fx-background-color: #F51835;
     -fx-cursor: hand;
 }
 
-#viewandupdate_button {
+#approve_button {
     -fx-background-color: #C5172E;
     -fx-text-fill: white;
 }
 
-#addemp_button:hover {
+#deny_button:hover {
     -fx-background-color: #F51835;
     -fx-cursor: hand;
 }
 
-#addemp_button {
-    -fx-background-color: #C5172E;
-    -fx-text-fill: white;
-}
-
-#deleteemp_button:hover {
-    -fx-background-color: #F51835;
-    -fx-cursor: hand;
-}
-
-#deleteemp_button {
+#deny_button {
     -fx-background-color: #C5172E;
     -fx-text-fill: white;
 }

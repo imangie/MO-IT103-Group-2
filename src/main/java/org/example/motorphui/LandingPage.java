@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public class LandingPageController {
+public class LandingPage {
     @FXML private Button employees_button;
     @FXML private Button hr_button;
     @FXML private Button exit_button;
