@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="1024.0" prefWidth="1440.0" stylesheets="@css/hr_login.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.HRLogin">
+   <children>
+      <VBox fx:id="container" layoutX="384.0" layoutY="154.0" prefHeight="716.0" prefWidth="671.0" />
+      <Label fx:id="welcomeback_label" layoutX="468.0" layoutY="217.0" text="Welcome Back!">
+         <font>
+            <Font name="Poppins Bold" size="64.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="password_field" layoutX="539.0" layoutY="494.0" prefHeight="44.0" prefWidth="365.0">
+         <font>
+            <Font name="Poppins Regular" size="20.0" />
+         </font>
+      </PasswordField>
+      <TextField fx:id="visible_password_field" layoutX="539.0" layoutY="494.0" prefHeight="44.0" prefWidth="365.0" visible="false" managed="false">
+         <font>
+            <Font name="Poppins Regular" size="20.0" />
+         </font>
+      </TextField>
+      <Button fx:id="login_button" layoutX="539.0" layoutY="615.0" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="35.0" prefWidth="365.0" text="Login">
+         <font>
+            <Font name="Poppins Regular" size="15.0" />
+         </font>
+      </Button>
+      <Label fx:id="trouble_label" layoutX="595.0" layoutY="723.0" text="Having trouble logging in?">
+         <font>
+            <Font name="Poppins Regular" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="contact_label" layoutX="576.0" layoutY="755.0" text="Contact: corporate@motorph">
+         <font>
+            <Font name="Poppins Regular" size="18.0" />
+         </font>
+      </Label>
+      <CheckBox fx:id="show_password_check" layoutX="540.0" layoutY="553.0" mnemonicParsing="false" text="Show Password">
+         <font>
+            <Font name="Poppins Regular" size="14.0" />
+         </font>
+      </CheckBox>
+      <TextField fx:id="username_field" layoutX="539.0" layoutY="395.0" prefHeight="44.0" prefWidth="365.0">
+         <font>
+            <Font name="Poppins Regular" size="18.0" />
+         </font></TextField>
+      <Label fx:id="username_label" layoutX="543.0" layoutY="359.0" text="Username">
+         <font>
+            <Font name="Poppins Regular" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="password_label" layoutX="543.0" layoutY="459.0" text="Password">
+         <font>
+            <Font name="Poppins Regular" size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="back_label" layoutX="705.0" layoutY="660.0" onMouseClicked="#handleBackClick" text="Back">
+         <font>
+            <Font name="Poppins Regular" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
