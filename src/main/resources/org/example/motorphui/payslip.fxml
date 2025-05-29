@@ -1,22 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="root" prefHeight="650.0" prefWidth="500.0" stylesheets="@css/payslip.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.Payslip">
+<AnchorPane fx:id="root" prefHeight="574.0" prefWidth="438.0" stylesheets="@css/payslip.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.Payslip">
    <children>
-      <Label fx:id="empNumLabel" alignment="CENTER" layoutX="109.0" layoutY="36.0" prefHeight="17.0" prefWidth="110.0" text="empNum" wrapText="true" />
-      <Label fx:id="lastNameLabel" alignment="CENTER" layoutX="219.0" layoutY="65.0" prefHeight="17.0" prefWidth="90.0" text="LastName" wrapText="true" />
-      <Label fx:id="firstNameLabel" alignment="CENTER" layoutX="109.0" layoutY="65.0" prefHeight="17.0" prefWidth="110.0" text="FirstName" wrapText="true" />
-      <Label fx:id="sssLabel" alignment="CENTER" layoutX="109.0" layoutY="92.0" prefHeight="17.0" prefWidth="110.0" text="SSS" textAlignment="JUSTIFY" wrapText="true" />
-      <Label fx:id="philHealthLabel" alignment="CENTER" layoutX="109.0" layoutY="117.0" prefHeight="17.0" prefWidth="110.0" text="PhilHealth" textAlignment="JUSTIFY" wrapText="true" />
-      <Label fx:id="tinLabel" alignment="CENTER" layoutX="109.0" layoutY="141.0" prefHeight="17.0" prefWidth="110.0" text="TIN" textAlignment="JUSTIFY" wrapText="true" />
-      <Label fx:id="pagIbigLabel" alignment="CENTER" layoutX="109.0" layoutY="166.0" prefHeight="17.0" prefWidth="110.0" text="Pag-Ibig" textAlignment="JUSTIFY" wrapText="true" />
-      <Label alignment="CENTER" layoutX="22.0" layoutY="36.0" text="Employee #" />
-      <Label alignment="CENTER" layoutX="38.0" layoutY="65.0" text="Name" />
-      <Label alignment="CENTER" layoutX="44.0" layoutY="92.0" text="SSS" />
-      <Label alignment="CENTER" layoutX="27.0" layoutY="117.0" text="PhilHealth" />
-      <Label alignment="CENTER" layoutX="45.0" layoutY="141.0" text="TIN" />
-      <Label alignment="CENTER" layoutX="32.0" layoutY="166.0" text="Pag-Ibig" />
+      <Label fx:id="empNumLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="74.0" prefHeight="18.0" prefWidth="230.0" text="empNum" wrapText="true" />
+      <Label fx:id="NameLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="91.0" prefHeight="18.0" prefWidth="230.0" text="Name" wrapText="true" />
+      <Label fx:id="sssLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="160.0" prefHeight="18.0" prefWidth="230.0" text="SSS" textAlignment="JUSTIFY" wrapText="true" />
+      <Label fx:id="philHealthLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="177.0" prefHeight="18.0" prefWidth="230.0" text="PhilHealth" textAlignment="JUSTIFY" wrapText="true" />
+      <Label fx:id="tinLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="194.0" prefHeight="18.0" prefWidth="230.0" text="TIN" textAlignment="JUSTIFY" wrapText="true" />
+      <Label fx:id="pagIbigLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="211.0" prefHeight="18.0" prefWidth="230.0" text="Pag-Ibig" textAlignment="JUSTIFY" wrapText="true" />
+      <Label layoutX="22.0" layoutY="38.0" text="Employee Information" />
+      <Label fx:id="BdayLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="108.0" prefHeight="18.0" prefWidth="230.0" text="Birthday" />
+      <Label fx:id="AddressLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="125.0" prefHeight="18.0" prefWidth="386.0" text="Address" />
+      <Label fx:id="PhoneLabel" alignment="TOP_LEFT" layoutX="22.0" layoutY="143.0" prefHeight="18.0" prefWidth="230.0" text="Phone Number" />
+      <Label fx:id="positionLabel" layoutX="22.0" layoutY="229.0" prefHeight="18.0" prefWidth="230.0" text="Position" />
+      <Label fx:id="RiceLabel" layoutX="22.0" layoutY="278.0" prefHeight="18.0" prefWidth="230.0" text="Rice Subsidy" />
+      <Label fx:id="PhoneAllowLabel" layoutX="22.0" layoutY="296.0" prefHeight="18.0" prefWidth="230.0" text="Phone Allowance" />
+      <Label fx:id="ClothingLabel" layoutX="22.0" layoutY="316.0" prefHeight="18.0" prefWidth="230.0" text="Clothing Allowance" />
+      <Label fx:id="RateLabel" layoutX="22.0" layoutY="334.0" prefHeight="18.0" prefWidth="230.0" text="Hourly Rate" />
+      <ChoiceBox fx:id="MonthCHBox" layoutX="22.0" layoutY="370.0" prefHeight="26.0" prefWidth="230.0" />
+      <Label fx:id="GrossLabel" layoutX="22.0" layoutY="416.0" prefHeight="18.0" prefWidth="230.0" text="Gross Salary" />
+      <Label fx:id="SConLabel" layoutX="22.0" layoutY="434.0" prefHeight="18.0" prefWidth="230.0" text="SSS Contribution" />
+      <Label fx:id="PHConLabel" layoutX="22.0" layoutY="452.0" prefHeight="18.0" prefWidth="230.0" text="Philhealth Contribution" />
+      <Label fx:id="PConLabel" layoutX="22.0" layoutY="470.0" prefHeight="18.0" prefWidth="230.0" text="Pagibig Contribution" />
+      <Label fx:id="WTLabel" layoutX="22.0" layoutY="488.0" prefHeight="18.0" prefWidth="230.0" text="Withholding Tax" />
+      <Label fx:id="DeductLabel" layoutX="22.0" layoutY="506.0" prefHeight="18.0" prefWidth="230.0" text="Total Deductions" />
+      <Label fx:id="NetLabel" layoutX="22.0" layoutY="524.0" prefHeight="18.0" prefWidth="230.0" text="Net Salary" />
+      <Label fx:id="hoursWorkedLabel" layoutX="252.0" layoutY="417.0" prefHeight="18.0" prefWidth="230.0" text="Total Hours Worked" />
    </children>
 </AnchorPane>
