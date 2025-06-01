@@ -18,13 +18,13 @@
 
       <TableView fx:id="emp_table" layoutY="119.0" prefHeight="754.0" prefWidth="784.0" AnchorPane.bottomAnchor="151.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="337.0" AnchorPane.topAnchor="119.0">
          <columns>
-            <TableColumn text="Employee #" />
-            <TableColumn prefWidth="130.0" text="Last Name" />
-            <TableColumn prefWidth="130.0" text="First Name" />
-            <TableColumn prefWidth="110.0" text="SSS #" />
-            <TableColumn prefWidth="110.0" text="PhilHealth #" />
-            <TableColumn prefWidth="110.0" text="TIN #" />
-            <TableColumn prefWidth="113.0" text="Pag-Ibig #" />
+            <TableColumn id="emo" fx:id="empNumColumn" text="Employee #" />
+            <TableColumn fx:id="lastNameColumn" prefWidth="130.0" text="Last Name" />
+            <TableColumn fx:id="firstNameColumn" prefWidth="130.0" text="First Name" />
+            <TableColumn fx:id="sssColumn" prefWidth="110.0" text="SSS #" />
+            <TableColumn fx:id="philHealthColumn" prefWidth="110.0" text="PhilHealth #" />
+            <TableColumn fx:id="tinColumn" prefWidth="110.0" text="TIN #" />
+            <TableColumn fx:id="pagIbigColumn" prefWidth="113.0" text="Pag-Ibig #" />
          </columns>
       </TableView>
 
