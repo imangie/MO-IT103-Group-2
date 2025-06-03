@@ -58,15 +58,37 @@ public class Payroll {
                     String philHealth = data[7];
                     String tin = data[8];
                     String pagIbig = data[9];
+                    String status = data[10];
                     String position = data[11];
+                    String immediateSupervisor = data[12];
                     String basicSalary = data[13];
                     String riceSubsidy = data[14];
                     String phoneAllowance = data[15];
                     String clothingAllowance = data[16];
+                    String grossSemiMonthlyRate = data[17];
                     String hourlyRate = data[18];
 
-                    Employee employee = new Employee(empNumber, lastName, firstName, sss, philHealth, tin, pagIbig,
-                            birthday, address, phoneNumber, position, riceSubsidy, phoneAllowance, clothingAllowance, hourlyRate, basicSalary);
+                    Employee employee = new Employee(
+                            empNumber,          // employeeNumber
+                            lastName,           // lastName
+                            firstName,         // firstName
+                            birthday,          // birthday
+                            address,           // address
+                            phoneNumber,       // phoneNumber
+                            sss,              // sss
+                            philHealth,       // philHealth
+                            tin,              // tin
+                            pagIbig,          // pagIbig
+                            status,           // status (from data[10])
+                            position,         // position
+                            immediateSupervisor, // immediateSupervisor (from data[12])
+                            basicSalary,      // basicSalary
+                            riceSubsidy,      // riceSubsidy
+                            phoneAllowance,   // phoneAllowance
+                            clothingAllowance, // clothingAllowance
+                            data[17],         // grossSemiMonthlyRate
+                            hourlyRate        // hourlyRate
+                    );
 
                     employeeData.add(employee);
                 }
