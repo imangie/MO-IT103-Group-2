@@ -68,4 +68,22 @@ public class Employee {
     public String getClothingAllowance() { return clothingAllowance.get(); }
     public String getHourlyRate() { return hourlyRate.get(); }
     public String getBasicSalary() { return basicSalary.get(); }
+
+    public void setEmployeeNumber(String employeeNumber) { this.employeeNumber.set(employeeNumber); }
+    public void setLastName(String lastName) { this.lastName.set(lastName); }
+    public void setFirstName(String firstName) { this.firstName.set(firstName); }
+    public void setSss(String sss) { this.sss.set(sss); }
+    public void setPhilHealth(String philHealth) { this.philHealth.set(philHealth); }
+    public void setTin(String tin) { this.tin.set(tin); }
+    public void setPagIbig(String pagIbig) { this.pagIbig.set(pagIbig); }
+    public void setBirthday(String birthday) { this.birthday.set(birthday); }
+    public void setAddress(String address) { this.address.set(address); }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber.set(phoneNumber); }
+    public void setPosition(String position) { this.position.set(position); }
+    public void setRiceSubsidy(String riceSubsidy) { this.riceSubsidy.set(riceSubsidy); }
+    public void setPhoneAllowance(String phoneAllowance) { this.phoneAllowance.set(phoneAllowance); }
+    public void setClothingAllowance(String clothingAllowance) { this.clothingAllowance.set(clothingAllowance); }
+    public void setHourlyRate(String hourlyRate) { this.hourlyRate.set(hourlyRate); }
+    public void setBasicSalary(String basicSalary) { this.basicSalary.set(basicSalary); }
+
 }
