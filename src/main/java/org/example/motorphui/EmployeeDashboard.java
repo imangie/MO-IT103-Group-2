@@ -60,6 +60,25 @@ public class EmployeeDashboard {
             e.printStackTrace();
         }
     }
+
+    public void loadProfile(Employee employee) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("employee_profile.fxml"));
+            Parent root = loader.load();
+            EmployeeProfile profileController = loader.getController();
+            profileController.setEmployeeData(employee);
+
+            contentPane.getChildren().setAll(root);
+
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setActiveButton(Button active) {
         profile_button.getStyleClass().remove("menu-button-active");
         attendance_button.getStyleClass().remove("menu-button-active");

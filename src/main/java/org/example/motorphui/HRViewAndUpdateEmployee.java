@@ -3,7 +3,7 @@ package org.example.motorphui;
 public class HRViewAndUpdateEmployee {
 }
 
-// When the "View and Update" button is clicked, this opens a pop-up window (hr_view_and_update_employee.fxml)
+// When the "View and Update" button is clicked, this opens a pop-up window (hr_view_and_update_employee.fxml) which I've already added the UI for
 // to display the employee's current information for viewing and updating.
 
 // The pop-up window allows the HR user to view and edit the selected employee's details.
