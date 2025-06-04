@@ -104,7 +104,7 @@ public class Payroll {
 
     private void generatePayrollForEmployee(Employee employee) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("payslip.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_payslip.fxml"));
             Parent root = loader.load();
 
             Payslip controller = loader.getController();
@@ -189,6 +189,6 @@ public class Payroll {
     // Generate a payroll slip for the selected employee
 
     // Example: generatePayrollForEmployee(selectedEmployee);
-    // After generating the payroll, display it in a new window (payslip.fxml)
+    // After generating the payroll, display it in a new window (hr_payslip.fxml)
 
     // If no employee is selected, show a message to the user

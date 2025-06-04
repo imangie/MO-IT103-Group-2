@@ -33,7 +33,7 @@ public class HRDashboard {
 
     @FXML
     private void onPayrollClicked() {
-        loadView("payroll.fxml");
+        loadView("hr_payroll.fxml");
         setActiveButton(payroll_button);
     }
 
