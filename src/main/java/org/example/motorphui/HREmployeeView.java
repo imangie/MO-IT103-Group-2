@@ -9,10 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Optional;
 
 public class HREmployeeView {
 
@@ -81,7 +86,6 @@ public class HREmployeeView {
         empNumColumn.setCellValueFactory(new PropertyValueFactory<>("employeeNumber"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-
         birthdayColumn.setCellValueFactory(new PropertyValueFactory<>("birthday"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
         phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
@@ -99,43 +103,30 @@ public class HREmployeeView {
         grossSemiMonthlyColumn.setCellValueFactory(new PropertyValueFactory<>("grossSemiMonthlyRate"));
         hourlyRateColumn.setCellValueFactory(new PropertyValueFactory<>("hourlyRate"));
 
-        addemp_button.setOnAction(event -> openAddEmployeeWindow());
 
-        loadEmployeesFromCSV("motorph_employee_data.csv");
+        // Load employees from CSV
+        loadEmployeesFromCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
+
     }
 
     private void loadEmployeesFromCSV(String filePath) {
-        File file = new File(filePath);
-
-        if (!file.exists()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("File Not Found");
-            alert.setHeaderText("Employee data file not found");
-            alert.setContentText("Please make sure " + filePath + " exists.");
-            alert.showAndWait();
-            return;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        employeeList.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line = reader.readLine();
-
-            employeeList.clear();  // Clear old data
-
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",", -1);
-
                 if (data.length == 19) {
                     Employee emp = new Employee(
-                            data[0],  // employeeNumber
-                            data[1],  // lastName
-                            data[2],  // firstName
-                            data[3],  // birthday
-                            data[4],  // address
-                            data[5],  // phoneNumber
-                            data[6],  // sss
-                            data[7],  // philHealth
-                            data[8],  // tin
-                            data[9],  // pagIbig
+                            data[0], // employeeNumber
+                            data[1], // lastName
+                            data[2], // firstName
+                            data[3], // birthday
+                            data[4], // address
+                            data[5], // phoneNumber
+                            data[6], // sss
+                            data[7], // philHealth
+                            data[8], // tin
+                            data[9], // pagIbig
                             data[10], // status
                             data[11], // position
                             data[12], // immediateSupervisor
@@ -147,24 +138,129 @@ public class HREmployeeView {
                             data[18]  // hourlyRate
                     );
                     employeeList.add(emp);
-                } else {
-                    System.err.println("Invalid row (skipped): " + line);
                 }
             }
-
             emp_table.setItems(employeeList);
-
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Load Error");
             alert.setHeaderText("Failed to load employee data.");
-            alert.setContentText(e.getMessage());
+            alert.setContentText("An error occurred while loading the employee data.");
             alert.showAndWait();
         }
     }
 
-    private void openAddEmployeeWindow() {
+    @FXML
+    public void handleViewAndUpdateButton() {
+        Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
+        if (selectedEmployee != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_view_and_update_employee.fxml"));
+                Parent parent = loader.load();
+
+                HRViewAndUpdateEmployee controller = loader.getController();
+                controller.setEmployee(selectedEmployee);
+                controller.setParentController(this);
+
+                Stage stage = new Stage();
+                stage.setTitle("View and Update Employee");
+                stage.setScene(new Scene(parent));
+                stage.showAndWait(); // Wait for the pop-up to close
+
+                // After the pop-up closes, refresh the table data
+                refreshTable();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Could not open the update window.");
+                alert.setContentText("An error occurred while trying to load the employee update form.");
+                alert.showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    private void handleDeleteEmployeeButton() {
+        Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
+        if (selectedEmployee != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Deletion");
+            alert.setHeaderText("Delete Employee: " + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName() + "?");
+            alert.setContentText("Are you sure you want to delete this employee record? This action cannot be undone.");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                employeeList.remove(selectedEmployee);
+                saveEmployeesToCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
+                refreshTable();
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle("Deletion Successful");
+                successAlert.setHeaderText(null);
+                successAlert.setContentText("Employee record deleted successfully.");
+                successAlert.showAndWait();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Employee Selected");
+            alert.setContentText("Please select an employee in the table to delete.");
+            alert.showAndWait();
+        }
+    }
+
+    public void refreshTable() {
+        emp_table.refresh();
+        saveEmployeesToCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
+        loadEmployeesFromCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
+    }
+
+    private void saveEmployeesToCSV(String filePath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
+
+            for (Employee emp : employeeList) {
+                writer.write(String.join(",",
+                        emp.getEmployeeNumber(),
+                        emp.getLastName(),
+                        emp.getFirstName(),
+                        emp.getBirthday(),
+                        emp.getAddress(),
+                        emp.getPhoneNumber(),
+                        emp.getSss(),
+                        emp.getPhilHealth(),
+                        emp.getTin(),
+                        emp.getPagIbig(),
+                        emp.getStatus(),
+                        emp.getPosition(),
+                        emp.getImmediateSupervisor(),
+                        emp.getBasicSalary(),
+                        emp.getRiceSubsidy(),
+                        emp.getPhoneAllowance(),
+                        emp.getClothingAllowance(),
+                        emp.getGrossSemiMonthlyRate(),
+                        emp.getHourlyRate()
+                ));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Save Error");
+            alert.setHeaderText("Failed to save employee data.");
+            alert.setContentText("An error occurred while writing to the CSV file.");
+            alert.showAndWait();
+        }
+    }
+
+    public void addEmployee(Employee employee) {
+        employeeList.add(employee);
+        refreshTable();
+    }
+
+    @FXML
+    public void openAddEmployeeWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/motorphui/add_employee.fxml"));
             Parent root = loader.load();
@@ -182,9 +278,4 @@ public class HREmployeeView {
             alert.showAndWait();
         }
     }
-
-    //private void openUpdateEmployeeWindow(Employee employee) {
-        // initialize the view and update button here, make it able to select an employee from the table, then load the fxml file
-        // do the rest in the HRViewAndUpdateEmployee.java
-    //}
 }
