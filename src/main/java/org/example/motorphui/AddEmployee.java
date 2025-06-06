@@ -6,12 +6,14 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.*;
+import java.util.Optional;
 
 public class AddEmployee {
     @FXML
-    private TextField EmpNumTxtAr, LastNameTxtAr, FirstNameTxtAr, BDayTxtAr, AddressTxtAr, PhoneNumTxtAr,
-            SSSNumTxtAr, PHNumTxtAr, TINNumTxtAr, PgbgNumTxtAr, StatusTxtAr, PositionTxtAr,
-            ImmedSupTxtAr, BasSalTxtAr1, RiceTxtAr1, PhoneAllowTxtAr, ClothTxtAr, GrossSemiTxtAr, HourRateTxtAr;
+    private TextField employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+            phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
+            basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
+            statusField, immediateSupervisorField;
 
     @FXML
     private Button addEmpButton;
@@ -28,10 +30,10 @@ public class AddEmployee {
     @FXML
     private void initialize() {
         addEmpButton.setDisable(true);
-        TextField[] fields = {EmpNumTxtAr, LastNameTxtAr, FirstNameTxtAr, BDayTxtAr, AddressTxtAr, PhoneNumTxtAr,
-                SSSNumTxtAr, PHNumTxtAr, TINNumTxtAr, PgbgNumTxtAr, StatusTxtAr, PositionTxtAr,
-                ImmedSupTxtAr, BasSalTxtAr1, RiceTxtAr1, PhoneAllowTxtAr, ClothTxtAr,
-                GrossSemiTxtAr, HourRateTxtAr};
+        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+                phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
+                basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
+                statusField, immediateSupervisorField};
 
         for (TextField field : fields) {
             field.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -47,64 +49,53 @@ public class AddEmployee {
             return;
         }
 
-        // Create new employee object
-        Employee newEmployee = new Employee(
-            EmpNumTxtAr.getText().trim(),      // Employee Number
-            LastNameTxtAr.getText().trim(),     // Last Name
-            FirstNameTxtAr.getText().trim(),    // First Name
-            BDayTxtAr.getText().trim(),        // Birthday
-            AddressTxtAr.getText().trim(),     // Address
-            PhoneNumTxtAr.getText().trim(),    // Phone Number
-            SSSNumTxtAr.getText().trim(),      // SSS
-            PHNumTxtAr.getText().trim(),       // PhilHealth
-            TINNumTxtAr.getText().trim(),      // TIN
-            PgbgNumTxtAr.getText().trim(),     // Pagibig
-            StatusTxtAr.getText().trim(),      // Status
-            PositionTxtAr.getText().trim(),    // Position
-            ImmedSupTxtAr.getText().trim(),    // Immediate Supervisor
-            BasSalTxtAr1.getText().trim(),     // Basic Salary
-            RiceTxtAr1.getText().trim(),       // Rice Subsidy
-            PhoneAllowTxtAr.getText().trim(),  // Phone Allowance
-            ClothTxtAr.getText().trim(),       // Clothing Allowance
-            GrossSemiTxtAr.getText().trim(),   // Gross Semi-monthly Rate
-            HourRateTxtAr.getText().trim()     // Hourly Rate
-        );
+        // Show confirmation dialog
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirm Add Employee");
+        confirmAlert.setHeaderText("Add New Employee");
+        confirmAlert.setContentText("Are you sure you want to add this employee?");
 
-        try {
-            // Add to parent's list first
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+
+            Employee newEmployee = new Employee(
+                    employeeNumberField.getText().trim(),
+                    lastNameField.getText().trim(),
+                    firstNameField.getText().trim(),
+                    birthdayField.getText().trim(),
+                    addressField.getText().trim(),
+                    phoneNumberField.getText().trim(),
+                    sssField.getText().trim(),
+                    philHealthField.getText().trim(),
+                    tinField.getText().trim(),
+                    pagIbigField.getText().trim(),
+                    statusField.getText().trim(),
+                    positionField.getText().trim(),
+                    immediateSupervisorField.getText().trim(),
+                    basicSalaryField.getText().trim(),
+                    riceSubsidyField.getText().trim(),
+                    phoneAllowanceField.getText().trim(),
+                    clothingAllowanceField.getText().trim(),
+                    "0",                                // grossSemiMonthlyRate - you might want to add this field
+                    hourlyRateField.getText().trim()
+);
+
+            // Add to parent's list and save
             if (parentController != null) {
                 parentController.addEmployee(newEmployee);
-            }
-
-            // Then write to file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(employeeDataFile, true))) {
-                String line = String.join(",",
-                    EmpNumTxtAr.getText().trim(),      
-                    // ... rest of your fields ...
-                    HourRateTxtAr.getText().trim()     
-                );
-
-                writer.write(line);
-                writer.newLine();
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Employee added successfully.");
-
-                // Clear the input fields and close
                 clearFields();
-                addEmpButton.setDisable(true);
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.close();
-
             }
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "File Error", "Error writing to CSV file: " + e.getMessage());
         }
     }
 
     private boolean allFieldsFilled() {
-        TextField[] fields = {EmpNumTxtAr, LastNameTxtAr, FirstNameTxtAr, BDayTxtAr, AddressTxtAr, PhoneNumTxtAr,
-                SSSNumTxtAr, PHNumTxtAr, TINNumTxtAr, PgbgNumTxtAr, StatusTxtAr, PositionTxtAr,
-                ImmedSupTxtAr, BasSalTxtAr1, RiceTxtAr1, PhoneAllowTxtAr, ClothTxtAr,
-                GrossSemiTxtAr, HourRateTxtAr};
+        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+                phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
+                basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
+                statusField, immediateSupervisorField};
 
         for (TextField f : fields) {
             if (f.getText().trim().isEmpty()) {
@@ -115,10 +106,10 @@ public class AddEmployee {
     }
 
     private void clearFields() {
-        TextField[] fields = {EmpNumTxtAr, LastNameTxtAr, FirstNameTxtAr, BDayTxtAr, AddressTxtAr, PhoneNumTxtAr,
-                SSSNumTxtAr, PHNumTxtAr, TINNumTxtAr, PgbgNumTxtAr, StatusTxtAr, PositionTxtAr,
-                ImmedSupTxtAr, BasSalTxtAr1, RiceTxtAr1, PhoneAllowTxtAr, ClothTxtAr,
-                GrossSemiTxtAr, HourRateTxtAr};
+        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+                phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
+                basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
+                statusField, immediateSupervisorField};
         
         for (TextField field : fields) {
             field.clear();

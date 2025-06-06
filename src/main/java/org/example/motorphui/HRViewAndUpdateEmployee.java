@@ -1,6 +1,9 @@
 package org.example.motorphui;
 
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -36,6 +39,10 @@ public class HRViewAndUpdateEmployee {
     private Employee employee;
     private HREmployeeView parentController;
 
+    public void setParentController(HREmployeeView controller) {
+        this.parentController = controller;
+    }
+
     public void setEmployee(Employee employee) {
         this.employee = employee;
 
@@ -61,56 +68,54 @@ public class HRViewAndUpdateEmployee {
         employeeNumberField.setEditable(false);
     }
 
-    public void setParentController(HREmployeeView controller) {
-        this.parentController = controller;
-    }
 
     @FXML
-    private void handleSaveButton() {
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirm Save");
-        confirmationAlert.setHeaderText("Are you sure you want to save these changes?");
-        confirmationAlert.setContentText("This will update the employee's information.");
+    private void handleSaveButton(ActionEvent event) {
+    Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+    confirmAlert.setTitle("Confirm Update");
+    confirmAlert.setHeaderText("Update Employee Information");
+    confirmAlert.setContentText("Are you sure you want to update this employee's information?");
 
-        ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton = new ButtonType("No");
+    Optional<ButtonType> result = confirmAlert.showAndWait();
+    if (result.isPresent() && result.get() == ButtonType.OK) {
 
-        confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        Employee updatedEmployee = new Employee(
+            employee.getEmployeeNumber(),
+            lastNameField.getText().trim(),
+            firstNameField.getText().trim(),
+            birthdayField.getText().trim(),
+            addressField.getText().trim(),
+            phoneNumberField.getText().trim(),
+            sssField.getText().trim(),
+            philHealthField.getText().trim(),
+            tinField.getText().trim(),
+            pagIbigField.getText().trim(),
+            statusField.getText().trim(),
+            positionField.getText().trim(),
+            immediateSupervisorField.getText().trim(),
+            basicSalaryField.getText().trim(),
+            riceSubsidyField.getText().trim(),
+            phoneAllowanceField.getText().trim(),
+            clothingAllowanceField.getText().trim(),
+            employee.getGrossSemiMonthlyRate(),
+            hourlyRateField.getText().trim()
+        );
 
-        if (result.isPresent() && result.get() == yesButton) {
-            // Update the employee details from the fields
-            employee.setLastName(lastNameField.getText());
-            employee.setFirstName(firstNameField.getText());
-            employee.setBirthday(birthdayField.getText());
-            employee.setAddress(addressField.getText());
-            employee.setPhoneNumber(phoneNumberField.getText());
-            employee.setSss(sssField.getText());
-            employee.setPhilHealth(philHealthField.getText());
-            employee.setTin(tinField.getText());
-            employee.setPagIbig(pagIbigField.getText());
-            employee.setPosition(positionField.getText());
-            employee.setBasicSalary(basicSalaryField.getText());
-            employee.setRiceSubsidy(riceSubsidyField.getText());
-            employee.setPhoneAllowance(phoneAllowanceField.getText());
-            employee.setClothingAllowance(clothingAllowanceField.getText());
-            employee.setHourlyRate(hourlyRateField.getText());
-
-            // Refresh the table in the parent controller after update
-            if (parentController != null) {
-                parentController.refreshTable();
-            }
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Update Successful");
-            alert.setHeaderText(null);
-            alert.setContentText("Employee information updated successfully.");
-            alert.showAndWait();
-
-            closeWindow();
-        } else {
+        // Update in parent controller
+        if (parentController != null) {
+            parentController.updateEmployee(updatedEmployee);
+            
+            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+            successAlert.setTitle("Success");
+            successAlert.setHeaderText(null);
+            successAlert.setContentText("Employee information updated successfully.");
+            successAlert.showAndWait();
+            
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
         }
     }
+}
 
     @FXML
     private void handleCancelButton() {

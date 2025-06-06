@@ -76,6 +76,8 @@ public class HREmployeeView {
 
     private final ObservableList<Employee> employeeList = FXCollections.observableArrayList();
 
+    private static final String EMPLOYEE_DATA_FILE = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
+
     @FXML
     public void initialize() {
         root.setMinWidth(1440);
@@ -105,14 +107,14 @@ public class HREmployeeView {
 
 
         // Load employees from CSV
-        loadEmployeesFromCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
-
+        loadEmployeesFromCSV();
     }
 
-    private void loadEmployeesFromCSV(String filePath) {
+    private void loadEmployeesFromCSV() {
         employeeList.clear();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line = reader.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {
+            reader.readLine(); // Skip header
+            String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",", -1);
                 if (data.length == 19) {
@@ -149,6 +151,17 @@ public class HREmployeeView {
             alert.setContentText("An error occurred while loading the employee data.");
             alert.showAndWait();
         }
+    }
+
+    public void updateEmployee(Employee updatedEmployee) {
+        for (int i = 0; i < employeeList.size(); i++) {
+            if (employeeList.get(i).getEmployeeNumber().equals(updatedEmployee.getEmployeeNumber())) {
+                employeeList.set(i, updatedEmployee);
+                break;
+            }
+        }
+        saveEmployeesToCSV(EMPLOYEE_DATA_FILE);
+        refreshTable();
     }
 
     @FXML
@@ -211,9 +224,7 @@ public class HREmployeeView {
     }
 
     public void refreshTable() {
-        emp_table.refresh();
-        saveEmployeesToCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
-        loadEmployeesFromCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
+        loadEmployeesFromCSV();
     }
 
     private void saveEmployeesToCSV(String filePath) {
@@ -256,6 +267,7 @@ public class HREmployeeView {
 
     public void addEmployee(Employee employee) {
         employeeList.add(employee);
+        saveEmployeesToCSV(EMPLOYEE_DATA_FILE);
         refreshTable();
     }
 
@@ -265,17 +277,23 @@ public class HREmployeeView {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/motorphui/add_employee.fxml"));
             Parent root = loader.load();
 
+            AddEmployee addController = loader.getController();
+            addController.SetParentController(this);
+
             Stage stage = new Stage();
             stage.setTitle("Add New Employee");
             stage.setScene(new Scene(root));
-            stage.show();
+            stage.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Load Error");
-            alert.setHeaderText("Failed to open Add Employee form.");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            showErrorAlert("Load Error", "Failed to open Add Employee form.", e.getMessage());
         }
+    }
+
+    private void showErrorAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
