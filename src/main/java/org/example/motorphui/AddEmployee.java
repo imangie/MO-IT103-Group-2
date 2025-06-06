@@ -47,54 +47,67 @@ public class AddEmployee {
             return;
         }
 
-        // Create new employee object
         Employee newEmployee = new Employee(
-            EmpNumTxtAr.getText().trim(),      // Employee Number
-            LastNameTxtAr.getText().trim(),     // Last Name
-            FirstNameTxtAr.getText().trim(),    // First Name
-            BDayTxtAr.getText().trim(),        // Birthday
-            AddressTxtAr.getText().trim(),     // Address
-            PhoneNumTxtAr.getText().trim(),    // Phone Number
-            SSSNumTxtAr.getText().trim(),      // SSS
-            PHNumTxtAr.getText().trim(),       // PhilHealth
-            TINNumTxtAr.getText().trim(),      // TIN
-            PgbgNumTxtAr.getText().trim(),     // Pagibig
-            StatusTxtAr.getText().trim(),      // Status
-            PositionTxtAr.getText().trim(),    // Position
-            ImmedSupTxtAr.getText().trim(),    // Immediate Supervisor
-            BasSalTxtAr1.getText().trim(),     // Basic Salary
-            RiceTxtAr1.getText().trim(),       // Rice Subsidy
-            PhoneAllowTxtAr.getText().trim(),  // Phone Allowance
-            ClothTxtAr.getText().trim(),       // Clothing Allowance
-            GrossSemiTxtAr.getText().trim(),   // Gross Semi-monthly Rate
-            HourRateTxtAr.getText().trim()     // Hourly Rate
+                EmpNumTxtAr.getText().trim(),      // Employee Number
+                LastNameTxtAr.getText().trim(),    // Last Name
+                FirstNameTxtAr.getText().trim(),   // First Name
+                BDayTxtAr.getText().trim(),        // Birthday
+                AddressTxtAr.getText().trim(),     // Address
+                PhoneNumTxtAr.getText().trim(),    // Phone Number
+                SSSNumTxtAr.getText().trim(),      // SSS
+                PHNumTxtAr.getText().trim(),       // PhilHealth
+                TINNumTxtAr.getText().trim(),      // TIN
+                PgbgNumTxtAr.getText().trim(),     // Pagibig
+                StatusTxtAr.getText().trim(),      // Status
+                PositionTxtAr.getText().trim(),    // Position
+                ImmedSupTxtAr.getText().trim(),    // Immediate Supervisor
+                BasSalTxtAr1.getText().trim(),     // Basic Salary
+                RiceTxtAr1.getText().trim(),       // Rice Subsidy
+                PhoneAllowTxtAr.getText().trim(),  // Phone Allowance
+                ClothTxtAr.getText().trim(),       // Clothing Allowance
+                GrossSemiTxtAr.getText().trim(),   // Gross Semi-monthly Rate
+                HourRateTxtAr.getText().trim()     // Hourly Rate
         );
 
         try {
-            // Add to parent's list first
             if (parentController != null) {
                 parentController.addEmployee(newEmployee);
             }
 
-            // Then write to file
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(employeeDataFile, true))) {
                 String line = String.join(",",
-                    EmpNumTxtAr.getText().trim(),      
-                    // ... rest of your fields ...
-                    HourRateTxtAr.getText().trim()     
+                        EmpNumTxtAr.getText().trim(),
+                        LastNameTxtAr.getText().trim(),
+                        FirstNameTxtAr.getText().trim(),
+                        BDayTxtAr.getText().trim(),
+                        AddressTxtAr.getText().trim(),
+                        PhoneNumTxtAr.getText().trim(),
+                        SSSNumTxtAr.getText().trim(),
+                        PHNumTxtAr.getText().trim(),
+                        TINNumTxtAr.getText().trim(),
+                        PgbgNumTxtAr.getText().trim(),
+                        StatusTxtAr.getText().trim(),
+                        PositionTxtAr.getText().trim(),
+                        ImmedSupTxtAr.getText().trim(),
+                        BasSalTxtAr1.getText().trim(),
+                        RiceTxtAr1.getText().trim(),
+                        PhoneAllowTxtAr.getText().trim(),
+                        ClothTxtAr.getText().trim(),
+                        GrossSemiTxtAr.getText().trim(),
+                        HourRateTxtAr.getText().trim()
                 );
 
                 writer.write(line);
                 writer.newLine();
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Employee added successfully.");
-
-                // Clear the input fields and close
-                clearFields();
-                addEmpButton.setDisable(true);
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.close();
-
             }
+
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Employee added successfully.");
+
+            clearFields();
+            addEmpButton.setDisable(true);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
+
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "File Error", "Error writing to CSV file: " + e.getMessage());
         }
@@ -119,7 +132,7 @@ public class AddEmployee {
                 SSSNumTxtAr, PHNumTxtAr, TINNumTxtAr, PgbgNumTxtAr, StatusTxtAr, PositionTxtAr,
                 ImmedSupTxtAr, BasSalTxtAr1, RiceTxtAr1, PhoneAllowTxtAr, ClothTxtAr,
                 GrossSemiTxtAr, HourRateTxtAr};
-        
+
         for (TextField field : fields) {
             field.clear();
         }

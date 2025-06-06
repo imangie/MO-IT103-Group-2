@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -25,64 +24,36 @@ public class HREmployeeView {
     private AnchorPane root;
     @FXML
     private TableView<Employee> emp_table;
-    @FXML
-    private Label emp_info_label;
-    @FXML
-    private Button viewandupdate_button;
-    @FXML
-    private Button addemp_button;
-    @FXML
-    private Button deleteemp_button;
 
-    // Declare columns for each property in Employee class
-    @FXML
-    private TableColumn<Employee, String> empNumColumn;
-    @FXML
-    private TableColumn<Employee, String> lastNameColumn;
-    @FXML
-    private TableColumn<Employee, String> firstNameColumn;
-    @FXML
-    private TableColumn<Employee, String> birthdayColumn;
-    @FXML
-    private TableColumn<Employee, String> addressColumn;
-    @FXML
-    private TableColumn<Employee, String> phoneNumberColumn;
-    @FXML
-    private TableColumn<Employee, String> sssColumn;
-    @FXML
-    private TableColumn<Employee, String> philHealthColumn;
-    @FXML
-    private TableColumn<Employee, String> tinColumn;
-    @FXML
-    private TableColumn<Employee, String> pagIbigColumn;
-    @FXML
-    private TableColumn<Employee, String> statusColumn;
-    @FXML
-    private TableColumn<Employee, String> positionColumn;
-    @FXML
-    private TableColumn<Employee, String> supervisorColumn;
-    @FXML
-    private TableColumn<Employee, String> basicSalaryColumn;
-    @FXML
-    private TableColumn<Employee, String> riceSubsidyColumn;
-    @FXML
-    private TableColumn<Employee, String> phoneAllowanceColumn;
-    @FXML
-    private TableColumn<Employee, String> clothingAllowanceColumn;
-    @FXML
-    private TableColumn<Employee, String> grossSemiMonthlyColumn;
-    @FXML
-    private TableColumn<Employee, String> hourlyRateColumn;
+    @FXML private TableColumn<Employee, String> empNumColumn;
+    @FXML private TableColumn<Employee, String> lastNameColumn;
+    @FXML private TableColumn<Employee, String> firstNameColumn;
+    @FXML private TableColumn<Employee, String> birthdayColumn;
+    @FXML private TableColumn<Employee, String> addressColumn;
+    @FXML private TableColumn<Employee, String> phoneNumberColumn;
+    @FXML private TableColumn<Employee, String> sssColumn;
+    @FXML private TableColumn<Employee, String> philHealthColumn;
+    @FXML private TableColumn<Employee, String> tinColumn;
+    @FXML private TableColumn<Employee, String> pagIbigColumn;
+    @FXML private TableColumn<Employee, String> statusColumn;
+    @FXML private TableColumn<Employee, String> positionColumn;
+    @FXML private TableColumn<Employee, String> supervisorColumn;
+    @FXML private TableColumn<Employee, String> basicSalaryColumn;
+    @FXML private TableColumn<Employee, String> riceSubsidyColumn;
+    @FXML private TableColumn<Employee, String> phoneAllowanceColumn;
+    @FXML private TableColumn<Employee, String> clothingAllowanceColumn;
+    @FXML private TableColumn<Employee, String> grossSemiMonthlyColumn;
+    @FXML private TableColumn<Employee, String> hourlyRateColumn;
 
     private final ObservableList<Employee> employeeList = FXCollections.observableArrayList();
+
+    private static final String EMPLOYEE_DATA_FILE = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
 
     @FXML
     public void initialize() {
         root.setMinWidth(1440);
         root.setMinHeight(1024);
         emp_table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        // Set column cell value factories for each property in the Employee class
         empNumColumn.setCellValueFactory(new PropertyValueFactory<>("employeeNumber"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
@@ -103,16 +74,14 @@ public class HREmployeeView {
         grossSemiMonthlyColumn.setCellValueFactory(new PropertyValueFactory<>("grossSemiMonthlyRate"));
         hourlyRateColumn.setCellValueFactory(new PropertyValueFactory<>("hourlyRate"));
 
-
-        // Load employees from CSV
-        loadEmployeesFromCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
-
+        loadEmployeesFromCSV();
     }
 
-    private void loadEmployeesFromCSV(String filePath) {
+    private void loadEmployeesFromCSV() {
         employeeList.clear();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line = reader.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {
+            reader.readLine(); // Skip header
+            String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",", -1);
                 if (data.length == 19) {
@@ -142,12 +111,7 @@ public class HREmployeeView {
             }
             emp_table.setItems(employeeList);
         } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Load Error");
-            alert.setHeaderText("Failed to load employee data.");
-            alert.setContentText("An error occurred while loading the employee data.");
-            alert.showAndWait();
+            showErrorAlert("Load Error", "Failed to load employee data.", "An error occurred while loading the employee data.\n" + e.getMessage());
         }
     }
 
@@ -166,17 +130,12 @@ public class HREmployeeView {
                 Stage stage = new Stage();
                 stage.setTitle("View and Update Employee");
                 stage.setScene(new Scene(parent));
-                stage.showAndWait(); // Wait for the pop-up to close
+                stage.showAndWait();
 
                 // After the pop-up closes, refresh the table data
                 refreshTable();
             } catch (IOException e) {
-                e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Could not open the update window.");
-                alert.setContentText("An error occurred while trying to load the employee update form.");
-                alert.showAndWait();
+                showErrorAlert("Error", "Could not open the update window.", "An error occurred while trying to load the employee update form.\n" + e.getMessage());
             }
         }
     }
@@ -193,7 +152,7 @@ public class HREmployeeView {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 employeeList.remove(selectedEmployee);
-                saveEmployeesToCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
+                saveEmployeesToCSV();
                 refreshTable();
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                 successAlert.setTitle("Deletion Successful");
@@ -211,15 +170,12 @@ public class HREmployeeView {
     }
 
     public void refreshTable() {
-        emp_table.refresh();
-        saveEmployeesToCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
-        loadEmployeesFromCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
+        loadEmployeesFromCSV();
     }
 
-    private void saveEmployeesToCSV(String filePath) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+    private void saveEmployeesToCSV() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(EMPLOYEE_DATA_FILE))) {
             writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
-
             for (Employee emp : employeeList) {
                 writer.write(String.join(",",
                         emp.getEmployeeNumber(),
@@ -245,17 +201,13 @@ public class HREmployeeView {
                 writer.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Save Error");
-            alert.setHeaderText("Failed to save employee data.");
-            alert.setContentText("An error occurred while writing to the CSV file.");
-            alert.showAndWait();
+            showErrorAlert("Save Error", "Failed to save employee data.", "An error occurred while writing to the CSV file.\n" + e.getMessage());
         }
     }
 
     public void addEmployee(Employee employee) {
         employeeList.add(employee);
+        saveEmployeesToCSV();
         refreshTable();
     }
 
@@ -265,17 +217,23 @@ public class HREmployeeView {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/motorphui/add_employee.fxml"));
             Parent root = loader.load();
 
+            AddEmployee addController = loader.getController();
+            addController.SetParentController(this);
+
             Stage stage = new Stage();
             stage.setTitle("Add New Employee");
             stage.setScene(new Scene(root));
-            stage.show();
+            stage.showAndWait();
         } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Load Error");
-            alert.setHeaderText("Failed to open Add Employee form.");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            showErrorAlert("Load Error", "Failed to open Add Employee form.", e.getMessage());
         }
+    }
+
+    private void showErrorAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

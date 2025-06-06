@@ -148,6 +148,7 @@
                <HBox.margin>
                   <Insets />
                </HBox.margin></Button>
+            <Button mnemonicParsing="false" onAction="#handleRefreshButton" prefHeight="33.0" prefWidth="144.0" text="Refresh" />
             </children>
          <VBox.margin>
             <Insets />

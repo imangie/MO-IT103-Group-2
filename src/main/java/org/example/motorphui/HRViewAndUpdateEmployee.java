@@ -30,7 +30,6 @@ public class HRViewAndUpdateEmployee {
     @FXML private TextField clothingAllowanceField;
     @FXML private TextField hourlyRateField;
 
-    @FXML private Button saveButton;
     @FXML private Button cancelButton;
 
     private Employee employee;
@@ -74,12 +73,11 @@ public class HRViewAndUpdateEmployee {
 
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No");
-
         confirmationAlert.getButtonTypes().setAll(yesButton, noButton);
+
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == yesButton) {
-            // Update the employee details from the fields
             employee.setLastName(lastNameField.getText());
             employee.setFirstName(firstNameField.getText());
             employee.setBirthday(birthdayField.getText());
@@ -89,14 +87,15 @@ public class HRViewAndUpdateEmployee {
             employee.setPhilHealth(philHealthField.getText());
             employee.setTin(tinField.getText());
             employee.setPagIbig(pagIbigField.getText());
+            employee.setStatus(statusField.getText());
             employee.setPosition(positionField.getText());
+            employee.setImmediateSupervisor(immediateSupervisorField.getText());
             employee.setBasicSalary(basicSalaryField.getText());
             employee.setRiceSubsidy(riceSubsidyField.getText());
             employee.setPhoneAllowance(phoneAllowanceField.getText());
             employee.setClothingAllowance(clothingAllowanceField.getText());
             employee.setHourlyRate(hourlyRateField.getText());
 
-            // Refresh the table in the parent controller after update
             if (parentController != null) {
                 parentController.refreshTable();
             }
@@ -108,7 +107,6 @@ public class HRViewAndUpdateEmployee {
             alert.showAndWait();
 
             closeWindow();
-        } else {
         }
     }
 
@@ -117,29 +115,45 @@ public class HRViewAndUpdateEmployee {
         closeWindow();
     }
 
+    @FXML
+    private void handleRefreshButton() {
+
+        if (parentController != null) {
+            parentController.refreshTable();
+        }
+
+        clearAllFields();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Refreshed");
+        alert.setHeaderText(null);
+        alert.setContentText("Employee table/view has been refreshed and fields cleared.");
+        alert.showAndWait();
+    }
+
+    private void clearAllFields() {
+        employeeNumberField.clear();
+        lastNameField.clear();
+        firstNameField.clear();
+        birthdayField.clear();
+        addressField.clear();
+        phoneNumberField.clear();
+        sssField.clear();
+        philHealthField.clear();
+        tinField.clear();
+        pagIbigField.clear();
+        statusField.clear();
+        positionField.clear();
+        immediateSupervisorField.clear();
+        basicSalaryField.clear();
+        riceSubsidyField.clear();
+        phoneAllowanceField.clear();
+        clothingAllowanceField.clear();
+        hourlyRateField.clear();
+    }
+
     private void closeWindow() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 }
-
-// When the "View and Update" button is clicked, this opens a pop-up window (hr_view_and_update_employee.fxml) which I've already added the UI for
-// to display the employee's current information for viewing and updating.
-
-// The pop-up window allows the HR user to view and edit the selected employee's details.
-// Once the user makes any changes, they can click the "Save" button to save the updated information.
-
-// A confirmation dialog should appear when the "Save" button is clicked, asking the user:
-// "Are you sure you want to save these changes?" This ensures the user is aware of the action being performed.
-
-// If the user confirms (clicks "Yes"), the updated information should be saved
-// and the employee's record should be updated accordingly (in the CSV file).
-
-// If the user clicks "No" on the confirmation prompt, the changes will not be saved,
-// and the pop-up window will remain open for further editing or cancellation.
-
-// After saving, the pop-up window should either close automatically or provide the option
-// to cancel the action and close without saving any changes.
-
-// In case of errors (e.g., file issues or invalid input), an error alert should be displayed
-// to inform the user about the issue.
