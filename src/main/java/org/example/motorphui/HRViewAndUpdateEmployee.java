@@ -90,8 +90,8 @@ public class HRViewAndUpdateEmployee {
 
         // Restrict non-numeric input for Phone Number, SSS, PhilHealth, TIN, PagIbig
         phoneNumberField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
-            if (!keyEvent.getCharacter().matches("[0-9-]")) {
-                keyEvent.consume(); // Discard the input if it's not numeric
+            if (!keyEvent.getCharacter().matches("[0-9-]") && !keyEvent.getText().isEmpty()) {
+                keyEvent.consume();  // Discard the input if it's not numeric or dash
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Number must be numeric and can contain dashes.");
             }
         });
@@ -179,7 +179,6 @@ public class HRViewAndUpdateEmployee {
         String empNumber = employeeNumberField.getText();
         String lastName = lastNameField.getText();
         String firstName = firstNameField.getText();
-        String basicSalary = basicSalaryField.getText();
 
         // Employee Number Validation (Numeric Only)
         if (!empNumber.matches("\\d*") && !empNumber.trim().isEmpty()) {
@@ -195,38 +194,6 @@ public class HRViewAndUpdateEmployee {
 
         if (!firstName.matches("[a-zA-Z ]*") && !firstName.trim().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Invalid Input", "First Name must only contain letters and spaces.");
-            return false;
-        }
-
-        // Salary Validation (Numeric)
-        if (!basicSalary.matches("\\d*(\\.\\d*)?") && !basicSalary.trim().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Salary must be a valid number.");
-            return false;
-        }
-
-        // Validate Numeric Fields (Phone, SSS, PhilHealth, TIN, Pag-Ibig)
-        if (!phoneNumberField.getText().matches("\\d*") && !phoneNumberField.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Number must be numeric.");
-            return false;
-        }
-
-        if (!sssField.getText().matches("\\d{3}-\\d{2}-\\d{4}") && !sssField.getText().trim().isEmpty()) { // SSS format with dashes
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "SSS must be in the format ###-##-####.");
-            return false;
-        }
-
-        if (!philHealthField.getText().matches("\\d*") && !philHealthField.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "PhilHealth must be numeric.");
-            return false;
-        }
-
-        if (!tinField.getText().matches("\\d{3}-\\d{2}-\\d{4}") && !tinField.getText().trim().isEmpty()) { // TIN format with dashes
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "TIN must be in the format ###-##-####.");
-            return false;
-        }
-
-        if (!pagIbigField.getText().matches("\\d*") && !pagIbigField.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Pag-Ibig must be numeric.");
             return false;
         }
 
