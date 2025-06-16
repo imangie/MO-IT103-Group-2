@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="root" prefHeight="1024.0" prefWidth="1140.0" stylesheets="@css/employee_view_salary.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.EmployeeViewSalary">
@@ -11,5 +16,63 @@
             <Font name="Poppins Bold" size="36.0" />
          </font>
       </Label>
+      <VBox fx:id="secondaryBox" layoutX="55.0" layoutY="105.0" prefHeight="814.0" prefWidth="1030.0">
+         <children>
+            <ImageView fx:id="profileView" fitHeight="180.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/Profile.png" />
+               </image>
+               <VBox.margin>
+                  <Insets left="20.0" top="20.0" />
+               </VBox.margin>
+            </ImageView>
+            <HBox prefHeight="74.0" prefWidth="830.0">
+               <VBox.margin>
+                  <Insets left="200.0" top="-150.0" />
+               </VBox.margin>
+               <children>
+                  <Label text="Name">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="30.0" top="30.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="nameLabel" layoutX="40.0" layoutY="40.0" text="Manuel III Garcia">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="70.0" top="30.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox layoutX="210.0" layoutY="30.0" prefHeight="74.0" prefWidth="830.0">
+               <children>
+                  <Label text="Employee ID">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="empIDLabel" layoutX="40.0" layoutY="40.0" text="000000">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="50.0" top="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets left="200.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
