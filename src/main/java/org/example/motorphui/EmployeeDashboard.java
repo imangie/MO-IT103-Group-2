@@ -21,7 +21,6 @@ public class EmployeeDashboard {
 
     @FXML
     public void initialize() {
-        loadView("employee_profile.fxml");
         setActiveButton(profile_button);
     }
     @FXML
@@ -47,10 +46,17 @@ public class EmployeeDashboard {
 
     private void loadView(String fxml) {
         try {
-            AnchorPane pane = FXMLLoader.load(getClass().getResource(fxml));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            AnchorPane pane = loader.load();
+
+            // If the profile view is being loaded, pass the employee
+            if (fxml.equals("employee_profile.fxml")) {
+                EmployeeProfile controller = loader.getController();
+                controller.setEmployeeData(loggedInEmployee);
+            }
+
             contentPane.getChildren().setAll(pane);
 
-            // Anchor the pane to all sides of contentPane to fill it entirely
             AnchorPane.setTopAnchor(pane, 0.0);
             AnchorPane.setBottomAnchor(pane, 0.0);
             AnchorPane.setLeftAnchor(pane, 0.0);
@@ -104,5 +110,11 @@ public class EmployeeDashboard {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private Employee loggedInEmployee;
+
+    public void setEmployee(Employee employee) {
+        this.loggedInEmployee = employee;
+        loadProfile(employee);
     }
 }
