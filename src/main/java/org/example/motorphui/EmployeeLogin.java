@@ -69,7 +69,6 @@ public class EmployeeLogin {
             return;
         }
 
-        // Authenticate user
         if (Authentication.authenticate(empId, username, password)) {
             Employee employee = Authentication.getEmployeeData(empId);
 
@@ -78,23 +77,19 @@ public class EmployeeLogin {
                 Parent root = loader.load();
 
                 EmployeeDashboard dashboardController = loader.getController();
-                dashboardController.loadProfile(employee);
+                dashboardController.setEmployee(employee);
 
                 Stage stage = (Stage) login_button.getScene().getWindow();
                 Scene scene = new Scene(root);
 
                 stage.setMinWidth(1440);
                 stage.setMinHeight(1024);
-
-                stage.setWidth(1440);
-                stage.setHeight(1024);
-
                 stage.setScene(scene);
                 stage.show();
 
             } catch (Exception e) {
                 e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Error", "Error loading profile screen.");
+                showAlert(Alert.AlertType.ERROR, "Error", "Error loading dashboard.");
             }
         } else {
             showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid credentials. Please try again.");

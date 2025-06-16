@@ -53,4 +53,15 @@ public class EmployeeProfile {
         clothingAllowanceLabel.setText(employee.getClothingAllowance());
         pagibigLabel.setText(employee.getPagIbig());
     }
+
+    public class EmployeeSession {
+        public static Employee currentEmployee;
+    }
+
+    @FXML
+    public void initialize() {
+        if (EmployeeSession.currentEmployee != null) {
+            setEmployeeData(EmployeeSession.currentEmployee);
+        }
+    }
 }
