@@ -7,11 +7,26 @@ import javafx.scene.control.Label;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+/**
+ * Purpose: Allows HR to view and manage employee payslips.
+ * - Displays detailed payslip information for employees.
+ * - Allows HR to generate and review payslip records.
+ */
+
 
 public class HRPayslip {
 
     @FXML
-    private ChoiceBox<String> MonthCHBox;
+    private ChoiceBox<String> PayPeriodCHBox;
     @FXML
     private Label hoursWorkedLabel;
 
@@ -28,19 +43,113 @@ public class HRPayslip {
 
     private Employee employee;
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
     @FXML
     public void initialize() {
-        MonthCHBox.setItems(FXCollections.observableArrayList(
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-        ));
+        populatePayPeriodChoiceBox();
 
-        MonthCHBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+        PayPeriodCHBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (employee != null && newVal != null) {
-                double hours = calculateMonthlyHours(employee.getEmployeeNumber(), newVal, "2024");
-                setMonthlyHours(hours);
+
+                String[] dates = ((String) newVal).split(" - ");
+                if (dates.length == 2) {
+                    try {
+                        LocalDate startDate = LocalDate.parse(dates[0].trim(), DATE_FORMATTER);
+                        LocalDate endDate = LocalDate.parse(dates[1].trim(), DATE_FORMATTER);
+                        double hours = calculatePayPeriodHours(employee.getEmployeeNumber(), startDate, endDate);
+                        setPayPeriodHours(hours);
+                    } catch (DateTimeParseException e) {
+                        System.err.println("Error parsing date from pay period string: " + newVal);
+                        e.printStackTrace();
+                    }
+                }
             }
         });
+    }
+
+    private void populatePayPeriodChoiceBox() {
+        Set<LocalDate> uniqueDates = new TreeSet<>();
+        System.out.println("Attempting to read attendance records from: /org/example/motorphui/data/motorph_attendance_records.csv");
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(getClass().getResourceAsStream("/org/example/motorphui/data/motorph_attendance_records.csv")))) {
+
+            System.out.println("Successfully opened stream to CSV file.");
+            String line;
+            boolean isFirstLine = true;
+            int lineNumber = 0;
+
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    System.out.println("Skipping header line: " + line);
+                    continue;
+                }
+
+                String[] data = line.split(",");
+                if (data.length >= 4) {
+                    try {
+
+                        LocalDate date = LocalDate.parse(data[3].trim(), DATE_FORMATTER);
+                        uniqueDates.add(date);
+
+                    } catch (DateTimeParseException e) {
+                        System.err.println("Error parsing date from CSV line " + lineNumber + ": " + line + " -> " + e.getMessage());
+                    }
+                } else {
+                    System.err.println("Skipping malformed CSV line " + lineNumber + " (not enough columns): " + line);
+                }
+            }
+            System.out.println("Finished reading CSV. Found " + uniqueDates.size() + " unique dates.");
+        } catch (IOException e) {
+            System.err.println("Error reading attendance file for pay period generation (IOException): " + e.getMessage());
+            e.printStackTrace();
+            System.err.println("Ensure 'motorph_attendance_records.csv' is in 'src/main/resources/org/example/motorphui/data/'");
+        } catch (NullPointerException e) {
+            System.err.println("Error: CSV file not found at the specified path. NullPointerException: " + e.getMessage());
+            e.printStackTrace();
+            System.err.println("Ensure 'motorph_attendance_records.csv' is in 'src/main/resources/org/example/motorphui/data/' and correctly packaged.");
+        }
+
+
+        List<LocalDate> sortedDates = new ArrayList<>(uniqueDates);
+        if (sortedDates.isEmpty()) {
+            System.out.println("No unique dates found from CSV. PayPeriodCHBox will be empty.");
+            return;
+        }
+        Collections.sort(sortedDates); // Ensure dates are sorted
+
+        List<String> payPeriods = new ArrayList<>();
+        if (!sortedDates.isEmpty()) {
+            LocalDate currentPeriodStart = sortedDates.get(0);
+            LocalDate lastDateInPeriod = currentPeriodStart.plusDays(4); // A 5-day period (start day + 4 more days)
+
+            for (LocalDate date : sortedDates) {
+                if (date.isAfter(lastDateInPeriod)) {
+
+                    payPeriods.add(currentPeriodStart.format(DATE_FORMATTER) + " - " + lastDateInPeriod.format(DATE_FORMATTER));
+                    currentPeriodStart = date; // Start the new period with the current date
+                    lastDateInPeriod = currentPeriodStart.plusDays(4); // Define the end of the new 5-day period
+
+                    while (currentPeriodStart.isAfter(lastDateInPeriod)) {
+                        lastDateInPeriod = lastDateInPeriod.plusDays(5); // Advance by a full period
+                    }
+                }
+
+            }
+
+            payPeriods.add(currentPeriodStart.format(DATE_FORMATTER) + " - " + lastDateInPeriod.format(DATE_FORMATTER));
+        }
+
+        System.out.println("Generated " + payPeriods.size() + " pay periods.");
+        if (!payPeriods.isEmpty()) {
+            System.out.println("First generated pay period: " + payPeriods.get(0));
+            System.out.println("Last generated pay period: " + payPeriods.get(payPeriods.size() - 1));
+        }
+
+        PayPeriodCHBox.setItems(FXCollections.observableArrayList(payPeriods));
+        System.out.println("Pay periods set to ChoiceBox.");
     }
 
     public void setEmployee(Employee employee) {
@@ -75,7 +184,7 @@ public class HRPayslip {
         DeductLabel.setText(String.format("Total Deductions: %.2f", totalDeductions));
     }
 
-    public void setMonthlyHours(double hours) {
+    public void setPayPeriodHours(double hours) {
         hoursWorkedLabel.setText("Hours Worked: " + String.format("%.2f", hours));
 
         if (employee != null) {
@@ -99,7 +208,7 @@ public class HRPayslip {
         }
     }
 
-    private double calculateMonthlyHours(String empNumber, String monthName, String year) {
+    private double calculatePayPeriodHours(String empNumber, LocalDate startDate, LocalDate endDate) { // Modified signature
         double totalHours = 0.0;
 
         try (BufferedReader reader = new BufferedReader(
@@ -111,39 +220,32 @@ public class HRPayslip {
             while ((line = reader.readLine()) != null) {
                 if (isFirstLine) {
                     isFirstLine = false;
-                    continue;
+                    continue; // Skip the header row
                 }
 
                 String[] data = line.split(",");
                 if (data.length >= 6 && data[0].trim().equals(empNumber)) {
-                    String date = data[3].trim();
-                    String login = data[4].trim();
-                    String logout = data[5].trim();
+                    try {
+                        LocalDate recordDate = LocalDate.parse(data[3].trim(), DATE_FORMATTER);
 
-                    String[] dateParts = date.split("/");
-                    if (dateParts.length == 3) {
-                        String fileMonth = dateParts[0].trim();
-                        String fileYear = dateParts[2].trim();
-
-                        int monthNumber = java.time.Month.valueOf(monthName.toUpperCase()).getValue();
-                        String expectedMonth = String.format("%02d", monthNumber);
-
-                        System.out.println("Employee: " + empNumber + " - File month: '" + fileMonth + "' Expected month: '" + expectedMonth + "' File year: '" + fileYear + "' Expected year: '" + year + "'");
-
-                        if (fileMonth.equals(expectedMonth) && fileYear.equals(year)) {
-                            double loginTime = parseTimeToDecimal(login);
-                            double logoutTime = parseTimeToDecimal(logout);
+                        if (!recordDate.isBefore(startDate) && !recordDate.isAfter(endDate)) {
+                            double loginTime = parseTimeToDecimal(data[4].trim());
+                            double logoutTime = parseTimeToDecimal(data[5].trim());
                             double hoursWorked = logoutTime - loginTime;
 
                             if (hoursWorked > 0) {
                                 totalHours += hoursWorked;
                             }
                         }
+                    } catch (DateTimeParseException e) {
+                        System.err.println("Error parsing date in attendance record: " + data[3] + " from line: " + line);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error parsing time in attendance record: " + data[4] + " or " + data[5] + " from line: " + line);
                     }
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading attendance file: " + e.getMessage());
+            System.err.println("Error reading attendance file: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -156,10 +258,12 @@ public class HRPayslip {
         int minutes = Integer.parseInt(parts[1]);
         return hours + (minutes / 60.0);
     }
+
     private double parseDoubleSafe(String s) {
         try {
             return Double.parseDouble(s.replace(",", "").trim());
         } catch (Exception e) {
+            System.err.println("Error parsing double: " + s + " - " + e.getMessage());
             return 0.0;
         }
     }

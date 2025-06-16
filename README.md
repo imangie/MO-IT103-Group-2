@@ -1,7 +1,7 @@
 # MotorPH Employee Management Payroll System
 ## MO-IT103 Computer Programming 2 | A1101
 
-This project is made by Group 2:
+This project is currently ongoing and is being developed by Group 2:
 
 - Cherry Angiela Ishizuka
 - Joy Faye Pacite
@@ -15,7 +15,6 @@ This project is made by Group 2:
 
 #### Employee:
 - **Employee Number**: 10001-10034
-- **Username**: admin
 - **Password**: password
 
 #### HR:

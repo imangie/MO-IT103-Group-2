@@ -10,6 +10,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Purpose: Displays the HR dashboard after login.
+ * - Allows HR to navigate between different sections (Employee Management, Attendance, Payroll).
+ * - Provides functionality to log out of the system.
+ */
+
+
 public class HRDashboard {
 
     @FXML

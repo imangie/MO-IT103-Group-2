@@ -14,6 +14,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
+/**
+ * Purpose: Manages payroll processing for employees.
+ * - Calculates payroll information based on employee salary data.
+ * - Allows HR to generate and view payroll records.
+ */
+
 
 public class HRPayroll {
 

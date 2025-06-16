@@ -4,9 +4,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import java.io.*;
 import java.util.Optional;
+
+/**
+ * Purpose: Manages the functionality for adding a new employee to the system.
+ * - Validates that all required fields are filled before submitting.
+ * - Restricts non-numeric input in specific fields (e.g., Employee Number, Phone Number).
+ * - Displays confirmation prompt and success/error alerts.
+ */
 
 public class AddEmployee {
     @FXML
@@ -22,6 +30,12 @@ public class AddEmployee {
 
     private final String employeeDataFile = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
     private HREmployeeView parentController;
+
+    private boolean phoneNumberAlertShown = false;
+    private boolean sssAlertShown = false;
+    private boolean tinAlertShown = false;
+    private boolean philHealthAlertShown = false;
+    private boolean pagIbigAlertShown = false;
 
     public void SetParentController(HREmployeeView parentController) {
         this.parentController = parentController;
@@ -40,6 +54,107 @@ public class AddEmployee {
                 addEmpButton.setDisable(!allFieldsFilled());
             });
         }
+
+        // Validation for Employee Number (Numeric Only)
+        employeeNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {  // Only digits allowed
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Employee Number must be numeric.");
+                employeeNumberField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        // Name Validation (Only Letters)
+        lastNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[a-zA-Z ]*")) {  // Only letters and spaces allowed
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Names must only contain letters and spaces.");
+                lastNameField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        firstNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[a-zA-Z ]*")) {  // Only letters and spaces allowed
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Names must only contain letters and spaces.");
+                firstNameField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        // Validate Salary and Allowances (numeric values allowed)
+        basicSalaryField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Salary must be a valid number.");
+                basicSalaryField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        riceSubsidyField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {  // Allows digits
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Rice Subsidy must be a valid number.");
+                riceSubsidyField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        phoneAllowanceField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Allowance must be a valid number.");
+                phoneAllowanceField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        clothingAllowanceField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Clothing Allowance must be a valid number.");
+                clothingAllowanceField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        hourlyRateField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Hourly Rate must be a valid number.");
+                hourlyRateField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        // Validate Pag-Ibig, TIN, SSS, PhilHealth, Phone Number (Numeric Only)
+        pagIbigField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {  // Only digits allowed
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Pag-Ibig must be numeric.");
+                pagIbigField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        tinField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[0-9-]*")) {  // Only digits and dashes allowed for TIN
+                if (!newValue.equals(oldValue)) { // Avoid setting the value if no change
+                    showAlert(Alert.AlertType.ERROR, "Invalid Input", "TIN must be numeric and can contain dashes.");
+                    tinField.setText(oldValue);  // Revert to the previous valid value
+                }
+            }
+        });
+
+        sssField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[0-9-]*")) {  // Only digits and dashes allowed for SSS
+                if (!newValue.equals(oldValue)) { // Avoid setting the value if no change
+                    showAlert(Alert.AlertType.ERROR, "Invalid Input", "SSS must be numeric and can contain dashes.");
+                    sssField.setText(oldValue);  // Revert to the previous valid value
+                }
+            }
+        });
+
+        philHealthField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {  // Only digits allowed
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "PhilHealth must be numeric.");
+                philHealthField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        phoneNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[0-9-]*")) {  // Only digits and dashes allowed
+                if (!newValue.equals(oldValue)) { // Avoid setting the value if no change
+                    showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Number must be numeric and can contain dashes.");
+                    phoneNumberField.setText(oldValue);  // Revert to the previous valid value
+                }
+            }
+        });
     }
 
     @FXML

@@ -8,6 +8,13 @@ import javafx.scene.control.TextInputDialog;
 
 import java.awt.event.MouseEvent;
 
+/**
+ * Purpose: Manages the leave requests and approvals for employees.
+ * - Allows HR to review and approve employee leave requests.
+ * - Tracks employee leave balances and usage.
+ */
+
+
 public class LeaveManagement {
 
     @FXML

@@ -2,11 +2,18 @@ package org.example.motorphui;
 
 import java.io.*;
 
+/**
+ * Purpose: Handles user authentication for both HR and employee logins.
+ * - Authenticates user credentials by checking against stored CSV files.
+ * - Retrieves employee data after successful login.
+ */
+
+
 public class Authentication {
     private static final String CREDENTIALS_FILE_PATH = "/org/example/motorphui/data/motorph_employee_credentials.csv";
     private static final String HR_CREDENTIALS_FILE_PATH = "/org/example/motorphui/data/motorph_hr_credentials.csv";
 
-    // Method for HR
+    // Method for HR Authentication
     public static boolean authenticateHR(String username, String password) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Authentication.class.getResourceAsStream(HR_CREDENTIALS_FILE_PATH)))) {
             String line;
@@ -25,24 +32,23 @@ public class Authentication {
         return false;
     }
 
-    // Method for Employee
-    public static boolean authenticate(String empId, String username, String password) {
+    // Method for Employee Authentication
+    public static boolean authenticate(String empId, String password) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 Authentication.class.getResourceAsStream(CREDENTIALS_FILE_PATH)))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length >= 3) {
-                    if (data[0].trim().equals(empId.trim()) && data[1].trim().equals(username.trim())) {
-                        return data[2].trim().equals(password.trim());
+                if (data.length >= 2) {
+                    if (data[0].trim().equals(empId.trim()) && data[2].trim().equals(password.trim())) {
+                        return true; // Authentication successful
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
-        return false;
+        return false; // Authentication Failed
     }
 
     public static Employee getEmployeeData(String empId) {

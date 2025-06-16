@@ -7,6 +7,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Purpose: Launches the main application and handles the initialization of the system.
+ * - Handles the startup process and sets up the main user interface (UI).
+ * - Manages the application lifecycle.
+ */
+
+
 public class  MainApplication extends Application {
 
     @Override

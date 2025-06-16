@@ -10,6 +10,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Purpose: Displays the landing page of the application.
+ * - Provides access to the login page for both employees and HR.
+ * - Serves as the entry point for users to access the system.
+ */
+
 
 public class LandingPage {
     @FXML private Button employees_button;

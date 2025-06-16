@@ -3,6 +3,13 @@ package org.example.motorphui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+/**
+ * Purpose: Displays and manages employee profile information.
+ * - Allows employees to view their personal details.
+ * - Provides functionality to update profile information.
+ */
+
+
 public class EmployeeProfile {
 
     @FXML
@@ -52,5 +59,16 @@ public class EmployeeProfile {
         tinLabel.setText(employee.getTin());
         clothingAllowanceLabel.setText(employee.getClothingAllowance());
         pagibigLabel.setText(employee.getPagIbig());
+    }
+
+    public class EmployeeSession {
+        public static Employee currentEmployee;
+    }
+
+    @FXML
+    public void initialize() {
+        if (EmployeeSession.currentEmployee != null) {
+            setEmployeeData(EmployeeSession.currentEmployee);
+        }
     }
 }

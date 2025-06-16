@@ -9,12 +9,16 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/**
+ * Purpose: Manages the employee login functionality.
+ * - Validates employee credentials.
+ * - Redirects to the employee dashboard after successful login.
+ */
+
+
 public class EmployeeLogin {
     @FXML
     private TextField employeeid_field;
-
-    @FXML
-    private TextField username_field;
 
     @FXML
     private Button login_button;
@@ -61,16 +65,16 @@ public class EmployeeLogin {
     @FXML
     private void handleLoginButton(ActionEvent event) {
         String empId = employeeid_field.getText();
-        String username = username_field.getText();
         String password = password_field.getText();
 
-        if (empId.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Login Failed", "All fields are required.");
+        // Check if employee ID or password is empty
+        if (empId.trim().isEmpty() || password.trim().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Login Failed", "Employee ID and Password are required.");
             return;
         }
 
-        // Authenticate user
-        if (Authentication.authenticate(empId, username, password)) {
+        // Authenticate using only employee ID and password
+        if (Authentication.authenticate(empId, password)) {
             Employee employee = Authentication.getEmployeeData(empId);
 
             try {
@@ -78,14 +82,13 @@ public class EmployeeLogin {
                 Parent root = loader.load();
 
                 EmployeeDashboard dashboardController = loader.getController();
-                dashboardController.loadProfile(employee);
+                dashboardController.setEmployee(employee);
 
                 Stage stage = (Stage) login_button.getScene().getWindow();
                 Scene scene = new Scene(root);
 
                 stage.setMinWidth(1440);
                 stage.setMinHeight(1024);
-
                 stage.setWidth(1440);
                 stage.setHeight(1024);
 
@@ -100,6 +103,7 @@ public class EmployeeLogin {
             showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid credentials. Please try again.");
         }
     }
+
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);

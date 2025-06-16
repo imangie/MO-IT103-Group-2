@@ -19,6 +19,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Purpose: Allows HR to view and manage employee records.
+ * - Displays a table of employee records.
+ * - Provides functionality to view, update, and delete employee information.
+ * - Loads and saves employee data from/to a CSV file.
+ */
+
+
 public class HREmployeeView {
 
     @FXML
@@ -198,22 +206,12 @@ public class HREmployeeView {
     private void handleDeleteEmployeeButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
         if (selectedEmployee != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Deletion");
-            alert.setHeaderText("Delete Employee: " + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName() + "?");
-            alert.setContentText("Are you sure you want to delete this employee record? This action cannot be undone.");
+            // Create DeleteEmployee instance and pass employeeList to the constructor
+            DeleteEmployee deleteEmployee = new DeleteEmployee(employeeList);
+            deleteEmployee.handleDeleteEmployeeButton(selectedEmployee);
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                employeeList.remove(selectedEmployee);
-                saveEmployeesToCSV("src/main/resources/org/example/motorphui/data/motorph_employee_data.csv");
-                refreshTable();
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle("Deletion Successful");
-                successAlert.setHeaderText(null);
-                successAlert.setContentText("Employee record deleted successfully.");
-                successAlert.showAndWait();
-            }
+            // Refresh the table after deletion
+            refreshTable();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("No Selection");

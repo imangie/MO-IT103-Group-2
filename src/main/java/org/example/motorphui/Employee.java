@@ -3,6 +3,13 @@ package org.example.motorphui;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Purpose: Represents an employee in the system.
+ * - Stores employee information such as name, address, salary, etc.
+ * - Provides getter and setter methods for each employee attribute.
+ */
+
+
 public class Employee {
     private final StringProperty employeeNumber;
     private final StringProperty lastName;

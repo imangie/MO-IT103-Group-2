@@ -9,6 +9,13 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/**
+ * Purpose: Manages the HR login functionality.
+ * - Validates HR credentials against stored data.
+ * - Redirects to the HR dashboard after successful login.
+ */
+
+
 public class HRLogin {
 
     @FXML
