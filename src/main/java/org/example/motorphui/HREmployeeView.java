@@ -1,3 +1,4 @@
+// src/main/java/org/example/motorphui/HREmployeeView.java
 package org.example.motorphui;
 
 import javafx.collections.FXCollections;
@@ -34,7 +35,6 @@ public class HREmployeeView {
     @FXML
     private Button deleteemp_button;
 
-    // Declare columns for each property in Employee class
     @FXML
     private TableColumn<Employee, String> empNumColumn;
     @FXML
@@ -51,17 +51,16 @@ public class HREmployeeView {
     private TableColumn<Employee, String> pagIbigColumn;
 
     private final ObservableList<Employee> employeeList = FXCollections.observableArrayList();
+    // Ensure this path is correct relative to your resources folder
     private final String CSV_FILE_PATH = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
 
     @FXML
     public void initialize() {
-        // Optional: set UI minimums
         root.setMinWidth(1440);
         root.setMinHeight(1024);
 
         emp_table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // Set column cell value factories
         empNumColumn.setCellValueFactory(new PropertyValueFactory<>("employeeNumber"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
@@ -70,26 +69,32 @@ public class HREmployeeView {
         tinColumn.setCellValueFactory(new PropertyValueFactory<>("tin"));
         pagIbigColumn.setCellValueFactory(new PropertyValueFactory<>("pagIbig"));
 
-        // Disable viewandupdate_button initially
+        // Initially disable update/delete buttons until an employee is selected
         viewandupdate_button.setDisable(true);
+        deleteemp_button.setDisable(true);
 
-        // Enable viewandupdate_button when a row is selected
+        // Listener to enable/disable buttons based on table selection
         emp_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            viewandupdate_button.setDisable(newSelection == null);
+            boolean isSelected = newSelection != null;
+            viewandupdate_button.setDisable(!isSelected);
+            deleteemp_button.setDisable(!isSelected);
         });
 
-        // Load CSV
         loadEmployeesFromCSV(CSV_FILE_PATH);
     }
 
     private void loadEmployeesFromCSV(String filePath) {
-        employeeList.clear(); 
+        employeeList.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line = reader.readLine();
+            String line = reader.readLine(); // Read header line
+            if (line == null) {
+                System.out.println("CSV file is empty or missing header.");
+                return;
+            }
             while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",", -1); // Allow empty fields
+                String[] data = line.split(",", -1);
 
-                // Ensure data array has enough elements
+                // Ensure data array has at least 19 elements to match expected CSV columns
                 if (data.length >= 19) {
                     Employee emp = new Employee(
                             data[0], // employeeNumber
@@ -111,7 +116,7 @@ public class HREmployeeView {
                     );
                     employeeList.add(emp);
                 } else {
-                    System.err.println("Invalid row (skipped): " + line);
+                    System.err.println("Invalid row (skipped) due to insufficient columns: " + line);
                 }
             }
             emp_table.setItems(employeeList);
@@ -120,37 +125,41 @@ public class HREmployeeView {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Load Error");
             alert.setHeaderText("Failed to load employee data.");
-            alert.setContentText("Check if the CSV file exists at:\n" + filePath);
+            alert.setContentText("Check if the CSV file exists at:\n" + filePath + "\nError: " + e.getMessage());
             alert.showAndWait();
         }
     }
 
     private void saveEmployeesToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            // Write header (assuming a fixed header for now)
+            // IMPORTANT: This header must match the column order and count of your CSV file.
+            // Ensure this matches the header in your actual CSV file
             writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
 
             for (Employee emp : employeeList) {
+                // Ensure all 19 fields are written in the correct order.
+                // Fields not directly managed by the Employee object (Status, Immediate Supervisor, Gross Semi-monthly Rate)
+                // are written as empty strings to maintain CSV column structure.
                 writer.write(String.join(",",
-                        emp.getEmployeeNumber(),
-                        emp.getLastName(),
-                        emp.getFirstName(),
-                        emp.getBirthday(),
-                        emp.getAddress(),
-                        emp.getPhoneNumber(),
-                        emp.getSss(),
-                        emp.getPhilHealth(),
-                        emp.getTin(),
-                        emp.getPagIbig(),
-                        "", // Status (assuming empty for now, not in Employee class)
-                        emp.getPosition(),
-                        "", // Immediate Supervisor (assuming empty for now, not in Employee class)
-                        emp.getBasicSalary(),
-                        emp.getRiceSubsidy(),
-                        emp.getPhoneAllowance(),
-                        emp.getClothingAllowance(),
-                        "", // Gross Semi-monthly Rate (assuming empty for now, not in Employee class)
-                        emp.getHourlyRate()
+                        emp.getEmployeeNumber(),    // 0
+                        emp.getLastName(),          // 1
+                        emp.getFirstName(),         // 2
+                        emp.getBirthday(),          // 3
+                        emp.getAddress(),           // 4
+                        emp.getPhoneNumber(),       // 5
+                        emp.getSss(),               // 6
+                        emp.getPhilHealth(),        // 7
+                        emp.getTin(),               // 8
+                        emp.getPagIbig(),           // 9
+                        "",                         // 10: Status (placeholder if not in Employee model, or pass actual status)
+                        emp.getPosition(),          // 11
+                        "",                         // 12: Immediate Supervisor (placeholder)
+                        emp.getBasicSalary(),       // 13
+                        emp.getRiceSubsidy(),       // 14
+                        emp.getPhoneAllowance(),    // 15
+                        emp.getClothingAllowance(), // 16
+                        "",                         // 17: Gross Semi-monthly Rate (placeholder)
+                        emp.getHourlyRate()         // 18
                 ));
                 writer.newLine();
             }
@@ -174,17 +183,16 @@ public class HREmployeeView {
 
                 HRViewAndUpdateEmployee controller = loader.getController();
                 controller.setEmployee(selectedEmployee);
-                controller.setParentController(this); // Pass this controller to the child
+                controller.setParentController(this);
 
                 Stage stage = new Stage();
                 stage.setTitle("View and Update Employee");
-                stage.initModality(Modality.APPLICATION_MODAL); // Block other windows
+                stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setScene(new Scene(parent));
                 stage.setResizable(false);
-                stage.showAndWait(); // Wait for the pop-up to close
+                stage.showAndWait();
 
-                // After the pop-up closes, refresh the table data
-                refreshTable();
+                refreshTable(); // Refresh table after update/delete operation in the child window
 
             } catch (IOException e) {
                 System.err.println("Error loading view and update employee window: " + e.getMessage());
@@ -205,23 +213,82 @@ public class HREmployeeView {
     }
 
     public void refreshTable() {
-        emp_table.refresh();
-        saveEmployeesToCSV(CSV_FILE_PATH);
+        // Re-load from CSV to pick up all changes (additions, deletions, updates)
         loadEmployeesFromCSV(CSV_FILE_PATH);
     }
 
-
-    // Implement Add Employee logic (placeholder)
     @FXML
     private void handleAddEmployeeButton() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Add Employee");
-        alert.setHeaderText("Add Employee functionality not yet implemented.");
-        alert.setContentText("This feature will allow adding new employee records.");
-        alert.showAndWait();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_add_employee.fxml"));
+            Parent parent = loader.load();
+
+            HRAddEmployeeController controller = loader.getController();
+            controller.setParentController(this);
+
+            // Generate the next employee number and pass it to the add controller
+            String nextEmpNum = generateNextEmployeeNumber();
+            controller.setEmployeeNumber(nextEmpNum);
+
+            Stage stage = new Stage();
+            stage.setTitle("Add New Employee");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(parent));
+            stage.setResizable(false);
+            stage.showAndWait();
+
+            refreshTable(); // Refresh table after the add operation
+
+        } catch (IOException e) {
+            System.err.println("Error loading add employee window: " + e.getMessage());
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not open the add employee window.");
+            alert.setContentText("An error occurred while trying to load the add employee form. Details: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
-    // Implement Delete Employee logic (placeholder)
+    /**
+     * Generates the next sequential employee number based on existing numbers in the list.
+     * Assumes employee numbers are purely numeric strings.
+     *
+     * @return A formatted string representing the next employee number (e.g., "00001", "00002").
+     */
+    private String generateNextEmployeeNumber() {
+        int maxEmpNum = 0;
+        if (employeeList.isEmpty()) {
+            return String.format("%05d", 1); // Start with 00001 if list is empty
+        }
+
+        for (Employee emp : employeeList) {
+            try {
+                int currentEmpNum = Integer.parseInt(emp.getEmployeeNumber());
+                if (currentEmpNum > maxEmpNum) {
+                    maxEmpNum = currentEmpNum;
+                }
+            } catch (NumberFormatException e) {
+                // Log or handle cases where employeeNumber might not be purely numeric
+                System.err.println("Non-numeric Employee Number found during ID generation: " + emp.getEmployeeNumber() + ". Skipping for max calculation.");
+            }
+        }
+        // Increment the max number and format it with leading zeros
+        // Adjust "%05d" if your employee numbers have a different number of digits (e.g., %04d for 4 digits)
+        return String.format("%05d", maxEmpNum + 1);
+    }
+
+
+    /**
+     * Called by HRAddEmployeeController to add a new employee to the list and save.
+     * @param newEmployee The Employee object to add.
+     */
+    public void addEmployee(Employee newEmployee) {
+        employeeList.add(newEmployee);
+        saveEmployeesToCSV(CSV_FILE_PATH); // Save changes immediately after adding
+    }
+
+
     @FXML
     private void handleDeleteEmployeeButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
@@ -235,7 +302,7 @@ public class HREmployeeView {
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 employeeList.remove(selectedEmployee);
                 saveEmployeesToCSV(CSV_FILE_PATH); // Save changes after deletion
-                refreshTable(); // Refresh the table
+                refreshTable(); // Refresh the table to reflect deletion
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                 successAlert.setTitle("Deletion Successful");
                 successAlert.setHeaderText(null);
@@ -249,5 +316,14 @@ public class HREmployeeView {
             alert.setContentText("Please select an employee in the table to delete.");
             alert.showAndWait();
         }
+    }
+
+    /**
+     * Called by HRViewAndUpdateEmployee to remove an employee (e.g., if deleted from that window).
+     * @param employeeToRemove The employee object to remove.
+     */
+    public void removeEmployee(Employee employeeToRemove) {
+        employeeList.remove(employeeToRemove);
+        saveEmployeesToCSV(CSV_FILE_PATH); // Save changes immediately after removal
     }
 }

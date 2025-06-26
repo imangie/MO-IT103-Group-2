@@ -1,10 +1,11 @@
+// src/main/java/org/example/motorphui/Employee.java
 package org.example.motorphui;
-
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Employee {
+    // Change fields to use StringProperty
     private final StringProperty employeeNumber;
     private final StringProperty lastName;
     private final StringProperty firstName;
@@ -22,10 +23,14 @@ public class Employee {
     private final StringProperty hourlyRate;
     private final StringProperty basicSalary;
 
-    public Employee(String employeeNumber, String lastName, String firstName, String sss, String philHealth, String tin,
-                    String pagIbig, String birthday, String address, String phoneNumber, String position,
-                    String riceSubsidy, String phoneAllowance, String clothingAllowance, String hourlyRate,
-                    String basicSalary) {
+
+    public Employee(String employeeNumber, String lastName, String firstName, String sss,
+                    String philHealth, String tin, String pagIbig, String birthday,
+                    String address, String phoneNumber, String position,
+                    String riceSubsidy, String phoneAllowance, String clothingAllowance,
+                    String hourlyRate, String basicSalary) { 
+
+        // Initialize StringProperty fields with SimpleStringProperty
         this.employeeNumber = new SimpleStringProperty(employeeNumber);
         this.lastName = new SimpleStringProperty(lastName);
         this.firstName = new SimpleStringProperty(firstName);
@@ -42,16 +47,10 @@ public class Employee {
         this.clothingAllowance = new SimpleStringProperty(clothingAllowance);
         this.hourlyRate = new SimpleStringProperty(hourlyRate);
         this.basicSalary = new SimpleStringProperty(basicSalary);
+
     }
 
-    public StringProperty employeeNumberProperty() { return employeeNumber; }
-    public StringProperty lastNameProperty() { return lastName; }
-    public StringProperty firstNameProperty() { return firstName; }
-    public StringProperty sssProperty() { return sss; }
-    public StringProperty philHealthProperty() { return philHealth; }
-    public StringProperty tinProperty() { return tin; }
-    public StringProperty pagIbigProperty() { return pagIbig; }
-
+    // --- Getters for String values (still needed for non-binding access) ---
     public String getEmployeeNumber() { return employeeNumber.get(); }
     public String getLastName() { return lastName.get(); }
     public String getFirstName() { return firstName.get(); }
@@ -69,6 +68,9 @@ public class Employee {
     public String getHourlyRate() { return hourlyRate.get(); }
     public String getBasicSalary() { return basicSalary.get(); }
 
+
+
+    // --- Setters for String values ---
     public void setEmployeeNumber(String employeeNumber) { this.employeeNumber.set(employeeNumber); }
     public void setLastName(String lastName) { this.lastName.set(lastName); }
     public void setFirstName(String firstName) { this.firstName.set(firstName); }
@@ -86,4 +88,48 @@ public class Employee {
     public void setHourlyRate(String hourlyRate) { this.hourlyRate.set(hourlyRate); }
     public void setBasicSalary(String basicSalary) { this.basicSalary.set(basicSalary); }
 
-}
+    // --- JavaFX Property Getters  ---
+    // These methods return the StringProperty objects, allowing for binding.
+    public StringProperty employeeNumberProperty() { return employeeNumber; }
+    public StringProperty lastNameProperty() { return lastName; }
+    public StringProperty firstNameProperty() { return firstName; }
+    public StringProperty sssProperty() { return sss; }
+    public StringProperty philHealthProperty() { return philHealth; }
+    public StringProperty tinProperty() { return tin; }
+    public StringProperty pagIbigProperty() { return pagIbig; }
+    public StringProperty birthdayProperty() { return birthday; }
+    public StringProperty addressProperty() { return address; }
+    public StringProperty phoneNumberProperty() { return phoneNumber; }
+    public StringProperty positionProperty() { return position; }
+    public StringProperty riceSubsidyProperty() { return riceSubsidy; }
+    public StringProperty phoneAllowanceProperty() { return phoneAllowance; }
+    public StringProperty clothingAllowanceProperty() { return clothingAllowance; }
+    public StringProperty hourlyRateProperty() { return hourlyRate; }
+    public StringProperty basicSalaryProperty() { return basicSalary; }
+
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employeeNumber='" + employeeNumber.get() + '\'' +
+                ", lastName='" + lastName.get() + '\'' +
+                ", firstName='" + firstName.get() + '\'' +
+                ", birthday='" + birthday.get() + '\'' +
+                ", address='" + address.get() + '\'' +
+                ", phoneNumber='" + phoneNumber.get() + '\'' +
+                ", sss='" + sss.get() + '\'' +
+                ", philHealth='" + philHealth.get() + '\'' +
+                ", tin='" + tin.get() + '\'' +
+                ", pagIbig='" + pagIbig.get() + '\'' +
+                //", status='" + status.get() + '\'' +
+                ", position='" + position.get() + '\'' +
+                //", immediateSupervisor='" + immediateSupervisor.get() + '\'' +
+                ", basicSalary='" + basicSalary.get() + '\'' +
+                ", riceSubsidy='" + riceSubsidy.get() + '\'' +
+                ", phoneAllowance='" + phoneAllowance.get() + '\'' +
+                ", clothingAllowance='" + clothingAllowance.get() + '\'' +
+                //", grossSemiMonthlyRate='" + grossSemiMonthlyRate.get() + '\'' +
+                ", hourlyRate='" + hourlyRate.get() + '\'' +
+                '}';
+    }
+    }
