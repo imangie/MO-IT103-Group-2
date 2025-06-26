@@ -8,13 +8,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * Purpose: Allows HR to view and manage employee payslips.
@@ -51,17 +52,19 @@ public class HRPayslip {
 
         PayPeriodCHBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (employee != null && newVal != null) {
-
-                String[] dates = ((String) newVal).split(" - ");
-                if (dates.length == 2) {
+                String[] parts = newVal.split(" ");
+                if (parts.length == 2) {
+                    String month = parts[0];
+                    String year = parts[1];
                     try {
-                        LocalDate startDate = LocalDate.parse(dates[0].trim(), DATE_FORMATTER);
-                        LocalDate endDate = LocalDate.parse(dates[1].trim(), DATE_FORMATTER);
+                        YearMonth yearMonth = YearMonth.of(Integer.parseInt(year), Month.valueOf(month.toUpperCase()));
+                        LocalDate startDate = yearMonth.atDay(1);
+                        LocalDate endDate = yearMonth.atEndOfMonth();
+
                         double hours = calculatePayPeriodHours(employee.getEmployeeNumber(), startDate, endDate);
                         setPayPeriodHours(hours);
-                    } catch (DateTimeParseException e) {
-                        System.err.println("Error parsing date from pay period string: " + newVal);
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        System.err.println("Invalid date format selected: " + newVal + " → " + e.getMessage());
                     }
                 }
             }
@@ -69,12 +72,14 @@ public class HRPayslip {
     }
 
     private void populatePayPeriodChoiceBox() {
-        Set<LocalDate> uniqueDates = new TreeSet<>();
-        System.out.println("Attempting to read attendance records from: /org/example/motorphui/data/motorph_attendance_records.csv");
+        Set<YearMonth> uniqueMonthYears = new TreeSet<>();
+        DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+        System.out.println("Reading attendance records from: /org/example/motorphui/data/motorph_attendance_records.csv");
+
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(getClass().getResourceAsStream("/org/example/motorphui/data/motorph_attendance_records.csv")))) {
 
-            System.out.println("Successfully opened stream to CSV file.");
             String line;
             boolean isFirstLine = true;
             int lineNumber = 0;
@@ -90,66 +95,31 @@ public class HRPayslip {
                 String[] data = line.split(",");
                 if (data.length >= 4) {
                     try {
-
                         LocalDate date = LocalDate.parse(data[3].trim(), DATE_FORMATTER);
-                        uniqueDates.add(date);
-
+                        uniqueMonthYears.add(YearMonth.from(date));
                     } catch (DateTimeParseException e) {
-                        System.err.println("Error parsing date from CSV line " + lineNumber + ": " + line + " -> " + e.getMessage());
+                        System.err.println("Error parsing date on line " + lineNumber + ": " + e.getMessage());
                     }
                 } else {
-                    System.err.println("Skipping malformed CSV line " + lineNumber + " (not enough columns): " + line);
+                    System.err.println("Skipping malformed line " + lineNumber + ": " + line);
                 }
             }
-            System.out.println("Finished reading CSV. Found " + uniqueDates.size() + " unique dates.");
-        } catch (IOException e) {
-            System.err.println("Error reading attendance file for pay period generation (IOException): " + e.getMessage());
-            e.printStackTrace();
-            System.err.println("Ensure 'motorph_attendance_records.csv' is in 'src/main/resources/org/example/motorphui/data/'");
-        } catch (NullPointerException e) {
-            System.err.println("Error: CSV file not found at the specified path. NullPointerException: " + e.getMessage());
-            e.printStackTrace();
-            System.err.println("Ensure 'motorph_attendance_records.csv' is in 'src/main/resources/org/example/motorphui/data/' and correctly packaged.");
-        }
 
-
-        List<LocalDate> sortedDates = new ArrayList<>(uniqueDates);
-        if (sortedDates.isEmpty()) {
-            System.out.println("No unique dates found from CSV. PayPeriodCHBox will be empty.");
+        } catch (IOException | NullPointerException e) {
+            System.err.println("Error reading attendance data: " + e.getMessage());
+            e.printStackTrace();
             return;
         }
-        Collections.sort(sortedDates); // Ensure dates are sorted
 
-        List<String> payPeriods = new ArrayList<>();
-        if (!sortedDates.isEmpty()) {
-            LocalDate currentPeriodStart = sortedDates.get(0);
-            LocalDate lastDateInPeriod = currentPeriodStart.plusDays(4); // A 5-day period (start day + 4 more days)
+        List<String> formattedMonthYears = uniqueMonthYears.stream()
+                .map(ym -> ym.getMonth().name().substring(0, 1).toUpperCase() +
+                        ym.getMonth().name().substring(1).toLowerCase() +
+                        " " + ym.getYear())
+                .collect(Collectors.toList());
 
-            for (LocalDate date : sortedDates) {
-                if (date.isAfter(lastDateInPeriod)) {
+        PayPeriodCHBox.setItems(FXCollections.observableArrayList(formattedMonthYears));
 
-                    payPeriods.add(currentPeriodStart.format(DATE_FORMATTER) + " - " + lastDateInPeriod.format(DATE_FORMATTER));
-                    currentPeriodStart = date; // Start the new period with the current date
-                    lastDateInPeriod = currentPeriodStart.plusDays(4); // Define the end of the new 5-day period
-
-                    while (currentPeriodStart.isAfter(lastDateInPeriod)) {
-                        lastDateInPeriod = lastDateInPeriod.plusDays(5); // Advance by a full period
-                    }
-                }
-
-            }
-
-            payPeriods.add(currentPeriodStart.format(DATE_FORMATTER) + " - " + lastDateInPeriod.format(DATE_FORMATTER));
-        }
-
-        System.out.println("Generated " + payPeriods.size() + " pay periods.");
-        if (!payPeriods.isEmpty()) {
-            System.out.println("First generated pay period: " + payPeriods.get(0));
-            System.out.println("Last generated pay period: " + payPeriods.get(payPeriods.size() - 1));
-        }
-
-        PayPeriodCHBox.setItems(FXCollections.observableArrayList(payPeriods));
-        System.out.println("Pay periods set to ChoiceBox.");
+        System.out.println("Available months loaded: " + formattedMonthYears);
     }
 
     public void setEmployee(Employee employee) {

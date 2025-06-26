@@ -23,17 +23,7 @@
                   <Font name="Poppins Regular" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="attendance_button" alignment="CENTER" layoutX="10.0" layoutY="144.0" mnemonicParsing="false" onAction="#onAttendanceClicked" prefHeight="45.0" prefWidth="299.0" styleClass="menu-button" text="Attendance">
-               <font>
-                  <Font name="Poppins Regular" size="20.0" />
-               </font>
-            </Button>
             <Button fx:id="payroll_button" alignment="CENTER" mnemonicParsing="false" onAction="#onPayrollClicked" prefHeight="45.0" prefWidth="299.0" styleClass="menu-button" text="Payroll">
-               <font>
-                  <Font name="Poppins Regular" size="20.0" />
-               </font>
-            </Button>
-            <Button fx:id="leave_button" alignment="CENTER" mnemonicParsing="false" onAction="#onLeaveClicked" prefHeight="45.0" prefWidth="299.0" styleClass="menu-button" text="Leave Management">
                <font>
                   <Font name="Poppins Regular" size="20.0" />
                </font>

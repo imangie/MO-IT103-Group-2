@@ -22,9 +22,6 @@ public class HRLogin {
     private Button login_button;
 
     @FXML
-    private Label back_label;
-
-    @FXML
     private TextField username_field;
 
     @FXML
@@ -104,21 +101,5 @@ public class HRLogin {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    @FXML
-    private void handleBackClick(MouseEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("landing_page.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) back_label.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

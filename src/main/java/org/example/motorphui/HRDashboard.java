@@ -22,7 +22,7 @@ public class HRDashboard {
     @FXML
     private AnchorPane contentPane;
     @FXML
-    private Button emp_button, payroll_button, leave_button, attendance_button;
+    private Button emp_button, payroll_button;
     @FXML
     private Button logout_button;
 
@@ -44,18 +44,6 @@ public class HRDashboard {
         setActiveButton(payroll_button);
     }
 
-    @FXML
-    private void onLeaveClicked() {
-        loadView("leave_management.fxml");
-        setActiveButton(leave_button);
-    }
-
-    @FXML
-    private void onAttendanceClicked() {
-        loadView("hr_attendance.fxml");
-        setActiveButton(attendance_button);
-    }
-
     private void loadView(String fxml) {
         try {
             AnchorPane pane = FXMLLoader.load(getClass().getResource(fxml));
@@ -75,9 +63,7 @@ public class HRDashboard {
     private void setActiveButton(Button active) {
         emp_button.getStyleClass().remove("menu-button-active");
         payroll_button.getStyleClass().remove("menu-button-active");
-        leave_button.getStyleClass().remove("menu-button-active");
         logout_button.getStyleClass().remove("menu-button-active");
-        attendance_button.getStyleClass().remove("menu-button-active");
 
         if (!active.getStyleClass().contains("menu-button-active")) {
             active.getStyleClass().add("menu-button-active");
@@ -87,7 +73,7 @@ public class HRDashboard {
     @FXML
     private void onLogoutClicked() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("landing_page.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_login.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) logout_button.getScene().getWindow();
