@@ -88,6 +88,27 @@ public class HRViewAndUpdateEmployee {
             });
         }
 
+        lastNameField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
+            if (!keyEvent.getCharacter().matches("[a-zA-Z]") && !keyEvent.getText().isEmpty()) {
+                keyEvent.consume();  // Discard the input if it's not a letter
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Last name must be letters.");
+            }
+        });
+
+        firstNameField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
+            if (!keyEvent.getCharacter().matches("[a-zA-Z]") && !keyEvent.getText().isEmpty()) {
+                keyEvent.consume();  // Discard the input if it's not a letter
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Last name must be letters.");
+            }
+        });
+
+        birthdayField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
+            if (!keyEvent.getCharacter().matches("[0-9/]") && !keyEvent.getText().isEmpty()) {
+                keyEvent.consume();  // Discard the input if it's not numeric or forward slashes
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Birthday must be numeric and can contain forward slashes.");
+            }
+        });
+
         // Restrict non-numeric input for Phone Number, SSS, PhilHealth, TIN, PagIbig
         phoneNumberField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9-]") && !keyEvent.getText().isEmpty()) {

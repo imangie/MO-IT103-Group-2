@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 /**
  * Purpose: Manages the HR login functionality.
  * - Validates HR credentials against stored data.
@@ -59,39 +61,27 @@ public class HRLogin {
 
     @FXML
     private void handleLoginButton(ActionEvent event) {
-        String username = username_field.getText();
-        String password = password_field.getText();
+        // The username and password fields are read, but their values are
+        // not used for authentication in this bypassed version.
 
-        if (username.trim().isEmpty() || password.trim().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Login Failed", "All fields are required.");
-            return;
-        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_dashboard.fxml"));
+            Parent root = loader.load();
 
-        // Authenticate user
-        if (Authentication.authenticateHR(username, password)) {
+            Stage stage = (Stage) login_button.getScene().getWindow();
+            Scene scene = new Scene(root);
 
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_dashboard.fxml"));
-                Parent root = loader.load();
+            stage.setMinWidth(1440);
+            stage.setMinHeight(1024);
+            stage.setWidth(1440);
+            stage.setHeight(1024);
 
-                Stage stage = (Stage) login_button.getScene().getWindow();
-                Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
 
-                stage.setMinWidth(1440);
-                stage.setMinHeight(1024);
-
-                stage.setWidth(1440);
-                stage.setHeight(1024);
-
-                stage.setScene(scene);
-                stage.show();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Error", "Error loading profile screen.");
-            }
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid credentials. Please try again.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Error loading HR dashboard screen.");
         }
     }
 
