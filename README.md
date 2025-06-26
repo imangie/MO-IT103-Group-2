@@ -10,13 +10,3 @@ This project is currently ongoing and is being developed by Group 2:
 - Thriastan Jeanne Bosing
 
 ---
-
-### Login Information
-
-#### Employee:
-- **Employee Number**: 10001-10034
-- **Password**: password
-
-#### HR:
-- **Username**: admin
-- **Password**: password
