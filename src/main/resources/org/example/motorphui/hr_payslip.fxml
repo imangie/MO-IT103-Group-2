@@ -112,5 +112,6 @@
             <Insets right="35.0" />
          </padding>
       </Label>
+      <ChoiceBox fx:id="WeekCHBox" layoutX="292.0" layoutY="429.0" prefHeight="26.0" prefWidth="173.0" />
    </children>
 </AnchorPane>

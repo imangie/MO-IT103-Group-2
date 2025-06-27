@@ -29,6 +29,8 @@ public class HRPayslip {
     @FXML
     private ChoiceBox<String> PayPeriodCHBox;
     @FXML
+    private ChoiceBox<String> WeekCHBox;
+    @FXML
     private Label hoursWorkedLabel;
 
     @FXML
@@ -51,23 +53,12 @@ public class HRPayslip {
         populatePayPeriodChoiceBox();
 
         PayPeriodCHBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (employee != null && newVal != null) {
-                String[] parts = newVal.split(" ");
-                if (parts.length == 2) {
-                    String month = parts[0];
-                    String year = parts[1];
-                    try {
-                        YearMonth yearMonth = YearMonth.of(Integer.parseInt(year), Month.valueOf(month.toUpperCase()));
-                        LocalDate startDate = yearMonth.atDay(1);
-                        LocalDate endDate = yearMonth.atEndOfMonth();
+            populateWeekChoiceBox(); // Populate Weeks once month is chosen
+            updateHoursIfReady();
+        });
 
-                        double hours = calculatePayPeriodHours(employee.getEmployeeNumber(), startDate, endDate);
-                        setPayPeriodHours(hours);
-                    } catch (Exception e) {
-                        System.err.println("Invalid date format selected: " + newVal + " → " + e.getMessage());
-                    }
-                }
-            }
+        WeekCHBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            updateHoursIfReady(); // Recalculate hours if week is selected
         });
     }
 
@@ -120,6 +111,42 @@ public class HRPayslip {
         PayPeriodCHBox.setItems(FXCollections.observableArrayList(formattedMonthYears));
 
         System.out.println("Available months loaded: " + formattedMonthYears);
+    }
+
+    private void populateWeekChoiceBox() {
+        WeekCHBox.setItems(FXCollections.observableArrayList("Week 1", "Week 2", "Week 3", "Week 4"));
+        WeekCHBox.getSelectionModel().clearSelection(); // Reset selection
+    }
+
+    private void updateHoursIfReady() {
+        String monthYear = PayPeriodCHBox.getValue();
+        String week = WeekCHBox.getValue();
+
+        if (employee == null || monthYear == null || week == null) return;
+
+        String[] parts = monthYear.split(" ");
+        if (parts.length != 2) return;
+
+        try {
+            String monthStr = parts[0];
+            int year = Integer.parseInt(parts[1]);
+            Month month = Month.valueOf(monthStr.toUpperCase());
+            YearMonth ym = YearMonth.of(year, month);
+
+            int weekNum = Integer.parseInt(week.replace("Week ", ""));
+            LocalDate start = ym.atDay(1 + (weekNum - 1) * 7);
+            LocalDate end = start.plusDays(6);
+
+            // Clamp to end of month
+            LocalDate endOfMonth = ym.atEndOfMonth();
+            if (end.isAfter(endOfMonth)) end = endOfMonth;
+
+            double hours = calculatePayPeriodHours(employee.getEmployeeNumber(), start, end);
+            setPayPeriodHours(hours);
+
+        } catch (Exception e) {
+            System.err.println("Failed to parse selection: " + e.getMessage());
+        }
     }
 
     public void setEmployee(Employee employee) {

@@ -193,7 +193,7 @@ public class AddEmployee {
                     clothingAllowanceField.getText().trim(),
                     "0",                                // grossSemiMonthlyRate - you might want to add this field
                     hourlyRateField.getText().trim()
-);
+            );
 
             // Add to parent's list and save
             if (parentController != null) {
@@ -225,7 +225,7 @@ public class AddEmployee {
                 phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
                 basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
                 statusField, immediateSupervisorField};
-        
+
         for (TextField field : fields) {
             field.clear();
         }
