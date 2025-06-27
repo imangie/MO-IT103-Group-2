@@ -25,7 +25,7 @@
             <TableColumn fx:id="pagIbigColumn" prefWidth="151.0" text="Pag-Ibig #" />
          </columns>
       </TableView>
-      <Button fx:id="genpayroll_button" layoutX="30.0" layoutY="904.0" onAction="#onGeneratePayroll" prefHeight="36.0" prefWidth="255.0" text="Generate Payroll">
+      <Button fx:id="genpayroll_button" layoutX="30.0" layoutY="904.0" onAction="#onGeneratePayroll" prefHeight="36.0" prefWidth="255.0" text="Calculate Payroll">
          <font>
             <Font name="Poppins Bold" size="16.0" />
          </font>
