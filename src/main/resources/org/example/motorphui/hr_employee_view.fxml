@@ -21,11 +21,11 @@
             <Font name="Poppins Bold" size="36.0" />
          </font>
       </Label>
-      <TableView fx:id="emp_table" layoutX="21.0" layoutY="119.0" prefHeight="739.0" prefWidth="425.0">
+      <TableView fx:id="emp_table" layoutX="21.0" layoutY="119.0" prefHeight="739.0" prefWidth="425.0" style="-fx-alignment: Center;">
          <columns>
-            <TableColumn id="emo" fx:id="empNumColumn" minWidth="100.0" prefWidth="130.0" text="Employee #" />
-            <TableColumn fx:id="lastNameColumn" minWidth="100.0" prefWidth="150.0" text="Last Name" />
-            <TableColumn fx:id="firstNameColumn" minWidth="52.0" prefWidth="150.0" text="First Name" />
+            <TableColumn id="emo" fx:id="empNumColumn" minWidth="100.0" prefWidth="130.0" style="-fx-alignment: Center;" text="Employee #" />
+            <TableColumn fx:id="lastNameColumn" minWidth="100.0" prefWidth="150.0" style="-fx-alignment: Center;" text="Last Name" />
+            <TableColumn fx:id="firstNameColumn" minWidth="52.0" prefWidth="150.0" style="-fx-alignment: Center;" text="First Name" />
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
