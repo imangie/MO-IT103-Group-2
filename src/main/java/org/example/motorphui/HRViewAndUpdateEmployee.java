@@ -1,6 +1,5 @@
 package org.example.motorphui;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,12 +11,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.util.Optional;
-
-/**
- * Purpose: Allows HR to view and update employee information in the system.
- * - Provides validation before saving updates to employee data.
- * - Displays confirmation prompts and success/error alerts to the user.
- */
 
 public class HRViewAndUpdateEmployee {
 
@@ -74,9 +67,10 @@ public class HRViewAndUpdateEmployee {
 
         employeeNumberField.setEditable(false);
     }
+
     @FXML
     private void initialize() {
-        saveButton.setDisable(true);  // Initially disable Save button
+        saveButton.setDisable(true);
         TextField[] fields = {employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
                 phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
                 basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
@@ -90,92 +84,91 @@ public class HRViewAndUpdateEmployee {
 
         lastNameField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[a-zA-Z]") && !keyEvent.getText().isEmpty()) {
-                keyEvent.consume();  // Discard the input if it's not a letter
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Last name must be letters.");
             }
         });
 
         firstNameField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[a-zA-Z]") && !keyEvent.getText().isEmpty()) {
-                keyEvent.consume();  // Discard the input if it's not a letter
-                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Last name must be letters.");
+                keyEvent.consume();
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "First name must be letters.");
             }
         });
 
         birthdayField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9/]") && !keyEvent.getText().isEmpty()) {
-                keyEvent.consume();  // Discard the input if it's not numeric or forward slashes
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Birthday must be numeric and can contain forward slashes.");
             }
         });
 
-        // Restrict non-numeric input for Phone Number, SSS, PhilHealth, TIN, PagIbig
         phoneNumberField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9-]") && !keyEvent.getText().isEmpty()) {
-                keyEvent.consume();  // Discard the input if it's not numeric or dash
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Number must be numeric and can contain dashes.");
             }
         });
 
         sssField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9-]")) {
-                keyEvent.consume(); // Allow only numbers and dash for SSS
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "SSS must be numeric and can contain dashes.");
             }
         });
 
         tinField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9-]")) {
-                keyEvent.consume(); // Allow only numbers and dash for TIN
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "TIN must be numeric and can contain dashes.");
             }
         });
 
         philHealthField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9]")) {
-                keyEvent.consume(); // Discard non-numeric input for PhilHealth
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "PhilHealth must be numeric.");
             }
         });
 
         pagIbigField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
             if (!keyEvent.getCharacter().matches("[0-9]")) {
-                keyEvent.consume(); // Discard non-numeric input for Pag-Ibig
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Pag-Ibig must be numeric.");
             }
         });
-        // Validation for salary fields (allow decimals)
+
         basicSalaryField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
-            if (!keyEvent.getCharacter().matches("[0-9.]") || basicSalaryField.getText().contains(".") && keyEvent.getCharacter().equals(".")) {
-                keyEvent.consume(); // Allow only numeric input and a single decimal point
+            if (!keyEvent.getCharacter().matches("[0-9.]") || (basicSalaryField.getText().contains(".") && keyEvent.getCharacter().equals("."))) {
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Salary must be numeric.");
             }
         });
 
         riceSubsidyField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
-            if (!keyEvent.getCharacter().matches("[0-9.]") || riceSubsidyField.getText().contains(".") && keyEvent.getCharacter().equals(".")) {
-                keyEvent.consume(); // Allow only numeric input and a single decimal point
+            if (!keyEvent.getCharacter().matches("[0-9.]") || (riceSubsidyField.getText().contains(".") && keyEvent.getCharacter().equals("."))) {
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Rice Subsidy must be numeric.");
             }
         });
 
         phoneAllowanceField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
-            if (!keyEvent.getCharacter().matches("[0-9.]") || phoneAllowanceField.getText().contains(".") && keyEvent.getCharacter().equals(".")) {
-                keyEvent.consume(); // Allow only numeric input and a single decimal point
+            if (!keyEvent.getCharacter().matches("[0-9.]") || (phoneAllowanceField.getText().contains(".") && keyEvent.getCharacter().equals("."))) {
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Allowance must be numeric.");
             }
         });
 
         clothingAllowanceField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
-            if (!keyEvent.getCharacter().matches("[0-9.]") || clothingAllowanceField.getText().contains(".") && keyEvent.getCharacter().equals(".")) {
-                keyEvent.consume(); // Allow only numeric input and a single decimal point
+            if (!keyEvent.getCharacter().matches("[0-9.]") || (clothingAllowanceField.getText().contains(".") && keyEvent.getCharacter().equals("."))) {
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Clothing Allowance must be numeric.");
             }
         });
 
         hourlyRateField.addEventFilter(KeyEvent.KEY_TYPED, keyEvent -> {
-            if (!keyEvent.getCharacter().matches("[0-9.]") || hourlyRateField.getText().contains(".") && keyEvent.getCharacter().equals(".")) {
-                keyEvent.consume(); // Allow only numeric input and a single decimal point
+            if (!keyEvent.getCharacter().matches("[0-9.]") || (hourlyRateField.getText().contains(".") && keyEvent.getCharacter().equals("."))) {
+                keyEvent.consume();
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Hourly Rate must be numeric and can contain one decimal point.");
             }
         });
@@ -195,19 +188,16 @@ public class HRViewAndUpdateEmployee {
         return true;
     }
 
-    // Validate the fields before saving
     private boolean validateEmployeeData() {
         String empNumber = employeeNumberField.getText();
         String lastName = lastNameField.getText();
         String firstName = firstNameField.getText();
 
-        // Employee Number Validation (Numeric Only)
         if (!empNumber.matches("\\d*") && !empNumber.trim().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Invalid Input", "Employee Number must be numeric.");
             return false;
         }
 
-        // Name Validation (Only Letters)
         if (!lastName.matches("[a-zA-Z ]*") && !lastName.trim().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Invalid Input", "Last Name must only contain letters and spaces.");
             return false;
@@ -218,11 +208,9 @@ public class HRViewAndUpdateEmployee {
             return false;
         }
 
-        // If all validations pass
         return true;
     }
 
-    // Show alert for invalid input
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -233,9 +221,7 @@ public class HRViewAndUpdateEmployee {
 
     @FXML
     private void handleSaveButton(ActionEvent event) {
-        // Validate the employee data before saving
         if (validateEmployeeData()) {
-            // Show confirmation dialog
             Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmAlert.setTitle("Confirm Update");
             confirmAlert.setHeaderText("Update Employee Information");
@@ -265,7 +251,6 @@ public class HRViewAndUpdateEmployee {
                         hourlyRateField.getText().trim()
                 );
 
-                // Update the employee in the parent controller
                 if (parentController != null) {
                     parentController.updateEmployee(updatedEmployee);
                     showAlert(Alert.AlertType.INFORMATION, "Success", "Employee information updated successfully.");
@@ -285,5 +270,22 @@ public class HRViewAndUpdateEmployee {
     private void closeWindow() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
+    }
+
+    // Add this method so the same controller can be used for read-only viewing
+    public void setReadOnly() {
+        TextField[] fields = {
+                employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+                phoneNumberField, sssField, philHealthField, tinField, pagIbigField, statusField,
+                positionField, immediateSupervisorField, basicSalaryField, riceSubsidyField,
+                phoneAllowanceField, clothingAllowanceField, hourlyRateField
+        };
+        for (TextField field : fields) {
+            field.setEditable(false);
+        }
+        saveButton.setVisible(false);
+        if (cancelButton != null) {
+            cancelButton.setText("Close");
+        }
     }
 }

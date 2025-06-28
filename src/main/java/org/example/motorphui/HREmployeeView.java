@@ -3,14 +3,9 @@ package org.example.motorphui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -21,12 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
-/**
- * Purpose: Allows HR to view and manage employee records.
- * - Displays a table of employee records with selected core info.
- * - Provides functionality to view (inline), update (inline), and delete employee information.
- * - Loads and saves employee data from/to a CSV file.
- */
 public class HREmployeeView {
 
     @FXML
@@ -39,13 +28,9 @@ public class HREmployeeView {
     private Button saveChangesButton;
     @FXML
     private Button deleteemp_button;
-
-    // Declare columns for each property in Employee class.
     @FXML private TableColumn<Employee, String> empNumColumn;
     @FXML private TableColumn<Employee, String> lastNameColumn;
     @FXML private TableColumn<Employee, String> firstNameColumn;
-
-    // FXML fields for the inline employee details form on the right
     @FXML private TextField employeeNumberField;
     @FXML private TextField lastNameField;
     @FXML private TextField firstNameField;
@@ -71,7 +56,6 @@ public class HREmployeeView {
     private static final String EMPLOYEE_DATA_FILE = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
 
-
     @FXML
     public void initialize() {
         root.setMinWidth(1440);
@@ -86,165 +70,161 @@ public class HREmployeeView {
 
         emp_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                employeeNumberField.setText(newSelection.getEmployeeNumber());
-                lastNameField.setText(newSelection.getLastName());
-                firstNameField.setText(newSelection.getFirstName());
-
-                if (newSelection.getBirthday() != null && !newSelection.getBirthday().isEmpty()) {
-                    try {
-                        birthdayField.setValue(LocalDate.parse(newSelection.getBirthday(), DATE_FORMATTER));
-                    } catch (DateTimeParseException e) {
-                        birthdayField.setValue(null);
-                        System.err.println("Error parsing birthday for Employee " + newSelection.getEmployeeNumber() + ": " + newSelection.getBirthday() + " - " + e.getMessage());
-                    }
-                } else {
-                    birthdayField.setValue(null);
-                }
-
-                addressField.setText(newSelection.getAddress());
-                phoneNumberField.setText(newSelection.getPhoneNumber());
-                sssField.setText(newSelection.getSss());
-                philHealthField.setText(newSelection.getPhilHealth());
-                tinField.setText(newSelection.getTin());
-                pagIbigField.setText(newSelection.getPagIbig());
-                statusField.setText(newSelection.getStatus());
-                positionField.setText(newSelection.getPosition());
-                immediateSupervisorField.setText(newSelection.getImmediateSupervisor());
-                basicSalaryField.setText(newSelection.getBasicSalary());
-                riceSubsidyField.setText(newSelection.getRiceSubsidy());
-                phoneAllowanceField.setText(newSelection.getPhoneAllowance());
-                clothingAllowanceField.setText(newSelection.getClothingAllowance());
-                grossSemiMonthlyField.setText(newSelection.getGrossSemiMonthlyRate());
-                hourlyRateField.setText(newSelection.getHourlyRate());
-
+                showEmployeeDetails(newSelection);
                 saveChangesButton.setDisable(false);
                 deleteemp_button.setDisable(false);
-
             } else {
-                employeeNumberField.clear();
-                lastNameField.clear();
-                firstNameField.clear();
-                birthdayField.setValue(null);
-                addressField.clear();
-                phoneNumberField.clear();
-                sssField.clear();
-                philHealthField.clear();
-                tinField.clear();
-                pagIbigField.clear();
-                statusField.clear();
-                positionField.clear();
-                immediateSupervisorField.clear();
-                basicSalaryField.clear();
-                riceSubsidyField.clear();
-                phoneAllowanceField.clear();
-                clothingAllowanceField.clear();
-                grossSemiMonthlyField.clear();
-                hourlyRateField.clear();
-
+                clearEmployeeDetails();
                 saveChangesButton.setDisable(true);
                 deleteemp_button.setDisable(true);
             }
         });
 
-        // Ensure buttons are initially disabled if no row is selected by default
         saveChangesButton.setDisable(true);
         deleteemp_button.setDisable(true);
 
-        // Real-time Input Validation using Listeners
-        // Validation for Employee Number (Numeric Only)
         employeeNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {  // Only digits allowed
+            if (!newValue.matches("\\d*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Employee Number must be numeric.");
-                employeeNumberField.setText(oldValue);  // Revert to the previous valid value
+                employeeNumberField.setText(oldValue);
             }
         });
 
-        // Name Validation (Only Letters and Spaces)
         lastNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("[a-zA-Z ]*")) {  // Only letters and spaces allowed
+            if (!newValue.matches("[a-zA-Z ]*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Last Name must only contain letters and spaces.");
-                lastNameField.setText(oldValue);  // Revert to the previous valid value
+                lastNameField.setText(oldValue);
             }
         });
 
         firstNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("[a-zA-Z ]*")) {  // Only letters and spaces allowed
+            if (!newValue.matches("[a-zA-Z ]*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "First Name must only contain letters and spaces.");
-                firstNameField.setText(oldValue);  // Revert to the previous valid value
+                firstNameField.setText(oldValue);
             }
         });
 
-        // Validate Salary and Allowances (numeric values allowed, including decimals for some)
         basicSalaryField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Basic Salary must be a valid number.");
-                basicSalaryField.setText(oldValue);  // Revert to the previous valid value
+                basicSalaryField.setText(oldValue);
             }
         });
 
         riceSubsidyField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {  // Allows digits (assuming whole numbers for rice subsidy)
+            if (!newValue.matches("\\d*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Rice Subsidy must be a valid number.");
-                riceSubsidyField.setText(oldValue);  // Revert to the previous valid value
+                riceSubsidyField.setText(oldValue);
             }
         });
 
         phoneAllowanceField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Allowance must be a valid number.");
-                phoneAllowanceField.setText(oldValue);  // Revert to the previous valid value
+                phoneAllowanceField.setText(oldValue);
             }
         });
 
         clothingAllowanceField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Clothing Allowance must be a valid number.");
-                clothingAllowanceField.setText(oldValue);  // Revert to the previous valid value
+                clothingAllowanceField.setText(oldValue);
             }
         });
 
         hourlyRateField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Hourly Rate must be a valid number.");
-                hourlyRateField.setText(oldValue);  // Revert to the previous valid value
+                hourlyRateField.setText(oldValue);
             }
         });
 
-        // Validate Pag-Ibig, TIN, SSS, PhilHealth, Phone Number (Numeric or Numeric with Dashes)
         pagIbigField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {  // Only digits allowed
+            if (!newValue.matches("\\d*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Pag-Ibig must be numeric.");
-                pagIbigField.setText(oldValue);  // Revert to the previous valid value
+                pagIbigField.setText(oldValue);
             }
         });
 
         tinField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("[0-9-]*")) {  // Only digits and dashes allowed for TIN
+            if (!newValue.matches("[0-9-]*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "TIN must be numeric and can contain dashes.");
-                tinField.setText(oldValue);  // Revert to the previous valid value
+                tinField.setText(oldValue);
             }
         });
 
         sssField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("[0-9-]*")) {  // Only digits and dashes allowed for SSS
+            if (!newValue.matches("[0-9-]*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "SSS must be numeric and can contain dashes.");
-                sssField.setText(oldValue);  // Revert to the previous valid value
+                sssField.setText(oldValue);
             }
         });
 
         philHealthField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {  // Only digits allowed
+            if (!newValue.matches("\\d*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "PhilHealth must be numeric.");
-                philHealthField.setText(oldValue);  // Revert to the previous valid value
+                philHealthField.setText(oldValue);
             }
         });
 
         phoneNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("[0-9-]*")) {  // Only digits and dashes allowed
+            if (!newValue.matches("[0-9-]*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Number must be numeric and can contain dashes.");
-                phoneNumberField.setText(oldValue);  // Revert to the previous valid value
+                phoneNumberField.setText(oldValue);
             }
         });
+    }
+
+    private void showEmployeeDetails(Employee emp) {
+        employeeNumberField.setText(emp.getEmployeeNumber());
+        lastNameField.setText(emp.getLastName());
+        firstNameField.setText(emp.getFirstName());
+        if (emp.getBirthday() != null && !emp.getBirthday().isEmpty()) {
+            try {
+                birthdayField.setValue(LocalDate.parse(emp.getBirthday(), DATE_FORMATTER));
+            } catch (DateTimeParseException e) {
+                birthdayField.setValue(null);
+            }
+        } else {
+            birthdayField.setValue(null);
+        }
+        addressField.setText(emp.getAddress());
+        phoneNumberField.setText(emp.getPhoneNumber());
+        sssField.setText(emp.getSss());
+        philHealthField.setText(emp.getPhilHealth());
+        tinField.setText(emp.getTin());
+        pagIbigField.setText(emp.getPagIbig());
+        statusField.setText(emp.getStatus());
+        positionField.setText(emp.getPosition());
+        immediateSupervisorField.setText(emp.getImmediateSupervisor());
+        basicSalaryField.setText(emp.getBasicSalary());
+        riceSubsidyField.setText(emp.getRiceSubsidy());
+        phoneAllowanceField.setText(emp.getPhoneAllowance());
+        clothingAllowanceField.setText(emp.getClothingAllowance());
+        grossSemiMonthlyField.setText(emp.getGrossSemiMonthlyRate());
+        hourlyRateField.setText(emp.getHourlyRate());
+    }
+
+    private void clearEmployeeDetails() {
+        employeeNumberField.clear();
+        lastNameField.clear();
+        firstNameField.clear();
+        birthdayField.setValue(null);
+        addressField.clear();
+        phoneNumberField.clear();
+        sssField.clear();
+        philHealthField.clear();
+        tinField.clear();
+        pagIbigField.clear();
+        statusField.clear();
+        positionField.clear();
+        immediateSupervisorField.clear();
+        basicSalaryField.clear();
+        riceSubsidyField.clear();
+        phoneAllowanceField.clear();
+        clothingAllowanceField.clear();
+        grossSemiMonthlyField.clear();
+        hourlyRateField.clear();
     }
 
     private void loadEmployeesFromCSV() {
@@ -256,32 +236,14 @@ public class HREmployeeView {
                 String[] data = line.split(",", -1);
                 if (data.length == 19) {
                     Employee emp = new Employee(
-                            data[0], // employeeNumber
-                            data[1], // lastName
-                            data[2], // firstName
-                            data[3], // birthday
-                            data[4], // address
-                            data[5], // phoneNumber
-                            data[6], // sss
-                            data[7], // philHealth
-                            data[8], // tin
-                            data[9], // pagIbig
-                            data[10], // status
-                            data[11], // position
-                            data[12], // immediateSupervisor
-                            data[13], // basicSalary
-                            data[14], // riceSubsidy
-                            data[15], // phoneAllowance
-                            data[16], // clothingAllowance
-                            data[17], // grossSemiMonthlyRate
-                            data[18]
+                            data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9],
+                            data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18]
                     );
                     employeeList.add(emp);
                 }
             }
             emp_table.setItems(employeeList);
         } catch (IOException e) {
-            e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to load employee data.");
         }
     }
@@ -301,8 +263,6 @@ public class HREmployeeView {
     public void handleSaveChangesButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
         if (selectedEmployee != null) {
-
-            // Basic validation for required fields (still good to have for final check)
             if (employeeNumberField.getText().trim().isEmpty() ||
                     lastNameField.getText().trim().isEmpty() ||
                     firstNameField.getText().trim().isEmpty() ||
@@ -311,7 +271,6 @@ public class HREmployeeView {
                 return;
             }
 
-            // This isValidDouble check complements the listeners by also catching empty fields if they're meant to be numeric.
             if (!isValidDouble(basicSalaryField.getText(), "Basic Salary") ||
                     !isValidDouble(riceSubsidyField.getText(), "Rice Subsidy") ||
                     !isValidDouble(phoneAllowanceField.getText(), "Phone Allowance") ||
@@ -349,13 +308,18 @@ public class HREmployeeView {
                         grossSemiMonthlyField.getText(),
                         hourlyRateField.getText()
                 );
-
                 updateEmployee(updatedEmployee);
+                for (Employee emp : emp_table.getItems()) {
+                    if (emp.getEmployeeNumber().equals(updatedEmployee.getEmployeeNumber())) {
+                        emp_table.getSelectionModel().select(emp);
+                        showEmployeeDetails(emp);
+                        break;
+                    }
+                }
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Employee record updated successfully!");
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Save operation cancelled.");
             }
-
         } else {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an employee in the table to update.");
         }
@@ -376,25 +340,7 @@ public class HREmployeeView {
                 saveEmployeesToCSV(EMPLOYEE_DATA_FILE);
                 refreshTable();
                 showAlert(Alert.AlertType.INFORMATION, "Deletion Successful", "Employee record deleted successfully.");
-                employeeNumberField.clear();
-                lastNameField.clear();
-                firstNameField.clear();
-                birthdayField.setValue(null);
-                addressField.clear();
-                phoneNumberField.clear();
-                sssField.clear();
-                philHealthField.clear();
-                tinField.clear();
-                pagIbigField.clear();
-                statusField.clear();
-                positionField.clear();
-                immediateSupervisorField.clear();
-                basicSalaryField.clear();
-                riceSubsidyField.clear();
-                phoneAllowanceField.clear();
-                clothingAllowanceField.clear();
-                grossSemiMonthlyField.clear();
-                hourlyRateField.clear();
+                clearEmployeeDetails();
                 saveChangesButton.setDisable(true);
                 deleteemp_button.setDisable(true);
             } else {
@@ -405,6 +351,11 @@ public class HREmployeeView {
         }
     }
 
+    @FXML
+    private void handleUpdateEmployee() {
+        handleSaveChangesButton();
+    }
+
     public void refreshTable() {
         loadEmployeesFromCSV();
     }
@@ -412,7 +363,6 @@ public class HREmployeeView {
     private void saveEmployeesToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
-
             for (Employee emp : employeeList) {
                 writer.write(String.join(",",
                         emp.getEmployeeNumber(),
@@ -438,7 +388,6 @@ public class HREmployeeView {
                 writer.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Save Error", "Failed to save employee data.");
         }
     }

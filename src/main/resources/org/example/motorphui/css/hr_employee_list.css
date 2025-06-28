@@ -2,22 +2,25 @@
     -fx-background-color: #F2F4F7;
 }
 
-#genpayroll_button:hover {
-    -fx-background-color: #F51835;
-    -fx-cursor: hand;
-}
-
-#genpayroll_button {
-    -fx-background-color: #C5172E;
+#genpayroll_button,
+#addemp_button,
+#updateemp_button,
+#viewemp_button {
+    -fx-background-color: #c5172e;
     -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-family: 'Poppins Bold';
+    -fx-font-size: 16px;
+    -fx-border-color: transparent;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 4, 0.2, 0, 2);
 }
 
-#addemp_button:hover{
-    -fx-background-color: #F51835;
+#genpayroll_button:hover,
+#addemp_button:hover,
+#updateemp_button:hover,
+#viewemp_button:hover {
+    -fx-background-color: #a01026;
     -fx-cursor: hand;
-}
-
-#addemp_button{
-    -fx-background-color: #C5172E;
-    -fx-text-fill: white;
 }
