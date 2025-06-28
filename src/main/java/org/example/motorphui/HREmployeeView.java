@@ -38,8 +38,6 @@ public class HREmployeeView {
     @FXML
     private Button saveChangesButton;
     @FXML
-    private Button addemp_button;
-    @FXML
     private Button deleteemp_button;
 
     // Declare columns for each property in Employee class.
@@ -459,40 +457,6 @@ public class HREmployeeView {
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Save Error", "Failed to save employee data.");
-        }
-    }
-
-    public void addEmployee(Employee employee) {
-        employeeList.add(employee);
-        saveEmployeesToCSV(EMPLOYEE_DATA_FILE);
-        refreshTable();
-    }
-
-    @FXML
-    public void openAddEmployeeWindow() {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirm Add Employee");
-        confirmation.setHeaderText("Adding New Employee?");
-        confirmation.setContentText("Are you sure you want to add a new employee record?");
-
-        Optional<ButtonType> result = confirmation.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/motorphui/add_employee.fxml"));
-                Parent root = loader.load();
-
-                AddEmployee addController = loader.getController();
-                addController.SetParentController(this);
-
-                Stage stage = new Stage();
-                stage.setTitle("Add New Employee");
-                stage.setScene(new Scene(root));
-                stage.showAndWait();
-            } catch (IOException e) {
-                showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to open Add Employee form: " + e.getMessage());
-            }
-        } else {
-            showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Add employee operation cancelled.");
         }
     }
 

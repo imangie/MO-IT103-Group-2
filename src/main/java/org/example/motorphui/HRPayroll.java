@@ -6,13 +6,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.Optional;
 
 /**
  * Purpose: Manages payroll processing for employees.
@@ -26,9 +23,13 @@ public class HRPayroll {
     @FXML
     private TableView<Employee> emp_table;
     @FXML
+    private Button addemp_button;
+    @FXML
     private TableColumn<Employee, String> empNumColumn, lastNameColumn, firstNameColumn, sssColumn, philHealthColumn, tinColumn, pagIbigColumn;
     @FXML
     private final ObservableList<Employee> employeeData = FXCollections.observableArrayList();
+
+    private static final String EMPLOYEE_DATA_FILE = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
 
     public void initialize() {
         empNumColumn.setCellValueFactory(cellData -> cellData.getValue().employeeNumberProperty());
@@ -181,6 +182,121 @@ public class HRPayroll {
         } catch (Exception e) {
             System.out.println("Invalid time format: " + time);
             return 0.0;
+        }
+    }
+    public void addEmployee(Employee employee) {
+        employeeData.add(employee);
+        saveEmployeesToCSV(EMPLOYEE_DATA_FILE);
+        refreshTable();
+    }
+
+    public void refreshTable() {
+        loadEmployeesFromCSV();
+    }
+
+    @FXML
+    public void openAddEmployeeWindow() {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirm Add Employee");
+        confirmation.setHeaderText("Adding New Employee?");
+        confirmation.setContentText("Are you sure you want to add a new employee record?");
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/motorphui/add_employee.fxml"));
+                Parent root = loader.load();
+
+                NewEmployee addController = loader.getController();
+                addController.SetParentController(this);
+
+                Stage stage = new Stage();
+                stage.setTitle("Add New Employee");
+                stage.setScene(new Scene(root));
+                stage.showAndWait();
+            } catch (IOException e) {
+                showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to open Add Employee form: " + e.getMessage());
+            }
+        } else {
+            showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Add employee operation cancelled.");
+        }
+    }
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    private void saveEmployeesToCSV(String filePath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
+
+            for (Employee emp : employeeData) {
+                writer.write(String.join(",",
+                        emp.getEmployeeNumber(),
+                        emp.getLastName(),
+                        emp.getFirstName(),
+                        emp.getBirthday(),
+                        emp.getAddress(),
+                        emp.getPhoneNumber(),
+                        emp.getSss(),
+                        emp.getPhilHealth(),
+                        emp.getTin(),
+                        emp.getPagIbig(),
+                        emp.getStatus(),
+                        emp.getPosition(),
+                        emp.getImmediateSupervisor(),
+                        emp.getBasicSalary(),
+                        emp.getRiceSubsidy(),
+                        emp.getPhoneAllowance(),
+                        emp.getClothingAllowance(),
+                        emp.getGrossSemiMonthlyRate(),
+                        emp.getHourlyRate()
+                ));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Save Error", "Failed to save employee data.");
+        }
+    }
+    private void loadEmployeesFromCSV() {
+        employeeData.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",", -1);
+                if (data.length == 19) {
+                    Employee emp = new Employee(
+                            data[0], // employeeNumber
+                            data[1], // lastName
+                            data[2], // firstName
+                            data[3], // birthday
+                            data[4], // address
+                            data[5], // phoneNumber
+                            data[6], // sss
+                            data[7], // philHealth
+                            data[8], // tin
+                            data[9], // pagIbig
+                            data[10], // status
+                            data[11], // position
+                            data[12], // immediateSupervisor
+                            data[13], // basicSalary
+                            data[14], // riceSubsidy
+                            data[15], // phoneAllowance
+                            data[16], // clothingAllowance
+                            data[17], // grossSemiMonthlyRate
+                            data[18]
+                    );
+                    employeeData.add(emp);
+                }
+            }
+            emp_table.setItems(employeeData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to load employee data.");
         }
     }
 }
