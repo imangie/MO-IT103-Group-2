@@ -41,26 +41,9 @@ public class HREmployeeView {
     private Button deleteemp_button;
 
     // Declare columns for each property in Employee class.
-    // These are commented out because you've removed them from FXML.
     @FXML private TableColumn<Employee, String> empNumColumn;
     @FXML private TableColumn<Employee, String> lastNameColumn;
     @FXML private TableColumn<Employee, String> firstNameColumn;
-    //@FXML private TableColumn<Employee, String> birthdayColumn;
-    //@FXML private TableColumn<Employee, String> addressColumn;
-    //@FXML private TableColumn<Employee, String> phoneNumberColumn;
-    //@FXML private TableColumn<Employee, String> sssColumn;
-    //@FXML private TableColumn<Employee, String> philHealthColumn;
-    //@FXML private TableColumn<Employee, String> tinColumn;
-    //@FXML private TableColumn<Employee, String> pagIbigColumn;
-    //@FXML private TableColumn<Employee, String> statusColumn;
-    //@FXML private TableColumn<Employee, String> positionColumn;
-    //@FXML private TableColumn<Employee, String> supervisorColumn;
-    //@FXML private TableColumn<Employee, String> basicSalaryColumn;
-    //@FXML private TableColumn<Employee, String> riceSubsidyColumn;
-    //@FXML private TableColumn<Employee, String> phoneAllowanceColumn;
-    //@FXML private TableColumn<Employee, String> clothingAllowanceColumn;
-    //@FXML private TableColumn<Employee, String> grossSemiMonthlyColumn;
-    //@FXML private TableColumn<Employee, String> hourlyRateColumn;
 
     // FXML fields for the inline employee details form on the right
     @FXML private TextField employeeNumberField;

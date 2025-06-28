@@ -11,3 +11,13 @@
     -fx-background-color: #C5172E;
     -fx-text-fill: white;
 }
+
+#addemp_button:hover{
+    -fx-background-color: #F51835;
+    -fx-cursor: hand;
+}
+
+#addemp_button{
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
