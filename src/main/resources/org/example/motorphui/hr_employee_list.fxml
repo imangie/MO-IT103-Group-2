@@ -30,5 +30,10 @@
             <Font name="Poppins Bold" size="16.0" />
          </font>
       </Button>
+      <Button fx:id="addemp_button" layoutX="314.0" layoutY="904.0" onAction="#openAddEmployeeWindow" prefHeight="36.0" prefWidth="255.0" text="New Employee">
+         <font>
+            <Font name="Poppins Bold" size="16.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

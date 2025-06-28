@@ -28,7 +28,7 @@ public class NewEmployee {
     private Button cancelButton;
 
     private final String employeeDataFile = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
-    private HREmployeeView parentController;
+    private HRPayroll parentController;
 
     private boolean phoneNumberAlertShown = false;
     private boolean sssAlertShown = false;
@@ -36,7 +36,7 @@ public class NewEmployee {
     private boolean philHealthAlertShown = false;
     private boolean pagIbigAlertShown = false;
 
-    public void SetParentController(HREmployeeView parentController) {
+    public void SetParentController(HRPayroll parentController) {
         this.parentController = parentController;
     }
 

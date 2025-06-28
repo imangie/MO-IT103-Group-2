@@ -38,13 +38,7 @@
          </font>
       </Button>
 
-      <Button fx:id="addemp_button" layoutX="21.0" layoutY="896.0" onAction="#openAddEmployeeWindow" prefHeight="36.0" prefWidth="255.0" text="New Employee" AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="21.0">
-         <font>
-            <Font name="Poppins Bold" size="16.0" />
-         </font>
-      </Button>
-
-      <Button fx:id="deleteemp_button" layoutX="301.0" layoutY="896.0" onAction="#handleDeleteEmployeeButton" prefHeight="36.0" prefWidth="255.0" text="Delete Record" AnchorPane.bottomAnchor="92.0" AnchorPane.leftAnchor="301.0">
+      <Button fx:id="deleteemp_button" layoutX="558.0" layoutY="894.0" onAction="#handleDeleteEmployeeButton" prefHeight="36.0" prefWidth="255.0" text="Delete Record" AnchorPane.bottomAnchor="93.20000000000005" AnchorPane.leftAnchor="558.0">
          <font>
             <Font name="Poppins Bold" size="16.0" />
          </font>

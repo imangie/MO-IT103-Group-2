@@ -23,8 +23,6 @@ public class HRDashboard {
     private AnchorPane contentPane;
     @FXML
     private Button emp_button, payroll_button;
-    @FXML
-    private Button logout_button;
 
     @FXML
     public void initialize() {
@@ -63,25 +61,9 @@ public class HRDashboard {
     private void setActiveButton(Button active) {
         emp_button.getStyleClass().remove("menu-button-active");
         payroll_button.getStyleClass().remove("menu-button-active");
-        logout_button.getStyleClass().remove("menu-button-active");
 
         if (!active.getStyleClass().contains("menu-button-active")) {
             active.getStyleClass().add("menu-button-active");
-        }
-    }
-
-    @FXML
-    private void onLogoutClicked() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_login.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) logout_button.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
