@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="1024.0" prefWidth="1140.0" stylesheets="@css/payroll.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.HRPayroll">
+<AnchorPane fx:id="root" prefHeight="1024.0" prefWidth="1140.0" stylesheets="@css/hr_employee_list.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.HRPayroll">
    <children>
-      <Label fx:id="payroll_label" layoutX="20.0" layoutY="35.0" text="Payroll">
+      <Label fx:id="payroll_label" layoutX="20.0" layoutY="35.0" text="Employee List">
          <font>
             <Font name="Poppins Bold" size="36.0" />
          </font>

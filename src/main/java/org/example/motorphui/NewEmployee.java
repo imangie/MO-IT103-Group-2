@@ -4,9 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import java.io.*;
+
 import java.util.Optional;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Optional;
  * - Displays confirmation prompt and success/error alerts.
  */
 
-public class AddEmployee {
+public class NewEmployee {
     @FXML
     private TextField employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
             phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,

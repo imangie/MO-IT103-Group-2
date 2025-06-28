@@ -481,7 +481,7 @@ public class HREmployeeView {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/motorphui/add_employee.fxml"));
                 Parent root = loader.load();
 
-                AddEmployee addController = loader.getController();
+                NewEmployee addController = loader.getController();
                 addController.SetParentController(this);
 
                 Stage stage = new Stage();

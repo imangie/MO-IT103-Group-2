@@ -3,8 +3,6 @@ package org.example.motorphui;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -18,13 +16,13 @@ import java.util.Optional;
  */
 
 
-public class DeleteEmployee {
+public class DeleteRecord {
 
     private final ObservableList<Employee> employeeList;
     private final String EMPLOYEE_DATA_FILE = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
 
     // Constructor that accepts the employeeList
-    public DeleteEmployee(ObservableList<Employee> employeeList) {
+    public DeleteRecord(ObservableList<Employee> employeeList) {
         this.employeeList = employeeList;
     }
 
