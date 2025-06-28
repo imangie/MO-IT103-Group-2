@@ -18,7 +18,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Optional;
 
 public class HREmployeeView {
 
@@ -32,8 +31,7 @@ public class HREmployeeView {
     private Button viewandupdate_button;
     @FXML
     private Button addemp_button;
-    @FXML
-    private Button deleteemp_button;
+
 
     @FXML
     private TableColumn<Employee, String> empNumColumn;
@@ -51,7 +49,6 @@ public class HREmployeeView {
     private TableColumn<Employee, String> pagIbigColumn;
 
     private final ObservableList<Employee> employeeList = FXCollections.observableArrayList();
-    // Ensure this path is correct relative to your resources folder
     private final String CSV_FILE_PATH = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
 
     @FXML
@@ -69,15 +66,13 @@ public class HREmployeeView {
         tinColumn.setCellValueFactory(new PropertyValueFactory<>("tin"));
         pagIbigColumn.setCellValueFactory(new PropertyValueFactory<>("pagIbig"));
 
-        // Initially disable update/delete buttons until an employee is selected
+        // Initially disable update button until an employee is selected
         viewandupdate_button.setDisable(true);
-        deleteemp_button.setDisable(true);
 
-        // Listener to enable/disable buttons based on table selection
+        // Listener to enable/disable view and update button based on table selection
         emp_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             boolean isSelected = newSelection != null;
             viewandupdate_button.setDisable(!isSelected);
-            deleteemp_button.setDisable(!isSelected);
         });
 
         loadEmployeesFromCSV(CSV_FILE_PATH);
@@ -132,14 +127,12 @@ public class HREmployeeView {
 
     private void saveEmployeesToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            // IMPORTANT: This header must match the column order and count of your CSV file.
+
             // Ensure this matches the header in your actual CSV file
             writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
 
             for (Employee emp : employeeList) {
-                // Ensure all 19 fields are written in the correct order.
-                // Fields not directly managed by the Employee object (Status, Immediate Supervisor, Gross Semi-monthly Rate)
-                // are written as empty strings to maintain CSV column structure.
+
                 writer.write(String.join(",",
                         emp.getEmployeeNumber(),    // 0
                         emp.getLastName(),          // 1
@@ -186,7 +179,7 @@ public class HREmployeeView {
                 controller.setParentController(this);
 
                 Stage stage = new Stage();
-                stage.setTitle("View and Update Employee");
+                stage.setTitle("MotorPH Portal");
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setScene(new Scene(parent));
                 stage.setResizable(false);
@@ -220,10 +213,10 @@ public class HREmployeeView {
     @FXML
     private void handleAddEmployeeButton() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_add_employee.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("add_employee.fxml"));
             Parent parent = loader.load();
 
-            HRAddEmployeeController controller = loader.getController();
+            AddEmployee controller = loader.getController();
             controller.setParentController(this);
 
             // Generate the next employee number and pass it to the add controller
@@ -250,12 +243,8 @@ public class HREmployeeView {
         }
     }
 
-    /**
-     * Generates the next sequential employee number based on existing numbers in the list.
-     * Assumes employee numbers are purely numeric strings.
-     *
-     * @return A formatted string representing the next employee number (e.g., "00001", "00002").
-     */
+
+     //Generates the next sequential employee number based on existing numbers in the list.
     private String generateNextEmployeeNumber() {
         int maxEmpNum = 0;
         if (employeeList.isEmpty()) {
@@ -274,54 +263,35 @@ public class HREmployeeView {
             }
         }
         // Increment the max number and format it with leading zeros
-        // Adjust "%05d" if your employee numbers have a different number of digits (e.g., %04d for 4 digits)
         return String.format("%05d", maxEmpNum + 1);
     }
+    public void updateEmployee(Employee updatedEmployee) {
+        boolean foundAndUpdated = false;
+        for (int i = 0; i < employeeList.size(); i++) {
+            // Find the employee by their unique employee number
+            if (employeeList.get(i).getEmployeeNumber().equals(updatedEmployee.getEmployeeNumber())) {
+                employeeList.set(i, updatedEmployee); // Replace the old object with the updated one
+                foundAndUpdated = true;
+                break; // Found and updated, exit loop
+            }
+        }
 
+        if (foundAndUpdated) {
+            saveEmployeesToCSV(CSV_FILE_PATH); // Save changes immediately after updating
+        } else {
+            System.err.println("Error: Could not find employee " + updatedEmployee.getEmployeeNumber() + " to update.");
+        }
+    }
 
-    /**
-     * Called by HRAddEmployeeController to add a new employee to the list and save.
-     * @param newEmployee The Employee object to add.
-     */
+   //Called by AddEmployee to add a new employee to the list and save.
     public void addEmployee(Employee newEmployee) {
         employeeList.add(newEmployee);
         saveEmployeesToCSV(CSV_FILE_PATH); // Save changes immediately after adding
     }
 
 
-    @FXML
-    private void handleDeleteEmployeeButton() {
-        Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
-        if (selectedEmployee != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Deletion");
-            alert.setHeaderText("Delete Employee: " + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName() + "?");
-            alert.setContentText("Are you sure you want to delete this employee record? This action cannot be undone.");
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                employeeList.remove(selectedEmployee);
-                saveEmployeesToCSV(CSV_FILE_PATH); // Save changes after deletion
-                refreshTable(); // Refresh the table to reflect deletion
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle("Deletion Successful");
-                successAlert.setHeaderText(null);
-                successAlert.setContentText("Employee record deleted successfully.");
-                successAlert.showAndWait();
-            }
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Employee Selected");
-            alert.setContentText("Please select an employee in the table to delete.");
-            alert.showAndWait();
-        }
-    }
-
-    /**
-     * Called by HRViewAndUpdateEmployee to remove an employee (e.g., if deleted from that window).
-     * @param employeeToRemove The employee object to remove.
-     */
+    //Called by HRViewAndUpdateEmployee to remove an employee
     public void removeEmployee(Employee employeeToRemove) {
         employeeList.remove(employeeToRemove);
         saveEmployeesToCSV(CSV_FILE_PATH); // Save changes immediately after removal

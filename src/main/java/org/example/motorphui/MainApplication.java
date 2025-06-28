@@ -11,7 +11,7 @@ public class  MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("landing_page.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("hr_dashboard.fxml"));
         Scene scene = new Scene(fxmlLoader.load()); //
 
         stage.setTitle("MotorPH");

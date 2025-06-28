@@ -1,4 +1,3 @@
-// src/main/java/org/example/motorphui/HRViewAndUpdateEmployee.java
 package org.example.motorphui;
 
 import javafx.fxml.FXML;
@@ -6,9 +5,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import org.example.motorphui.model.Payslip; // Import the Payslip class
 
 public class HRViewAndUpdateEmployee {
 
@@ -34,34 +39,52 @@ public class HRViewAndUpdateEmployee {
     @FXML private Button deleteButton;
     @FXML private Button updateModeButton;
 
-    private Employee employee; // The employee being viewed/updated
-    private HREmployeeView parentController; // Reference to the main HR view controller
+    @FXML private ComboBox<String> yearComboBox;
+    @FXML private ComboBox<String> payPeriodComboBox;
+    @FXML private TextArea payslipTextArea;
 
-    private TextField[] editableFields; // Array to easily manage editable state of fields
+    private Employee employee;
+    private HREmployeeView parentController; // This is the main table view controller
+
+    private TextField[] editableFields;
+    private Payroll payroll;
+
 
     @FXML
     public void initialize() {
-        // Initialize the array of fields that can be edited
         editableFields = new TextField[]{
                 lastNameField, firstNameField, birthdayField, addressField, phoneNumberField,
                 sssField, philHealthField, tinField, pagIbigField, positionField,
                 basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField
         };
 
-        // Set fields to non-editable and hide save/cancel buttons initially
         setFieldsEditable(false);
         saveButton.setVisible(false);
         cancelButton.setVisible(false);
-        updateModeButton.setVisible(true); // Show update mode button
-        deleteButton.setVisible(true);    // Show delete button
-        employeeNumberField.setEditable(false); // Employee number is never editable
+        updateModeButton.setVisible(true);
+        deleteButton.setVisible(true);
+        employeeNumberField.setEditable(false);
+        employeeNumberField.setStyle("-fx-control-inner-background: #e0e0e0;");
+
+        payslipTextArea.setEditable(false);
+        payslipTextArea.setFont(javafx.scene.text.Font.font("monospace", 12));
+
+        payroll = new Payroll();
+
+        populatePayslipComboBoxes();
+
+        yearComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+
+            if (newVal != null && employee != null) {
+                populatePayPeriodComboBox(newVal, employee.getEmployeeNumber());
+            } else if (newVal == null) {
+                payPeriodComboBox.getItems().clear();
+            } else { // employee == null
+                payPeriodComboBox.getItems().clear();
+            }
+        });
     }
 
-    /**
-     * Sets the Employee object to be displayed and updated.
-     * Populates all text fields with the employee's data.
-     * @param employee The Employee object.
-     */
     public void setEmployee(Employee employee) {
         this.employee = employee;
 
@@ -82,119 +105,126 @@ public class HRViewAndUpdateEmployee {
         clothingAllowanceField.setText(employee.getClothingAllowance());
         hourlyRateField.setText(employee.getHourlyRate());
 
-        // Ensure fields are not editable when initially setting the employee
         setFieldsEditable(false);
         saveButton.setVisible(false);
         cancelButton.setVisible(false);
         updateModeButton.setVisible(true);
         deleteButton.setVisible(true);
+
+        payslipTextArea.clear();
+        if (yearComboBox.getValue() != null) {
+            populatePayPeriodComboBox(yearComboBox.getValue(), employee.getEmployeeNumber());
+        } else {
+        }
     }
 
-    /**
-     * Sets the reference to the parent controller (HREmployeeView) to allow communication.
-     * @param controller The HREmployeeView instance.
-     */
     public void setParentController(HREmployeeView controller) {
         this.parentController = controller;
     }
 
-    /**
-     * Sets the editable state of the designated text fields.
-     * @param editable True to make fields editable, false otherwise.
-     */
     private void setFieldsEditable(boolean editable) {
+        String editableStyle = "";
+        String viewOnlyStyle = "-fx-control-inner-background: #e0e0e0;";
+
         for (TextField field : editableFields) {
             if (field != null) {
                 field.setEditable(editable);
+                if (editable) {
+                    field.setStyle(editableStyle);
+                } else {
+                    field.setStyle(viewOnlyStyle);
+                }
             }
         }
     }
 
-    /**
-     * Handles the action when the "Update Mode" button is clicked.
-     * Makes fields editable and changes button visibility.
-     */
     @FXML
     private void handleUpdateModeButton() {
         setFieldsEditable(true);
         updateModeButton.setVisible(false);
         saveButton.setVisible(true);
         cancelButton.setVisible(true);
-        deleteButton.setVisible(false); // Hide delete button during editing
+        deleteButton.setVisible(false);
     }
 
-    /**
-     * Handles the action when the "Save" button is clicked.
-     * Saves updated employee information and reverts UI state.
-     */
     @FXML
     private void handleSaveButton() {
         if (employee != null) {
-            // --- Input Validation (add more specific validation as needed) ---
-            if (lastNameField.getText().trim().isEmpty() || firstNameField.getText().trim().isEmpty() ||
-                    birthdayField.getText().trim().isEmpty() || addressField.getText().trim().isEmpty() ||
-                    phoneNumberField.getText().trim().isEmpty() || sssField.getText().trim().isEmpty() ||
-                    philHealthField.getText().trim().isEmpty() || tinField.getText().trim().isEmpty() ||
-                    pagIbigField.getText().trim().isEmpty() || positionField.getText().trim().isEmpty() ||
-                    basicSalaryField.getText().trim().isEmpty() || riceSubsidyField.getText().trim().isEmpty() ||
-                    phoneAllowanceField.getText().trim().isEmpty() || clothingAllowanceField.getText().trim().isEmpty() ||
-                    hourlyRateField.getText().trim().isEmpty()) {
+            // Input validation for mandatory text fields (cannot be empty)
+            if (lastNameField.getText().trim().isEmpty() ||
+                    firstNameField.getText().trim().isEmpty() ||
+                    birthdayField.getText().trim().isEmpty() ||
+                    addressField.getText().trim().isEmpty() ||
+                    phoneNumberField.getText().trim().isEmpty() ||
+                    positionField.getText().trim().isEmpty() ||
+                    sssField.getText().trim().isEmpty() ||
+                    philHealthField.getText().trim().isEmpty() ||
+                    tinField.getText().trim().isEmpty() ||
+                    pagIbigField.getText().trim().isEmpty())
+            {
 
-                showAlert(Alert.AlertType.WARNING, "Missing Information", null, "Please fill in all employee details.");
+                showAlert(Alert.AlertType.WARNING, "Missing Information", null, "Please fill in all mandatory employee details.");
                 return;
             }
 
-            // Basic numeric validation for salary/rate fields
-            try {
-                Double.parseDouble(basicSalaryField.getText());
-                Double.parseDouble(riceSubsidyField.getText());
-                Double.parseDouble(phoneAllowanceField.getText());
-                Double.parseDouble(clothingAllowanceField.getText());
-                Double.parseDouble(hourlyRateField.getText());
-            } catch (NumberFormatException e) {
-                showAlert(Alert.AlertType.WARNING, "Invalid Input", null, "Please enter valid numeric values for salary and allowance fields.");
+            // Numeric format validation for fields that must contain numbers
+
+            if (!isValidNumericInput(basicSalaryField.getText()) ||
+                    !isValidNumericInput(riceSubsidyField.getText()) ||
+                    !isValidNumericInput(phoneAllowanceField.getText()) ||
+                    !isValidNumericInput(clothingAllowanceField.getText()) ||
+                    !isValidNumericInput(hourlyRateField.getText()))
+            {
+
+                showAlert(Alert.AlertType.WARNING, "Invalid Input", null,
+                        "Please ensure all numeric fields (e.g., salaries, allowances, SSS, PhilHealth, TIN, Pag-IBIG) contain valid numbers.");
                 return;
             }
+            Employee updatedEmployee = new Employee(
+                    employee.getEmployeeNumber(), // The employee number does not change
+                    lastNameField.getText(),
+                    firstNameField.getText(),
+                    sssField.getText(),
+                    philHealthField.getText(),
+                    tinField.getText(),
+                    pagIbigField.getText(),
+                    birthdayField.getText(),
+                    addressField.getText(),
+                    phoneNumberField.getText(),
+                    positionField.getText(),
+                    riceSubsidyField.getText(),
+                    phoneAllowanceField.getText(),
+                    clothingAllowanceField.getText(),
+                    hourlyRateField.getText(),
+                    basicSalaryField.getText()
+            );
 
-            // Update the Employee object with new values from text fields
-            employee.setLastName(lastNameField.getText());
-            employee.setFirstName(firstNameField.getText());
-            employee.setBirthday(birthdayField.getText());
-            employee.setAddress(addressField.getText());
-            employee.setPhoneNumber(phoneNumberField.getText());
-            employee.setSss(sssField.getText());
-            employee.setPhilHealth(philHealthField.getText());
-            employee.setTin(tinField.getText());
-            employee.setPagIbig(pagIbigField.getText());
-            employee.setPosition(positionField.getText());
-            employee.setBasicSalary(basicSalaryField.getText());
-            employee.setRiceSubsidy(riceSubsidyField.getText());
-            employee.setPhoneAllowance(phoneAllowanceField.getText());
-            employee.setClothingAllowance(clothingAllowanceField.getText());
-            employee.setHourlyRate(hourlyRateField.getText());
-
-            // Inform the parent controller (HREmployeeView) to refresh its table
-            // The HREmployeeView.refreshTable() reloads from CSV, effectively saving changes.
             if (parentController != null) {
                 parentController.refreshTable();
+                parentController.updateEmployee(updatedEmployee);
             }
 
             showAlert(Alert.AlertType.INFORMATION, "Update Successful", null, "Employee information updated successfully.");
 
-            // Revert UI to read-only state
             setFieldsEditable(false);
             saveButton.setVisible(false);
             cancelButton.setVisible(false);
             updateModeButton.setVisible(true);
-            deleteButton.setVisible(true); // Show delete button after saving
-            closeWindow(); // Close the update window
+            deleteButton.setVisible(true);
+            closeWindow();
         }
     }
 
-    /**
-     * Handles the action when the "Delete" button is clicked.
-     * Confirms deletion and informs the parent controller to remove the employee.
-     */
+    private boolean isValidNumericInput(String text) {
+        try {
+            Double.parseDouble(text);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+
     @FXML
     private void handleDeleteButton() {
         if (employee != null) {
@@ -206,29 +236,27 @@ public class HRViewAndUpdateEmployee {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 if (parentController != null) {
-                    parentController.removeEmployee(employee); // Delegate removal to parent
+                    parentController.removeEmployee(employee);
                 }
                 showAlert(Alert.AlertType.INFORMATION, "Deletion Successful", null, "Employee record deleted successfully.");
-                closeWindow(); // Close the update window after deletion
+                closeWindow();
             }
         }
     }
 
-    /**
-     * Handles the action when the "Cancel" button is clicked.
-     * Discards changes and reverts fields to original values, then restores UI state.
-     */
     @FXML
     private void handleCancelButton() {
         if (employee != null) {
-            setEmployee(this.employee); // Re-populate fields with original data and set to read-only
-            // The setEmployee method handles button visibility correctly for read-only mode.
-            deleteButton.setVisible(true); // Ensure delete button is visible after canceling edits
+            setEmployee(this.employee);
+            setFieldsEditable(false);
+            saveButton.setVisible(false);
+            cancelButton.setVisible(false);
+            updateModeButton.setVisible(true);
+            deleteButton.setVisible(true);
         }
     }
 
     private void closeWindow() {
-        // Find the stage and close it
         Stage stage = (Stage) (saveButton != null ? saveButton : (cancelButton != null ? cancelButton : deleteButton)).getScene().getWindow();
         stage.close();
     }
@@ -239,5 +267,59 @@ public class HRViewAndUpdateEmployee {
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private void populatePayslipComboBoxes() {
+        Set<String> uniqueYears = payroll.getUniqueYearsFromAttendance();
+        yearComboBox.getItems().setAll(uniqueYears);
+        if (!uniqueYears.isEmpty()) {
+            yearComboBox.getSelectionModel().selectFirst();
+        } else {
+        }
+    }
+
+    private void populatePayPeriodComboBox(String year, String employeeNumber) {
+        payPeriodComboBox.getItems().clear();
+        List<String> periodsList = payroll.getSortedPayPeriodsForEmployee(year, employeeNumber);
+        payPeriodComboBox.getItems().setAll(periodsList);
+        if (!periodsList.isEmpty()) {
+            payPeriodComboBox.getSelectionModel().selectFirst();
+        } else {
+        }
+    }
+
+
+    @FXML
+    private void handleCalculatePayslipButton() {
+        if (employee == null) {
+            showAlert(Alert.AlertType.WARNING, "No Employee Selected", null, "Please select an employee first.");
+            return;
+        }
+        String selectedYear = yearComboBox.getSelectionModel().getSelectedItem();
+        String selectedPayPeriod = payPeriodComboBox.getSelectionModel().getSelectedItem();
+
+        if (selectedYear == null || selectedPayPeriod == null) {
+            showAlert(Alert.AlertType.WARNING, "Missing Selection", null, "Please select both a year and a pay period.");
+            return;
+        }
+
+        try {
+            Payslip payslip = payroll.calculateFullPayslip(employee, selectedYear, selectedPayPeriod);
+
+            // Set the formatted payslip text to the TextArea
+            String formattedPayslip = payslip.formatPayslip();
+            payslipTextArea.setText(formattedPayslip);
+
+        } catch (IllegalArgumentException e) {
+            showAlert(Alert.AlertType.ERROR, "Calculation Error", "Invalid Pay Period Data",
+                    "There was an error processing the pay period data: " + e.getMessage());
+            payslipTextArea.setText("Error calculating payslip.");
+        } catch (Exception e) { // Catch any other unexpected errors during calculation
+            showAlert(Alert.AlertType.ERROR, "Calculation Error", "An unexpected error occurred",
+                    "Failed to calculate payslip: " + e.getMessage() + "\n" +
+                            "Please check employee data and attendance records.");
+            payslipTextArea.setText("Error calculating payslip.");
+            e.printStackTrace(); // Log the full stack trace for debugging
+        }
     }
 }

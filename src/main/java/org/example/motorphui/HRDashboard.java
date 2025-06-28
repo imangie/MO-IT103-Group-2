@@ -30,7 +30,7 @@ public class HRDashboard {
         loadView("hr_employee_view.fxml");
         setActiveButton(emp_button);
     }
-
+/*
     @FXML
     private void onPayrollClicked() {
         loadView("payroll.fxml");
@@ -47,7 +47,7 @@ public class HRDashboard {
     private void onAttendanceClicked() {
         loadView("hr_attendance.fxml");
         setActiveButton(attendance_button);
-    }
+    }*/
 
     private void loadView(String fxml) {
         try {
@@ -67,16 +67,16 @@ public class HRDashboard {
 
     private void setActiveButton(Button active) {
         emp_button.getStyleClass().remove("menu-button-active");
-        payroll_button.getStyleClass().remove("menu-button-active");
+        /*payroll_button.getStyleClass().remove("menu-button-active");
         leave_button.getStyleClass().remove("menu-button-active");
         logout_button.getStyleClass().remove("menu-button-active");
-        attendance_button.getStyleClass().remove("menu-button-active");
+        attendance_button.getStyleClass().remove("menu-button-active"); */
 
         if (!active.getStyleClass().contains("menu-button-active")) {
             active.getStyleClass().add("menu-button-active");
         }
     }
-
+/*
     @FXML
     private void onLogoutClicked() {
         try {
@@ -90,5 +90,5 @@ public class HRDashboard {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

@@ -6,7 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class HRAddEmployeeController {
+public class AddEmployee {
 
     @FXML private TextField employeeNumberField; // For displaying the auto-generated number
     @FXML private TextField lastNameField;
@@ -27,6 +27,13 @@ public class HRAddEmployeeController {
 
     private HREmployeeView parentController;
 
+    @FXML
+    public void initialize() {
+        // Set the employee number field to be non-editable with light gray background.
+        employeeNumberField.setEditable(false);
+        employeeNumberField.setStyle("-fx-control-inner-background: #e0e0e0;");
+    }
+
     // Method to set the reference to the parent controller (HREmployeeView)
     public void setParentController(HREmployeeView controller) {
         this.parentController = controller;
@@ -39,8 +46,7 @@ public class HRAddEmployeeController {
 
     @FXML
     private void handleAddButton() {
-        // --- Input Validation ---
-        // Check if all required text fields are not empty
+        // Input Validation. Check if all required text fields are not empty
         if (lastNameField.getText().trim().isEmpty() || firstNameField.getText().trim().isEmpty() ||
                 birthdayField.getText().trim().isEmpty() || addressField.getText().trim().isEmpty() ||
                 phoneNumberField.getText().trim().isEmpty() || sssField.getText().trim().isEmpty() ||
@@ -107,7 +113,6 @@ public class HRAddEmployeeController {
     }
 
     private void closeWindow() {
-        // Get the stage from any control's scene and close it
         Stage stage = (Stage) lastNameField.getScene().getWindow();
         stage.close();
     }
