@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 
 
-public class HRPayroll {
+public class HREmployeeList {
 
     @FXML
     private TableView<Employee> emp_table;

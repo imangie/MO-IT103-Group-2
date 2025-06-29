@@ -1,6 +1,5 @@
 package org.example.motorphui;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -44,9 +43,9 @@ public class HRViewAndUpdateEmployee {
     @FXML private Button cancelButton;
 
     private Employee employee;
-    private HREmployeeView parentController;
+    private HRUpdateEmployeeInformation parentController;
 
-    public void setParentController(HREmployeeView controller) {
+    public void setParentController(HRUpdateEmployeeInformation controller) {
         this.parentController = controller;
     }
 

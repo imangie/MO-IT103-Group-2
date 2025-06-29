@@ -3,13 +3,9 @@ package org.example.motorphui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,7 +22,7 @@ import java.util.Optional;
  * - Provides functionality to view (inline), update (inline), and delete employee information.
  * - Loads and saves employee data from/to a CSV file.
  */
-public class HREmployeeView {
+public class HRUpdateEmployeeInformation {
 
     @FXML
     private AnchorPane root;
