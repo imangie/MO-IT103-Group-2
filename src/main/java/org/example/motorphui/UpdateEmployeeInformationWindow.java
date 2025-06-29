@@ -236,29 +236,9 @@ public class UpdateEmployeeInformationWindow {
             updateSaveButtonState();
         });
 
-        statusField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("[a-zA-Z ]*")) {
-                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Status must only contain letters and spaces.");
-                statusField.setText(oldVal); // Revert to the previous valid value
-            }
-            updateSaveButtonState();
-        });
-
-        positionField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("[a-zA-Z ]*")) {
-                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Position must only contain letters and spaces.");
-                positionField.setText(oldVal); // Revert to the previous valid value
-            }
-            updateSaveButtonState();
-        });
-
-        immediateSupervisorField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("[a-zA-Z ]*")) {
-                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Immediate Supervisor's name must only contain letters and spaces.");
-                immediateSupervisorField.setText(oldVal); // Revert to the previous valid value
-            }
-            updateSaveButtonState();
-        });
+        statusField.textProperty().addListener((obs, oldVal, newVal) -> updateSaveButtonState());
+        positionField.textProperty().addListener((obs, oldVal, newVal) -> updateSaveButtonState());
+        immediateSupervisorField.textProperty().addListener((obs, oldVal, newVal) -> updateSaveButtonState());
 
         // Validate Salary and Allowances (numeric values allowed, including decimals for some)
         basicSalaryField.textProperty().addListener((observable, oldValue, newValue) -> {
