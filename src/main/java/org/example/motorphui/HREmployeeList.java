@@ -23,7 +23,7 @@ public class HREmployeeList {
     @FXML
     private TableView<Employee> emp_table;
     @FXML
-    private Button addemp_button;
+    private Button newEmployeeButton;
     @FXML
     private TableColumn<Employee, String> empNumColumn, lastNameColumn, firstNameColumn, sssColumn, philHealthColumn, tinColumn, pagIbigColumn;
     @FXML
@@ -108,7 +108,7 @@ public class HREmployeeList {
         }
     }
 
-    private void generatePayrollForEmployee(Employee employee) {
+    private void calculatePayrollForEmployee(Employee employee) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_payslip.fxml"));
             Parent root = loader.load();
@@ -126,11 +126,11 @@ public class HREmployeeList {
     }
 
     @FXML
-    private void onGeneratePayroll() {
+    private void onCalculatePayroll() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
 
         if (selectedEmployee != null) {
-            generatePayrollForEmployee(selectedEmployee);
+            calculatePayrollForEmployee(selectedEmployee);
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("No Selection");
@@ -300,16 +300,3 @@ public class HREmployeeList {
         }
     }
 }
-    // Initialization method to set up the TableView and its columns
-    // Set the columns' cell value factories (this binds each column to a property in the Employee class)
-    // Then load the employee data into the table
-
-    // Create a method for the "Generate Payroll" Button
-    // Get the SELECTED employee from the TableView
-    // This is where the logic for generating the payroll will go
-    // Generate a payroll slip for the selected employee
-
-    // Example: generatePayrollForEmployee(selectedEmployee);
-    // After generating the payroll, display it in a new window (hr_payslip.fxml)
-
-    // If no employee is selected, show a message to the user

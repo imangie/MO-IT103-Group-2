@@ -17,13 +17,13 @@
                   <Image url="@images/MotorPHWhite.png" />
                </image>
             </ImageView>
-
-            <Button fx:id="emp_button" alignment="CENTER" mnemonicParsing="false" onAction="#onEmployeesClicked" prefHeight="45.0" prefWidth="299.0" styleClass="menu-button" text="Update Employee Information">
+            <Button fx:id="employeeList" alignment="CENTER" mnemonicParsing="false" onAction="#onPayrollClicked" prefHeight="45.0" prefWidth="299.0" styleClass="menu-button" text="Employee List">
                <font>
                   <Font name="Poppins Regular" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="payroll_button" alignment="CENTER" mnemonicParsing="false" onAction="#onPayrollClicked" prefHeight="45.0" prefWidth="299.0" styleClass="menu-button" text="Employee List">
+
+            <Button fx:id="updateEmpInfo" alignment="CENTER" mnemonicParsing="false" onAction="#onEmployeesClicked" prefHeight="45.0" prefWidth="299.0" styleClass="menu-button" text="Update Employee Information">
                <font>
                   <Font name="Poppins Regular" size="20.0" />
                </font>

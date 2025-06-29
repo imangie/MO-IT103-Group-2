@@ -1,0 +1,19 @@
+#calculatePayrollButton {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#calculatePayrollButton:hover {
+    -fx-background-color: #F51835;
+    -fx-cursor: hand;
+}
+
+#newEmployeeButton {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#newEmployeeButton:hover {
+    -fx-background-color: #F51835;
+    -fx-cursor: hand;
+}

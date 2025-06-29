@@ -22,24 +22,24 @@ public class HRDashboard {
     @FXML
     private AnchorPane contentPane;
     @FXML
-    private Button emp_button, payroll_button;
+    private Button updateEmpInfo, employeeList;
 
     @FXML
     public void initialize() {
-        loadView("hr_update_employee_information_view.fxml");
-        setActiveButton(emp_button);
+        loadView("hr_employee_list.fxml");
+        setActiveButton(employeeList);
     }
 
     @FXML
     private void onEmployeesClicked() {
         loadView("hr_update_employee_information_view.fxml");
-        setActiveButton(emp_button);
+        setActiveButton(updateEmpInfo);
     }
 
     @FXML
     private void onPayrollClicked() {
         loadView("hr_employee_list.fxml");
-        setActiveButton(payroll_button);
+        setActiveButton(employeeList);
     }
 
     private void loadView(String fxml) {
@@ -59,8 +59,8 @@ public class HRDashboard {
     }
 
     private void setActiveButton(Button active) {
-        emp_button.getStyleClass().remove("menu-button-active");
-        payroll_button.getStyleClass().remove("menu-button-active");
+        updateEmpInfo.getStyleClass().remove("menu-button-active");
+        employeeList.getStyleClass().remove("menu-button-active");
 
         if (!active.getStyleClass().contains("menu-button-active")) {
             active.getStyleClass().add("menu-button-active");

@@ -18,25 +18,14 @@
     -fx-cursor: hand;
 }
 
-
-#saveChangesButton:hover {
-    -fx-background-color: #F51835;
-    -fx-cursor: hand;
-}
-
-#saveChangesButton {
+#cancelButton {
     -fx-background-color: #C5172E;
     -fx-text-fill: white;
 }
 
-#addemp_button:hover {
+#cancelButton:hover {
     -fx-background-color: #F51835;
     -fx-cursor: hand;
-}
-
-#addemp_button {
-    -fx-background-color: #C5172E;
-    -fx-text-fill: white;
 }
 
 #deleteemp_button:hover {
@@ -47,4 +36,23 @@
 #deleteemp_button {
     -fx-background-color: #C5172E;
     -fx-text-fill: white;
+}
+
+#saveButton:hover {
+    -fx-background-color: #F51835;
+    -fx-cursor: hand;
+}
+
+#saveButton {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#saveButton:disabled {
+    -fx-background-color: #A0A0A0; /* inactive state */
+    -fx-cursor: default;
+}
+
+#saveButton:disabled:hover {
+    -fx-background-color: #B0B0B0; /* Slightly lighter grey on hover */
 }

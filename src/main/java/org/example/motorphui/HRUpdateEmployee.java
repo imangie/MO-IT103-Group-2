@@ -18,7 +18,7 @@ import java.util.Optional;
  * - Displays confirmation prompts and success/error alerts to the user.
  */
 
-public class HRViewAndUpdateEmployee {
+public class HRUpdateEmployee {
 
     @FXML private TextField employeeNumberField;
     @FXML private TextField lastNameField;
