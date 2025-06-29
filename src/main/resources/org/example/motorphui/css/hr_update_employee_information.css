@@ -8,6 +8,17 @@
     -fx-effect: dropshadow(gaussian, #CCCED5, 10, 0, 2, 4);
 }
 
+#updateButton {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#updateButton:hover {
+    -fx-background-color: #F51835;
+    -fx-cursor: hand;
+}
+
+
 #saveChangesButton:hover {
     -fx-background-color: #F51835;
     -fx-cursor: hand;

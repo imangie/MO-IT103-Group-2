@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
@@ -32,17 +33,30 @@
          </columnResizePolicy>
       </TableView>
 
-      <Button fx:id="saveChangesButton" layoutX="844.0" layoutY="895.0" onAction="#handleSaveChangesButton" prefHeight="36.0" prefWidth="255.0" stylesheets="@css/hr_update_employee_information.css" text="Save" AnchorPane.bottomAnchor="93.0" AnchorPane.leftAnchor="844.0">
+      <Button fx:id="updateButton" layoutX="558.0" layoutY="894.0" onAction="#handleUpdateButton" prefHeight="36.0" prefWidth="255.0" text="Update Employee" AnchorPane.bottomAnchor="93.0" AnchorPane.leftAnchor="558.0">
          <font>
             <Font name="Poppins Bold" size="16.0" />
          </font>
       </Button>
 
-      <Button fx:id="deleteemp_button" layoutX="558.0" layoutY="894.0" onAction="#handleDeleteEmployeeButton" prefHeight="36.0" prefWidth="255.0" text="Delete Record" AnchorPane.bottomAnchor="93.20000000000005" AnchorPane.leftAnchor="558.0">
+      <Button fx:id="deleteemp_button" layoutX="844.0" layoutY="894.0" onAction="#handleDeleteEmployeeButton" prefHeight="36.0" prefWidth="255.0" text="Delete Record" AnchorPane.bottomAnchor="93.0" AnchorPane.leftAnchor="844.0">
          <font>
             <Font name="Poppins Bold" size="16.0" />
          </font>
       </Button>
+
+      <Button fx:id="saveButton" layoutX="558.0" layoutY="894.0" onAction="#handleSaveButton" prefHeight="36.0" prefWidth="255.0" text="Save" visible="false" managed="false" AnchorPane.bottomAnchor="93.0" AnchorPane.leftAnchor="558.0">
+         <font>
+            <Font name="Poppins Bold" size="16.0" />
+         </font>
+      </Button>
+
+      <Button fx:id="cancelButton" layoutX="844.0" layoutY="894.0" onAction="#handleCancelButton" prefHeight="36.0" prefWidth="255.0" text="Cancel" visible="false" managed="false" AnchorPane.bottomAnchor="93.0" AnchorPane.leftAnchor="844.0">
+         <font>
+            <Font name="Poppins Bold" size="16.0" />
+         </font>
+      </Button>
+
       <AnchorPane fx:id="employeeDetails" layoutX="471.0" layoutY="119.0" prefHeight="752.0" prefWidth="627.0">
          <children>
             <GridPane hgap="30.0" layoutX="36.0" layoutY="45.0" prefHeight="702.0" prefWidth="560.0" vgap="10.0">

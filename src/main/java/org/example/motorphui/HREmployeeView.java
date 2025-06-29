@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
-
 /**
  * Purpose: Allows HR to view and manage employee records.
  * - Displays a table of employee records with selected core info.
@@ -35,36 +34,46 @@ public class HREmployeeView {
     private TableView<Employee> emp_table;
     @FXML
     private Label emp_info_label;
-    @FXML
-    private Button saveChangesButton;
+
+    // Old Save Changes button is removed
+    // @FXML private Button saveChangesButton; // REMOVED
+
     @FXML
     private Button deleteemp_button;
 
+    // New buttons for update workflow
+    @FXML
+    private Button updateButton;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button cancelButton;
+
     // Declare columns for each property in Employee class.
-    @FXML private TableColumn<Employee, String> empNumColumn;
-    @FXML private TableColumn<Employee, String> lastNameColumn;
-    @FXML private TableColumn<Employee, String> firstNameColumn;
+    @FXML    private TableColumn<Employee, String> empNumColumn;
+    @FXML    private TableColumn<Employee, String> lastNameColumn;
+    @FXML    private TableColumn<Employee, String> firstNameColumn;
 
     // FXML fields for the inline employee details form on the right
-    @FXML private TextField employeeNumberField;
-    @FXML private TextField lastNameField;
-    @FXML private TextField firstNameField;
-    @FXML private DatePicker birthdayField;
-    @FXML private TextField addressField;
-    @FXML private TextField phoneNumberField;
-    @FXML private TextField sssField;
-    @FXML private TextField philHealthField;
-    @FXML private TextField tinField;
-    @FXML private TextField pagIbigField;
-    @FXML private TextField positionField;
-    @FXML private TextField basicSalaryField;
-    @FXML private TextField riceSubsidyField;
-    @FXML private TextField phoneAllowanceField;
-    @FXML private TextField clothingAllowanceField;
-    @FXML private TextField hourlyRateField;
-    @FXML private TextField statusField;
-    @FXML private TextField immediateSupervisorField;
-    @FXML private TextField grossSemiMonthlyField;
+    @FXML    private TextField employeeNumberField;
+    @FXML    private TextField lastNameField;
+    @FXML    private TextField firstNameField;
+    @FXML    private DatePicker birthdayField;
+    @FXML    private TextField addressField;
+    @FXML    private TextField phoneNumberField;
+    @FXML    private TextField sssField;
+    @FXML    private TextField philHealthField;
+    @FXML    private TextField tinField;
+    @FXML    private TextField pagIbigField;
+    @FXML    private TextField positionField;
+    @FXML    private TextField basicSalaryField;
+    @FXML    private TextField riceSubsidyField;
+    @FXML    private TextField phoneAllowanceField;
+    @FXML    private TextField clothingAllowanceField;
+    @FXML    private TextField hourlyRateField;
+    @FXML    private TextField statusField;
+    @FXML    private TextField immediateSupervisorField;
+    @FXML    private TextField grossSemiMonthlyField;
 
     private final ObservableList<Employee> employeeList = FXCollections.observableArrayList();
 
@@ -84,81 +93,48 @@ public class HREmployeeView {
 
         loadEmployeesFromCSV();
 
-        emp_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                employeeNumberField.setText(newSelection.getEmployeeNumber());
-                lastNameField.setText(newSelection.getLastName());
-                firstNameField.setText(newSelection.getFirstName());
+        // Initially disable all text fields and date picker
+        setFieldsEditable(false);
+        employeeNumberField.setEditable(false);
+        employeeNumberField.setStyle("-fx-control-inner-background: #F0F0F0;");
 
-                if (newSelection.getBirthday() != null && !newSelection.getBirthday().isEmpty()) {
-                    try {
-                        birthdayField.setValue(LocalDate.parse(newSelection.getBirthday(), DATE_FORMATTER));
-                    } catch (DateTimeParseException e) {
-                        birthdayField.setValue(null);
-                        System.err.println("Error parsing birthday for Employee " + newSelection.getEmployeeNumber() + ": " + newSelection.getBirthday() + " - " + e.getMessage());
-                    }
-                } else {
-                    birthdayField.setValue(null);
-                }
+        // Initially hide Save and Cancel buttons
+        saveButton.setVisible(false);
+        saveButton.setManaged(false); // Does not take up space in display
+        cancelButton.setVisible(false);
+        cancelButton.setManaged(false);
 
-                addressField.setText(newSelection.getAddress());
-                phoneNumberField.setText(newSelection.getPhoneNumber());
-                sssField.setText(newSelection.getSss());
-                philHealthField.setText(newSelection.getPhilHealth());
-                tinField.setText(newSelection.getTin());
-                pagIbigField.setText(newSelection.getPagIbig());
-                statusField.setText(newSelection.getStatus());
-                positionField.setText(newSelection.getPosition());
-                immediateSupervisorField.setText(newSelection.getImmediateSupervisor());
-                basicSalaryField.setText(newSelection.getBasicSalary());
-                riceSubsidyField.setText(newSelection.getRiceSubsidy());
-                phoneAllowanceField.setText(newSelection.getPhoneAllowance());
-                clothingAllowanceField.setText(newSelection.getClothingAllowance());
-                grossSemiMonthlyField.setText(newSelection.getGrossSemiMonthlyRate());
-                hourlyRateField.setText(newSelection.getHourlyRate());
-
-                saveChangesButton.setDisable(false);
-                deleteemp_button.setDisable(false);
-
-            } else {
-                employeeNumberField.clear();
-                lastNameField.clear();
-                firstNameField.clear();
-                birthdayField.setValue(null);
-                addressField.clear();
-                phoneNumberField.clear();
-                sssField.clear();
-                philHealthField.clear();
-                tinField.clear();
-                pagIbigField.clear();
-                statusField.clear();
-                positionField.clear();
-                immediateSupervisorField.clear();
-                basicSalaryField.clear();
-                riceSubsidyField.clear();
-                phoneAllowanceField.clear();
-                clothingAllowanceField.clear();
-                grossSemiMonthlyField.clear();
-                hourlyRateField.clear();
-
-                saveChangesButton.setDisable(true);
-                deleteemp_button.setDisable(true);
-            }
-        });
-
-        // Ensure buttons are initially disabled if no row is selected by default
-        saveChangesButton.setDisable(true);
+        // Initially disable Update and Delete buttons
+        updateButton.setDisable(true);
         deleteemp_button.setDisable(true);
 
-        // Real-time Input Validation using Listeners
-        // Validation for Employee Number (Numeric Only)
-        employeeNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {  // Only digits allowed
-                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Employee Number must be numeric.");
-                employeeNumberField.setText(oldValue);  // Revert to the previous valid value
+
+        emp_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                displayEmployeeDetails(newSelection);
+                updateButton.setDisable(false);
+                deleteemp_button.setDisable(false);
+                // When a new row is selected, if we were in edit mode, cancel it.
+                if (saveButton.isVisible()) {
+                    handleCancelButton();
+                }
+            } else {
+                clearEmployeeDetails();
+                updateButton.setDisable(true);
+                deleteemp_button.setDisable(true);
+                // Ensure edit mode is off if no selection
+                setFieldsEditable(false);
+                saveButton.setVisible(false);
+                saveButton.setManaged(false);
+                cancelButton.setVisible(false);
+                cancelButton.setManaged(false);
+                updateButton.setVisible(true);
+                updateButton.setManaged(true);
             }
         });
 
+        // Real-time Input Validation using Listeners
+ 
         // Name Validation (Only Letters and Spaces)
         lastNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("[a-zA-Z ]*")) {  // Only letters and spaces allowed
@@ -247,10 +223,94 @@ public class HREmployeeView {
         });
     }
 
+    private void displayEmployeeDetails(Employee employee) {
+        employeeNumberField.setText(employee.getEmployeeNumber());
+        lastNameField.setText(employee.getLastName());
+        firstNameField.setText(employee.getFirstName());
+
+        if (employee.getBirthday() != null && !employee.getBirthday().isEmpty()) {
+            try {
+                birthdayField.setValue(LocalDate.parse(employee.getBirthday(), DATE_FORMATTER));
+            } catch (DateTimeParseException e) {
+                birthdayField.setValue(null);
+                System.err.println("Error parsing birthday for Employee " + employee.getEmployeeNumber() + ": " + employee.getBirthday() + " - " + e.getMessage());
+            }
+        } else {
+            birthdayField.setValue(null);
+        }
+
+        addressField.setText(employee.getAddress());
+        phoneNumberField.setText(employee.getPhoneNumber());
+        sssField.setText(employee.getSss());
+        philHealthField.setText(employee.getPhilHealth());
+        tinField.setText(employee.getTin());
+        pagIbigField.setText(employee.getPagIbig());
+        statusField.setText(employee.getStatus());
+        positionField.setText(employee.getPosition());
+        immediateSupervisorField.setText(employee.getImmediateSupervisor());
+        basicSalaryField.setText(employee.getBasicSalary());
+        riceSubsidyField.setText(employee.getRiceSubsidy());
+        phoneAllowanceField.setText(employee.getPhoneAllowance());
+        clothingAllowanceField.setText(employee.getClothingAllowance());
+        grossSemiMonthlyField.setText(employee.getGrossSemiMonthlyRate());
+        hourlyRateField.setText(employee.getHourlyRate());
+    }
+
+    private void clearEmployeeDetails() {
+        employeeNumberField.clear();
+        lastNameField.clear();
+        firstNameField.clear();
+        birthdayField.setValue(null);
+        addressField.clear();
+        phoneNumberField.clear();
+        sssField.clear();
+        philHealthField.clear();
+        tinField.clear();
+        pagIbigField.clear();
+        statusField.clear();
+        positionField.clear();
+        immediateSupervisorField.clear();
+        basicSalaryField.clear();
+        riceSubsidyField.clear();
+        phoneAllowanceField.clear();
+        clothingAllowanceField.clear();
+        grossSemiMonthlyField.clear();
+        hourlyRateField.clear();
+    }
+
+
+      // editable true to make fields editable, false to make them non-editable.
+
+    private void setFieldsEditable(boolean editable) {
+        TextField[] textFields = {
+                lastNameField, firstNameField, addressField,
+                phoneNumberField, sssField, philHealthField, tinField, pagIbigField,
+                positionField, basicSalaryField, riceSubsidyField, phoneAllowanceField,
+                clothingAllowanceField, hourlyRateField, statusField, immediateSupervisorField,
+                grossSemiMonthlyField // Include the new field here
+        };
+        for (TextField field : textFields) {
+            field.setEditable(editable);
+            if (editable) {
+                field.setStyle("-fx-control-inner-background: white;"); // Set background to white
+            } else {
+                field.setStyle("-fx-control-inner-background: #F0F0F0;"); // Set background to light gray
+            }
+        }
+        birthdayField.setEditable(editable);
+        // Special handling for DatePicker's internal TextField
+        birthdayField.getEditor().setEditable(editable);
+        if (editable) {
+            birthdayField.getEditor().setStyle("-fx-control-inner-background: white;");
+        } else {
+            birthdayField.getEditor().setStyle("-fx-control-inner-background: #F0F0F0;");
+        }
+    }
+
     private void loadEmployeesFromCSV() {
         employeeList.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {
-            reader.readLine();
+            reader.readLine(); // Skip header row
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",", -1);
@@ -274,7 +334,7 @@ public class HREmployeeView {
                             data[15], // phoneAllowance
                             data[16], // clothingAllowance
                             data[17], // grossSemiMonthlyRate
-                            data[18]
+                            data[18]  // hourlyRate
                     );
                     employeeList.add(emp);
                 }
@@ -298,11 +358,28 @@ public class HREmployeeView {
     }
 
     @FXML
-    public void handleSaveChangesButton() {
+    private void handleUpdateButton() {
+        Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
+        if (selectedEmployee != null) {
+            setFieldsEditable(true);
+            updateButton.setVisible(false);
+            updateButton.setManaged(false); // Hides button and removes it from layout calculations
+            deleteemp_button.setDisable(true); // Disable delete during edit
+            saveButton.setVisible(true);
+            saveButton.setManaged(true);
+            cancelButton.setVisible(true);
+            cancelButton.setManaged(true);
+        } else {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an employee to update.");
+        }
+    }
+
+    @FXML
+    private void handleSaveButton() { // This replaces handleSaveChangesButton
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
         if (selectedEmployee != null) {
 
-            // Basic validation for required fields (still good to have for final check)
+            // Basic validation for required fields
             if (employeeNumberField.getText().trim().isEmpty() ||
                     lastNameField.getText().trim().isEmpty() ||
                     firstNameField.getText().trim().isEmpty() ||
@@ -352,14 +429,47 @@ public class HREmployeeView {
 
                 updateEmployee(updatedEmployee);
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Employee record updated successfully!");
+                exitEditMode();
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Save operation cancelled.");
             }
 
         } else {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an employee in the table to update.");
+            exitEditMode(); // Exit edit mode if somehow no employee is selected but save was clicked
         }
     }
+
+    @FXML
+    private void handleCancelButton() {
+        Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
+        if (selectedEmployee != null) {
+            displayEmployeeDetails(selectedEmployee); // Revert fields to original selected employee's data
+        } else {
+            clearEmployeeDetails(); // Clear fields if no employee selected
+        }
+        showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Edit operation cancelled. Changes discarded.");
+        exitEditMode();
+    }
+
+    private void exitEditMode() {
+        setFieldsEditable(false);
+        saveButton.setVisible(false);
+        saveButton.setManaged(false);
+        cancelButton.setVisible(false);
+        cancelButton.setManaged(false);
+        updateButton.setVisible(true);
+        updateButton.setManaged(true);
+        // Re-enable delete and update buttons if an item is still selected
+        if (emp_table.getSelectionModel().getSelectedItem() != null) {
+            updateButton.setDisable(false);
+            deleteemp_button.setDisable(false);
+        } else {
+            updateButton.setDisable(true);
+            deleteemp_button.setDisable(true);
+        }
+    }
+
 
     @FXML
     private void handleDeleteEmployeeButton() {
@@ -376,26 +486,8 @@ public class HREmployeeView {
                 saveEmployeesToCSV(EMPLOYEE_DATA_FILE);
                 refreshTable();
                 showAlert(Alert.AlertType.INFORMATION, "Deletion Successful", "Employee record deleted successfully.");
-                employeeNumberField.clear();
-                lastNameField.clear();
-                firstNameField.clear();
-                birthdayField.setValue(null);
-                addressField.clear();
-                phoneNumberField.clear();
-                sssField.clear();
-                philHealthField.clear();
-                tinField.clear();
-                pagIbigField.clear();
-                statusField.clear();
-                positionField.clear();
-                immediateSupervisorField.clear();
-                basicSalaryField.clear();
-                riceSubsidyField.clear();
-                phoneAllowanceField.clear();
-                clothingAllowanceField.clear();
-                grossSemiMonthlyField.clear();
-                hourlyRateField.clear();
-                saveChangesButton.setDisable(true);
+                clearEmployeeDetails(); // Clear fields after deletion
+                updateButton.setDisable(true); // Disable buttons as no selection
                 deleteemp_button.setDisable(true);
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Delete operation cancelled.");
@@ -407,7 +499,28 @@ public class HREmployeeView {
 
     public void refreshTable() {
         loadEmployeesFromCSV();
+        // After refreshing, re-select the employee if it still exists in the list
+        Employee currentlySelected = emp_table.getSelectionModel().getSelectedItem();
+        if (currentlySelected != null) {
+            Optional<Employee> found = employeeList.stream()
+                    .filter(e -> e.getEmployeeNumber().equals(currentlySelected.getEmployeeNumber()))
+                    .findFirst();
+            if (found.isPresent()) {
+                emp_table.getSelectionModel().select(found.get());
+                displayEmployeeDetails(found.get()); // Ensure fields are updated after refresh
+            } else {
+                clearEmployeeDetails();
+                updateButton.setDisable(true);
+                deleteemp_button.setDisable(true);
+            }
+        } else {
+            clearEmployeeDetails();
+            updateButton.setDisable(true);
+            deleteemp_button.setDisable(true);
+        }
     }
+
+
 
     private void saveEmployeesToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -453,7 +566,7 @@ public class HREmployeeView {
 
     private boolean isValidDouble(String text, String fieldName) {
         if (text.trim().isEmpty()) {
-            return true;
+            return true; // Consider empty numeric fields as valid for now, or add a specific check if they are required.
         }
         try {
             Double.parseDouble(text);
