@@ -17,11 +17,13 @@ import java.util.Optional;
 
 public class NewEmployee {
     @FXML
-    private TextField employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+    private TextField employeeNumberField, lastNameField, firstNameField, addressField,
             phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
             basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
             statusField, immediateSupervisorField;
 
+    @FXML
+    private DatePicker birthdayField;
     @FXML
     private Button addEmpButton;
     @FXML
@@ -43,7 +45,7 @@ public class NewEmployee {
     @FXML
     private void initialize() {
         addEmpButton.setDisable(true);
-        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, addressField,
                 phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
                 basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
                 statusField, immediateSupervisorField};
@@ -51,6 +53,9 @@ public class NewEmployee {
         for (TextField field : fields) {
             field.textProperty().addListener((obs, oldVal, newVal) -> {
                 addEmpButton.setDisable(!allFieldsFilled());
+            });
+            birthdayField.valueProperty().addListener((obs, oldVal, newVal) -> {
+                        addEmpButton.setDisable(!allFieldsFilled());
             });
         }
 
@@ -197,7 +202,7 @@ public class NewEmployee {
                     employeeNumberField.getText().trim(),
                     lastNameField.getText().trim(),
                     firstNameField.getText().trim(),
-                    birthdayField.getText().trim(),
+                    birthdayField.getValue().toString(),
                     addressField.getText().trim(),
                     phoneNumberField.getText().trim(),
                     sssField.getText().trim(),
@@ -227,7 +232,7 @@ public class NewEmployee {
     }
 
     private boolean allFieldsFilled() {
-        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, addressField,
                 phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
                 basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
                 statusField, immediateSupervisorField};
@@ -237,11 +242,11 @@ public class NewEmployee {
                 return false;
             }
         }
-        return true;
+        return birthdayField.getValue() != null;
     }
 
     private void clearFields() {
-        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, birthdayField, addressField,
+        TextField[] fields = {employeeNumberField, lastNameField, firstNameField, addressField,
                 phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
                 basicSalaryField, riceSubsidyField, phoneAllowanceField, clothingAllowanceField, hourlyRateField,
                 statusField, immediateSupervisorField};
@@ -249,6 +254,7 @@ public class NewEmployee {
         for (TextField field : fields) {
             field.clear();
         }
+        birthdayField.setValue(null);
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
