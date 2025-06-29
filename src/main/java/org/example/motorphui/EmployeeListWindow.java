@@ -59,7 +59,7 @@ public class EmployeeListWindow {
 
     private void calculatePayrollForEmployee(Employee employee) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_payslip.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("payslip.fxml"));
             Parent root = loader.load();
 
             Payslip controller = loader.getController();

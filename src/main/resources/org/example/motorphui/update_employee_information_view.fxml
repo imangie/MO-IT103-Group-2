@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" minHeight="1024.0" minWidth="1141.0" prefHeight="1024" prefWidth="1141.0" stylesheets="@css/hr_update_employee_information.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.UpdateEmployeeInformationWindow">
+<AnchorPane fx:id="root" minHeight="1024.0" minWidth="1141.0" prefHeight="1024" prefWidth="1141.0" stylesheets="@css/update_employee_information.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.UpdateEmployeeInformationWindow">
 
    <children>
       <Label fx:id="emp_info_label" layoutX="20.0" layoutY="35.0" text="Update Employee Information">

@@ -23,19 +23,19 @@ public class Dashboard {
 
     @FXML
     public void initialize() {
-        loadView("hr_employee_list.fxml");
+        loadView("employee_list.fxml");
         setActiveButton(employeeList);
     }
 
     @FXML
     private void onEmployeesClicked() {
-        loadView("hr_update_employee_information_view.fxml");
+        loadView("update_employee_information_view.fxml");
         setActiveButton(updateEmpInfo);
     }
 
     @FXML
     private void onPayrollClicked() {
-        loadView("hr_employee_list.fxml");
+        loadView("employee_list.fxml");
         setActiveButton(employeeList);
     }
 
