@@ -132,7 +132,14 @@ public class HREmployeeView {
         });
 
         // Real-time Input Validation using Listeners
- 
+        // Validation for Employee Number (Numeric Only)
+        employeeNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {  // Only digits allowed
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Employee Number must be numeric.");
+                employeeNumberField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
         // Name Validation (Only Letters and Spaces)
         lastNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("[a-zA-Z ]*")) {  // Only letters and spaces allowed
