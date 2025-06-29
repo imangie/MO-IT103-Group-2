@@ -17,13 +17,17 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Optional;
+
+
 /**
  * Purpose: Allows HR to view and manage employee records.
  * - Displays a table of employee records with selected core info.
  * - Provides functionality to view (inline), update (inline), and delete employee information.
  * - Loads and saves employee data from/to a CSV file.
  */
-public class HRUpdateEmployeeInformation {
+
+
+public class UpdateEmployeeInformationWindow {
 
     @FXML
     private AnchorPane root;
@@ -65,16 +69,33 @@ public class HRUpdateEmployeeInformation {
     @FXML    private TextField grossSemiMonthlyField;
 
     private final ObservableList<Employee> employeeList = FXCollections.observableArrayList();
-
-    privateHREmployeeList parentController;
-
+    private EmployeeListWindow parentController;
     private static final String EMPLOYEE_DATA_FILE = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
 
-    // Store the original employee data for change tracking
-    private Employee originalEmployeeData;
+    private Employee originalEmployeeData; // Store the original employee data for change tracking
 
-    public void setParentController(HREmployeeList controller) {
+    private void addDisableEditListeners(javafx.scene.control.TextInputControl field) {
+        // Listener for mouse click (when they click on the field)
+        field.setOnMousePressed(event -> {
+            if (!field.isEditable()) {
+                showAlert(Alert.AlertType.INFORMATION, "Editing Not Enabled",
+                        "Please click the 'Update' button first to modify employee information.");
+                event.consume();
+            }
+        });
+
+        // Listener for key press (when they try to type into the field)
+        field.setOnKeyPressed(event -> {
+            if (!field.isEditable()) {
+                showAlert(Alert.AlertType.INFORMATION, "Editing Not Enabled",
+                        "Please click the 'Update' button first to modify employee information.");
+                event.consume();
+            }
+        });
+    }
+
+    public void setParentController(EmployeeListWindow controller) {
         this.parentController = controller;
     }
 
@@ -105,6 +126,20 @@ public class HRUpdateEmployeeInformation {
         updateButton.setDisable(true);
         deleteemp_button.setDisable(true);
 
+        // Apply the listeners to all fields that should only be editable after clicking "Update"
+        TextField[] fieldsToMonitor = {
+                lastNameField, firstNameField, addressField, phoneNumberField, sssField, philHealthField,
+                tinField, pagIbigField, positionField, basicSalaryField, riceSubsidyField,
+                phoneAllowanceField, clothingAllowanceField, hourlyRateField, statusField,
+                immediateSupervisorField, grossSemiMonthlyField
+        };
+
+        for (TextField field : fieldsToMonitor) {
+            addDisableEditListeners(field);
+        }
+
+        // Special handling for DatePicker's internal text field editor
+        addDisableEditListeners(birthdayField.getEditor());
 
         emp_table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -163,75 +198,87 @@ public class HRUpdateEmployeeInformation {
             updateSaveButtonState();
         });
 
-        // Validate Salary and Allowances (numeric values allowed, including decimals for some)
-        basicSalaryField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
-                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Basic Salary must be a valid number.");
-                basicSalaryField.setText(oldValue);  // Revert to the previous valid value
-            }
-            updateSaveButtonState();
-        });
-
         // Add listeners to ALL other editable TextFields
         addressField.textProperty().addListener((obs, oldVal, newVal) -> updateSaveButtonState());
         phoneNumberField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("[0-9-]*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Number must be numeric and can contain dashes.");
-                phoneNumberField.setText(oldVal);
+                phoneNumberField.setText(oldVal); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
         sssField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("[0-9-]*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "SSS must be numeric and can contain dashes.");
-                sssField.setText(oldVal);
+                sssField.setText(oldVal); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
         philHealthField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "PhilHealth must be numeric.");
-                philHealthField.setText(oldVal);
+                philHealthField.setText(oldVal); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
         tinField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("[0-9-]*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "TIN must be numeric and can contain dashes.");
-                tinField.setText(oldVal);
+                tinField.setText(oldVal); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
         pagIbigField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Pag-Ibig must be numeric.");
-                pagIbigField.setText(oldVal);
+                pagIbigField.setText(oldVal); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
-        statusField.textProperty().addListener((obs, oldVal, newVal) -> updateSaveButtonState());
-        positionField.textProperty().addListener((obs, oldVal, newVal) -> updateSaveButtonState());
-        immediateSupervisorField.textProperty().addListener((obs, oldVal, newVal) -> updateSaveButtonState());
+
+        statusField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("[a-zA-Z ]*")) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Status must only contain letters and spaces.");
+                statusField.setText(oldVal); // Revert to the previous valid value
+            }
+            updateSaveButtonState();
+        });
+
+        positionField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("[a-zA-Z ]*")) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Position must only contain letters and spaces.");
+                positionField.setText(oldVal); // Revert to the previous valid value
+            }
+            updateSaveButtonState();
+        });
+
+        immediateSupervisorField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("[a-zA-Z ]*")) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Immediate Supervisor's name must only contain letters and spaces.");
+                immediateSupervisorField.setText(oldVal); // Revert to the previous valid value
+            }
+            updateSaveButtonState();
+        });
 
         // Validate Salary and Allowances (numeric values allowed, including decimals for some)
         basicSalaryField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Basic Salary must be a valid number.");
-                basicSalaryField.setText(oldValue);
+                basicSalaryField.setText(oldValue); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
 
         riceSubsidyField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {  // Allows digits (assuming whole numbers for rice subsidy)
+            if (!newValue.matches("\\d*")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Rice Subsidy must be a valid number.");
-                riceSubsidyField.setText(oldValue);
+                riceSubsidyField.setText(oldValue); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
 
         phoneAllowanceField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Phone Allowance must be a valid number.");
                 phoneAllowanceField.setText(oldValue);  // Revert to the previous valid value
             }
@@ -239,25 +286,25 @@ public class HRUpdateEmployeeInformation {
         });
 
         clothingAllowanceField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Clothing Allowance must be a valid number.");
-                clothingAllowanceField.setText(oldValue);
+                clothingAllowanceField.setText(oldValue); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
 
         hourlyRateField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*(\\.\\d*)?")) {  // Allows digits and decimals
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Hourly Rate must be a valid number.");
-                hourlyRateField.setText(oldValue);  // Revert to the previous valid value
+                hourlyRateField.setText(oldValue); // Revert to the previous valid value
             }
-            updateSaveButtonState(); // NEW: Update button state
+            updateSaveButtonState();
         });
         //Listener for Gross Semi-Monthly Rate (assuming it's editable)
         grossSemiMonthlyField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "Gross Semi-Monthly Rate must be a valid number.");
-                grossSemiMonthlyField.setText(oldValue);
+                grossSemiMonthlyField.setText(oldValue); // Revert to the previous valid value
             }
             updateSaveButtonState();
         });
@@ -332,14 +379,13 @@ public class HRUpdateEmployeeInformation {
     }
 
       // editable true to make fields editable, false to make them non-editable.
-
     private void setFieldsEditable(boolean editable) {
         TextField[] textFields = {
                 lastNameField, firstNameField, addressField,
                 phoneNumberField, sssField, philHealthField, tinField, pagIbigField,
                 positionField, basicSalaryField, riceSubsidyField, phoneAllowanceField,
                 clothingAllowanceField, hourlyRateField, statusField, immediateSupervisorField,
-                grossSemiMonthlyField // Include the new field here
+                grossSemiMonthlyField
         };
         for (TextField field : textFields) {
             field.setEditable(editable);
@@ -423,7 +469,6 @@ public class HRUpdateEmployeeInformation {
             ButtonType buttonTypeYes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
             ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            // Set the buttons for the alert
             confirmation.getButtonTypes().setAll(buttonTypeYes, buttonTypeCancel);
 
             Optional<ButtonType> result = confirmation.showAndWait();
@@ -448,7 +493,7 @@ public class HRUpdateEmployeeInformation {
     }
 
     @FXML
-    private void handleSaveButton() { // This replaces handleSaveChangesButton
+    private void handleSaveButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
         if (selectedEmployee != null) {
 
@@ -482,7 +527,7 @@ public class HRUpdateEmployeeInformation {
             confirmation.getButtonTypes().setAll(buttonTypeYes, buttonTypeCancel);
 
             Optional<ButtonType> result = confirmation.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (result.isPresent() && result.get() == buttonTypeYes) {
                 Employee updatedEmployee = new Employee(
                         employeeNumberField.getText(),
                         lastNameField.getText(),
@@ -506,22 +551,20 @@ public class HRUpdateEmployeeInformation {
                 );
 
                 updateEmployee(updatedEmployee);
-                this.originalEmployeeData = updatedEmployee;
+                this.originalEmployeeData = updatedEmployee; // Update original data after save
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Employee record updated successfully!");
                 exitEditMode();
                 updateSaveButtonState();
 
-                // NEW: Notify the parent controller to refresh its table
                 if (parentController != null) {
                     parentController.refreshTable();
                 }
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Save operation cancelled.");
             }
-
         } else {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an employee in the table to update.");
-            exitEditMode();
+            exitEditMode(); // Ensure edit mode is exited if no selection
         }
     }
 
@@ -615,8 +658,6 @@ public class HRUpdateEmployeeInformation {
             deleteemp_button.setDisable(true);
         }
     }
-
-
 
     private void saveEmployeesToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {

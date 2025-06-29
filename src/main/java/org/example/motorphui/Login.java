@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ import java.io.IOException;
  */
 
 
-public class HRLogin {
+public class Login {
 
     @FXML
     private Button login_button;
@@ -65,7 +64,7 @@ public class HRLogin {
         // not used for authentication in this bypassed version.
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("main_dashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) login_button.getScene().getWindow();

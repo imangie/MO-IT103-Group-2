@@ -28,7 +28,7 @@ public class NewEmployee {
     private Button cancelButton;
 
     private final String employeeDataFile = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
-    private HREmployeeList parentController;
+    private EmployeeListWindow parentController;
 
     private boolean phoneNumberAlertShown = false;
     private boolean sssAlertShown = false;
@@ -36,7 +36,7 @@ public class NewEmployee {
     private boolean philHealthAlertShown = false;
     private boolean pagIbigAlertShown = false;
 
-    public void SetParentController(HREmployeeList parentController) {
+    public void SetParentController(EmployeeListWindow parentController) {
         this.parentController = parentController;
     }
 
@@ -123,7 +123,7 @@ public class NewEmployee {
 
         tinField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("[0-9-]*")) {  // Only digits and dashes allowed for TIN
-                if (!newValue.equals(oldValue)) { // Avoid setting the value if no change
+                if (!newValue.equals(oldValue)) {
                     showAlert(Alert.AlertType.ERROR, "Invalid Input", "TIN must be numeric and can contain dashes.");
                     tinField.setText(oldValue);  // Revert to the previous valid value
                 }
@@ -132,7 +132,7 @@ public class NewEmployee {
 
         sssField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("[0-9-]*")) {  // Only digits and dashes allowed for SSS
-                if (!newValue.equals(oldValue)) { // Avoid setting the value if no change
+                if (!newValue.equals(oldValue)) {
                     showAlert(Alert.AlertType.ERROR, "Invalid Input", "SSS must be numeric and can contain dashes.");
                     sssField.setText(oldValue);  // Revert to the previous valid value
                 }
@@ -143,6 +143,27 @@ public class NewEmployee {
             if (!newValue.matches("\\d*")) {  // Only digits allowed
                 showAlert(Alert.AlertType.ERROR, "Invalid Input", "PhilHealth must be numeric.");
                 philHealthField.setText(oldValue);  // Revert to the previous valid value
+            }
+        });
+
+        statusField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("[a-zA-Z ]*")) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Status must only contain letters and spaces.");
+                statusField.setText(oldVal); // Revert to the previous valid value
+            }
+        });
+
+        positionField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("[a-zA-Z ]*")) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Position must only contain letters and spaces.");
+                positionField.setText(oldVal); // Revert to the previous valid value
+            }
+        });
+
+        immediateSupervisorField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("[a-zA-Z ]*")) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Input", "Immediate Supervisor's name must only contain letters and spaces.");
+                immediateSupervisorField.setText(oldVal);
             }
         });
 

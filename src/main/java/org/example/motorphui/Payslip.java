@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 
 
-public class HRPayslip {
+public class Payslip {
 
     @FXML
     private ChoiceBox<String> PayPeriodCHBox;

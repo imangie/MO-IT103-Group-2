@@ -11,14 +11,19 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.util.Optional;
 
+
 /**
- * Purpose: Manages payroll processing for employees.
- * - Calculates payroll information based on employee salary data.
- * - Allows HR to generate and view payroll records.
+ * Purpose: Manages and displays the main list of all employees for HR,
+ * providing tools for employee record management and payroll slip generation.
+ * - Displays a comprehensive table of employee records including personal and statutory details.
+ * - Facilitates adding new employee records through a dedicated window.
+ * - Provides functionality to generate and view payroll slips for selected employees,
+ * including calculation of monthly hours from attendance records.
+ * - Loads and persists employee data to/from a CSV file.
  */
 
 
-public class HREmployeeList {
+public class EmployeeListWindow {
 
     @FXML
     private TableView<Employee> emp_table;
@@ -32,6 +37,7 @@ public class HREmployeeList {
     private static final String EMPLOYEE_DATA_FILE = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
 
     public void initialize() {
+        // Set up table column cell value factories
         empNumColumn.setCellValueFactory(cellData -> cellData.getValue().employeeNumberProperty());
         lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
@@ -40,72 +46,15 @@ public class HREmployeeList {
         tinColumn.setCellValueFactory(cellData -> cellData.getValue().tinProperty());
         pagIbigColumn.setCellValueFactory(cellData -> cellData.getValue().pagIbigProperty());
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream("/org/example/motorphui/data/motorph_employee_data.csv")))) {
+        // Load employee data into the table on initialization
+        loadEmployeesFromCSV();
 
-            String line;
-            boolean isFirstLine = true;
-
-            while ((line = reader.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false;
-                    continue;
-                }
-
-                String[] data = line.split(",");
-                if (data.length >= 19) {
-                    String empNumber = data[0];
-                    String lastName = data[1];
-                    String firstName = data[2];
-                    String birthday = data[3];
-                    String address = data[4];
-                    String phoneNumber = data[5];
-                    String sss = data[6];
-                    String philHealth = data[7];
-                    String tin = data[8];
-                    String pagIbig = data[9];
-                    String status = data[10];
-                    String position = data[11];
-                    String immediateSupervisor = data[12];
-                    String basicSalary = data[13];
-                    String riceSubsidy = data[14];
-                    String phoneAllowance = data[15];
-                    String clothingAllowance = data[16];
-                    String grossSemiMonthlyRate = data[17];
-                    String hourlyRate = data[18];
-
-                    Employee employee = new Employee(
-                            empNumber,          // employeeNumber
-                            lastName,           // lastName
-                            firstName,         // firstName
-                            birthday,          // birthday
-                            address,           // address
-                            phoneNumber,       // phoneNumber
-                            sss,              // sss
-                            philHealth,       // philHealth
-                            tin,              // tin
-                            pagIbig,          // pagIbig
-                            status,           // status (from data[10])
-                            position,         // position
-                            immediateSupervisor, // immediateSupervisor (from data[12])
-                            basicSalary,      // basicSalary
-                            riceSubsidy,      // riceSubsidy
-                            phoneAllowance,   // phoneAllowance
-                            clothingAllowance, // clothingAllowance
-                            data[17],         // grossSemiMonthlyRate
-                            hourlyRate        // hourlyRate
-                    );
-
-                    employeeData.add(employee);
-                }
+        // Add double-click event listener to the TableView for updating employees
+        emp_table.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && emp_table.getSelectionModel().getSelectedItem() != null) {
+                openUpdateEmployeeWindow();
             }
-
-            emp_table.setItems(employeeData);
-
-        } catch (Exception e) {
-            System.out.println("Error loading employee data: " + e.getMessage());
-            e.printStackTrace();
-        }
+        });
     }
 
     private void calculatePayrollForEmployee(Employee employee) {
@@ -113,7 +62,7 @@ public class HREmployeeList {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("hr_payslip.fxml"));
             Parent root = loader.load();
 
-            HRPayslip controller = loader.getController();
+            Payslip controller = loader.getController();
             controller.setEmployee(employee);
 
             Stage stage = new Stage();
@@ -132,11 +81,7 @@ public class HREmployeeList {
         if (selectedEmployee != null) {
             calculatePayrollForEmployee(selectedEmployee);
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("No Selection");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select an employee to generate payroll.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.INFORMATION, "No Selection", "Please select an employee to generate payroll.");
         }
     }
 
@@ -184,12 +129,15 @@ public class HREmployeeList {
             return 0.0;
         }
     }
+
     public void addEmployee(Employee employee) {
         employeeData.add(employee);
         saveEmployeesToCSV(EMPLOYEE_DATA_FILE);
         refreshTable();
     }
 
+    //Refreshes the TableView by reloading data from the CSV file.
+    //This method is public so it can be called from the other controllers.
     public void refreshTable() {
         loadEmployeesFromCSV();
     }
@@ -213,6 +161,11 @@ public class HREmployeeList {
                 Stage stage = new Stage();
                 stage.setTitle("Add New Employee");
                 stage.setScene(new Scene(root));
+                // Refresh table when the add employee window closes
+                stage.setOnHidden(event -> {
+                    System.out.println("Add employee window closed. Refreshing Employee List table.");
+                    refreshTable();
+                });
                 stage.showAndWait();
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to open Add Employee form: " + e.getMessage());
@@ -221,6 +174,45 @@ public class HREmployeeList {
             showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Add employee operation cancelled.");
         }
     }
+
+
+    // Opens the HRUpdateEmployeeInformation window for the selected employee.
+    // This method is triggered by double-clicking a row in the TableView.
+    private void openUpdateEmployeeWindow() {
+        Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
+
+        if (selectedEmployee == null) {
+            showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee from the list to update.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/motorphui/hr_update_employee_information.fxml"));
+            Parent root = loader.load();
+
+            UpdateEmployeeInformationWindow updateController = loader.getController();
+
+            updateController.displayEmployeeDetails(selectedEmployee);
+            updateController.setParentController(this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Update Employee Information");
+            stage.setScene(new Scene(root));
+
+            // Refresh the table when the update window closes
+            stage.setOnHidden(event -> {
+                System.out.println("Update window closed. Refreshing Employee List table.");
+                refreshTable();
+            });
+
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to open Update Employee form: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -228,6 +220,7 @@ public class HREmployeeList {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     private void saveEmployeesToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
@@ -261,39 +254,25 @@ public class HREmployeeList {
             showAlert(Alert.AlertType.ERROR, "Save Error", "Failed to save employee data.");
         }
     }
+
     private void loadEmployeesFromCSV() {
-        employeeData.clear();
+        employeeData.clear(); // Clear existing data before loading new
         try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {
-            reader.readLine();
+            reader.readLine(); // Skip header line
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",", -1);
                 if (data.length == 19) {
                     Employee emp = new Employee(
-                            data[0], // employeeNumber
-                            data[1], // lastName
-                            data[2], // firstName
-                            data[3], // birthday
-                            data[4], // address
-                            data[5], // phoneNumber
-                            data[6], // sss
-                            data[7], // philHealth
-                            data[8], // tin
-                            data[9], // pagIbig
-                            data[10], // status
-                            data[11], // position
-                            data[12], // immediateSupervisor
-                            data[13], // basicSalary
-                            data[14], // riceSubsidy
-                            data[15], // phoneAllowance
-                            data[16], // clothingAllowance
-                            data[17], // grossSemiMonthlyRate
-                            data[18]
+                            data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9],
+                            data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17], data[18]
                     );
                     employeeData.add(emp);
+                } else {
+                    System.err.println("Skipping malformed line in CSV: " + line);
                 }
             }
-            emp_table.setItems(employeeData);
+            emp_table.setItems(employeeData); // Set the updated data to the TableView
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to load employee data.");
