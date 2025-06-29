@@ -64,7 +64,7 @@ public class Login {
         // not used for authentication in this bypassed version.
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("main_dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("dashboard.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) login_button.getScene().getWindow();
