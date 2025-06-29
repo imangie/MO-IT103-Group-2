@@ -29,7 +29,7 @@ public class Dashboard {
 
     @FXML
     private void onEmployeesClicked() {
-        loadView("update_employee_information_view.fxml");
+        loadView("update_employee_information_window.fxml");
         setActiveButton(updateEmpInfo);
     }
 
