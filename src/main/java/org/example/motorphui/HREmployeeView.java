@@ -38,8 +38,6 @@ public class HREmployeeView {
 
     @FXML
     private Button deleteemp_button;
-
-    // New buttons for update workflow
     @FXML
     private Button updateButton;
     @FXML
