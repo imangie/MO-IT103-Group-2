@@ -35,8 +35,6 @@ public class HREmployeeView {
     @FXML
     private Label emp_info_label;
 
-    // Old Save Changes button is removed
-    // @FXML private Button saveChangesButton; // REMOVED
 
     @FXML
     private Button deleteemp_button;
