@@ -35,15 +35,11 @@ public class HREmployeeView {
     @FXML
     private Label emp_info_label;
 
-
-    @FXML
-    private Button deleteemp_button;
-    @FXML
-    private Button updateButton;
-    @FXML
-    private Button saveButton;
-    @FXML
-    private Button cancelButton;
+    //Added buttons for Update worflow
+    @FXML    private Button deleteemp_button;
+    @FXML    private Button updateButton;
+    @FXML    private Button saveButton;
+    @FXML    private Button cancelButton;
 
     // Declare columns for each property in Employee class.
     @FXML    private TableColumn<Employee, String> empNumColumn;
