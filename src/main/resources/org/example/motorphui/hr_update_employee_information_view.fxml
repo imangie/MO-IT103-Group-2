@@ -30,14 +30,7 @@
             <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-
       <Button fx:id="saveChangesButton" layoutX="844.0" layoutY="895.0" onAction="#handleSaveChangesButton" prefHeight="36.0" prefWidth="255.0" stylesheets="@css/hr_update_employee_information.css" text="Save" AnchorPane.bottomAnchor="93.0" AnchorPane.leftAnchor="844.0">
-         <font>
-            <Font name="Poppins Bold" size="16.0" />
-         </font>
-      </Button>
-
-      <Button fx:id="deleteemp_button" layoutX="558.0" layoutY="894.0" onAction="#handleDeleteEmployeeButton" prefHeight="36.0" prefWidth="255.0" text="Delete Record" AnchorPane.bottomAnchor="93.20000000000005" AnchorPane.leftAnchor="558.0">
          <font>
             <Font name="Poppins Bold" size="16.0" />
          </font>

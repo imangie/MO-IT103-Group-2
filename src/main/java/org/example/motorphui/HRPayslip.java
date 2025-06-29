@@ -4,8 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.Month;
@@ -22,27 +24,16 @@ import java.util.stream.Collectors;
  * - Displays detailed payslip information for employees.
  * - Allows HR to generate and review payslip records.
  */
-
-
 public class HRPayslip {
 
-    @FXML
-    private ChoiceBox<String> PayPeriodCHBox;
-    @FXML
-    private ChoiceBox<String> WeekCHBox;
-    @FXML
-    private Label hoursWorkedLabel;
-
-    @FXML
-    private Label empNumLabel, NameLabel, sssLabel, philHealthLabel, tinLabel, pagIbigLabel;
-    @FXML
-    private Label BdayLabel, AddressLabel, PhoneLabel, positionLabel, RiceLabel;
-    @FXML
-    private Label PhoneAllowLabel, ClothingLabel, RateLabel;
-    @FXML
-    private Label GrossLabel, SConLabel, PHConLabel, PConLabel, WTLabel, DeductLabel;
-    @FXML
-    private Label NetLabel;
+    @FXML private ChoiceBox<String> PayPeriodCHBox;
+    @FXML private ChoiceBox<String> WeekCHBox;
+    @FXML private Label hoursWorkedLabel;
+    @FXML private Label empNumLabel, NameLabel, sssLabel, philHealthLabel, tinLabel, pagIbigLabel;
+    @FXML private Label BdayLabel, AddressLabel, PhoneLabel, positionLabel, RiceLabel;
+    @FXML private Label PhoneAllowLabel, ClothingLabel, RateLabel;
+    @FXML private Label GrossLabel, SConLabel, PHConLabel, PConLabel, WTLabel, DeductLabel;
+    @FXML private Label NetLabel;
 
     private Employee employee;
 
@@ -52,25 +43,25 @@ public class HRPayslip {
     public void initialize() {
         populatePayPeriodChoiceBox();
 
-        PayPeriodCHBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            populateWeekChoiceBox(); // Populate Weeks once month is chosen
+        PayPeriodCHBox.getSelectionModel().selectedItemProperty().addListener((_,_, _) -> {
+            populateWeekChoiceBox();
             updateHoursIfReady();
         });
 
-        WeekCHBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            updateHoursIfReady(); // Recalculate hours if week is selected
-        });
+        WeekCHBox.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> updateHoursIfReady());
     }
 
     private void populatePayPeriodChoiceBox() {
         Set<YearMonth> uniqueMonthYears = new TreeSet<>();
-        DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-
         System.out.println("Reading attendance records from: /org/example/motorphui/data/motorph_attendance_records.csv");
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream("/org/example/motorphui/data/motorph_attendance_records.csv")))) {
+        InputStream is = getClass().getResourceAsStream("/org/example/motorphui/data/motorph_attendance_records.csv");
+        if (is == null) {
+            System.err.println("Attendance data file not found.");
+            return;
+        }
 
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             String line;
             boolean isFirstLine = true;
             int lineNumber = 0;
@@ -79,10 +70,8 @@ public class HRPayslip {
                 lineNumber++;
                 if (isFirstLine) {
                     isFirstLine = false;
-                    System.out.println("Skipping header line: " + line);
                     continue;
                 }
-
                 String[] data = line.split(",");
                 if (data.length >= 4) {
                     try {
@@ -96,10 +85,8 @@ public class HRPayslip {
                 }
             }
 
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException e) {
             System.err.println("Error reading attendance data: " + e.getMessage());
-            e.printStackTrace();
-            return;
         }
 
         List<String> formattedMonthYears = uniqueMonthYears.stream()
@@ -109,13 +96,12 @@ public class HRPayslip {
                 .collect(Collectors.toList());
 
         PayPeriodCHBox.setItems(FXCollections.observableArrayList(formattedMonthYears));
-
         System.out.println("Available months loaded: " + formattedMonthYears);
     }
 
     private void populateWeekChoiceBox() {
         WeekCHBox.setItems(FXCollections.observableArrayList("Week 1", "Week 2", "Week 3", "Week 4"));
-        WeekCHBox.getSelectionModel().clearSelection(); // Reset selection
+        WeekCHBox.getSelectionModel().clearSelection();
     }
 
     private void updateHoursIfReady() {
@@ -137,7 +123,6 @@ public class HRPayslip {
             LocalDate start = ym.atDay(1 + (weekNum - 1) * 7);
             LocalDate end = start.plusDays(6);
 
-            // Clamp to end of month
             LocalDate endOfMonth = ym.atEndOfMonth();
             if (end.isAfter(endOfMonth)) end = endOfMonth;
 
@@ -205,19 +190,21 @@ public class HRPayslip {
         }
     }
 
-    private double calculatePayPeriodHours(String empNumber, LocalDate startDate, LocalDate endDate) { // Modified signature
+    private double calculatePayPeriodHours(String empNumber, LocalDate startDate, LocalDate endDate) {
         double totalHours = 0.0;
+        InputStream is = getClass().getResourceAsStream("/org/example/motorphui/data/motorph_attendance_records.csv");
+        if (is == null) {
+            System.err.println("Attendance data file not found.");
+            return 0.0;
+        }
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream("/org/example/motorphui/data/motorph_attendance_records.csv")))) {
-
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             String line;
             boolean isFirstLine = true;
-
             while ((line = reader.readLine()) != null) {
                 if (isFirstLine) {
                     isFirstLine = false;
-                    continue; // Skip the header row
+                    continue;
                 }
 
                 String[] data = line.split(",");
@@ -243,7 +230,6 @@ public class HRPayslip {
             }
         } catch (IOException e) {
             System.err.println("Error reading attendance file: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return totalHours;
@@ -327,7 +313,7 @@ public class HRPayslip {
 
     public static double calculateWithholdingTax(double basicSalary, double sss, double philhealth, double pagibig) {
         double taxableIncome = basicSalary - (sss + philhealth + pagibig);
-        double tax = 0;
+        double tax;
 
         if (taxableIncome <= 20832) {
             tax = 0;
@@ -336,11 +322,11 @@ public class HRPayslip {
         } else if (taxableIncome < 66667) {
             tax = 2500 + (taxableIncome - 33333) * 0.25;
         } else if (taxableIncome < 166667) {
-            tax = (10833 + (taxableIncome - 66667)) * 0.30;
+            tax = 10833 + (taxableIncome - 66667) * 0.30;
         } else if (taxableIncome < 666667) {
-            tax = (40833.33 + (taxableIncome - 166667)) * 0.32;
+            tax = 40833.33 + (taxableIncome - 166667) * 0.32;
         } else {
-            tax = (200833.33 + (taxableIncome - 666667)) * 0.35;
+            tax = 200833.33 + (taxableIncome - 666667) * 0.35;
         }
         return tax;
     }
