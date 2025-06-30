@@ -17,3 +17,13 @@
     -fx-background-color: #F51835;
     -fx-cursor: hand;
 }
+
+#viewEmployeeButton {
+    -fx-background-color: #C5172E;
+    -fx-text-fill: white;
+}
+
+#viewEmployeeButton:hover {
+    -fx-background-color: #F51835;
+    -fx-cursor: hand;
+}

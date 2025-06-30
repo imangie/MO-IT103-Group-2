@@ -30,12 +30,12 @@
             <Font name="Poppins Bold" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="newEmployeeButton" layoutX="848.0" layoutY="894.0" onAction="#openAddEmployeeWindow" prefHeight="36.0" prefWidth="255.0" text="New Employee">
+      <Button fx:id="newEmployeeButton" layoutX="847.0" layoutY="894.0" onAction="#openAddEmployeeWindow" prefHeight="36.0" prefWidth="255.0" text="New Employee">
          <font>
             <Font name="Poppins Bold" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="viewEmployeeButton" layoutX="570.0" layoutY="894.0" prefHeight="36.0" prefWidth="255.0" text="View Employee">
+      <Button fx:id="viewEmployeeButton" layoutX="580.0" layoutY="894.0" onAction="#handleViewEmployeeButton" prefHeight="36.0" prefWidth="255.0" text="View Employee">
          <font>
             <Font name="Poppins Bold" size="16.0" />
          </font>

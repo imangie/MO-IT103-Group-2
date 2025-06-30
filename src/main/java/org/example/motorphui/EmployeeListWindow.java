@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.*;
 import java.util.Optional;
@@ -29,6 +30,8 @@ public class EmployeeListWindow {
     private TableView<Employee> emp_table;
     @FXML
     private Button newEmployeeButton;
+    @FXML
+    private Button viewEmployeeButton;
     @FXML
     private TableColumn<Employee, String> empNumColumn, lastNameColumn, firstNameColumn, sssColumn, philHealthColumn, tinColumn, pagIbigColumn;
     @FXML
@@ -85,48 +88,31 @@ public class EmployeeListWindow {
         }
     }
 
-    private double calculateMonthlyHours(String empNumber, String month) {
-        double totalHours = 0.0;
+    @FXML
+    private void handleViewEmployeeButton() {
+        Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream("/org/example/motorphui/data/motorph_attendance_records.csv")))) {
-
-            String line;
-            boolean isFirstLine = true;
-
-            while ((line = reader.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false;
-                    continue;
-                }
-
-                String[] data = line.split(",");
-                if (data.length >= 7 && data[0].equals(empNumber) && data[4].equalsIgnoreCase(month)) {
-                    String login = data[5];
-                    String logout = data[6];
-
-                    double loginTime = parseTimeToDecimal(login);
-                    double logoutTime = parseTimeToDecimal(logout);
-                    totalHours += (logoutTime - loginTime);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading attendance file: " + e.getMessage());
-            e.printStackTrace();
+        if (selectedEmployee == null) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an employee to view their details.");
+            return;
         }
 
-        return totalHours;
-    }
-
-    private double parseTimeToDecimal(String time) {
         try {
-            String[] parts = time.split(":");
-            int hours = Integer.parseInt(parts[0]);
-            int minutes = Integer.parseInt(parts[1]);
-            return hours + (minutes / 60.0);
-        } catch (Exception e) {
-            System.out.println("Invalid time format: " + time);
-            return 0.0;
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view_employee_details_window.fxml"));
+            Parent root = fxmlLoader.load();
+
+            ViewEmployeeDetailsWindow viewController = fxmlLoader.getController();
+            viewController.displayEmployeeDetails(selectedEmployee); // Pass the selected employee
+
+            Stage viewStage = new Stage();
+            viewStage.setTitle("Employee Details: " + selectedEmployee.getFirstName() + " " + selectedEmployee.getLastName());
+            viewStage.setScene(new Scene(root));
+            viewStage.initModality(Modality.APPLICATION_MODAL);
+            viewStage.setResizable(false);
+            viewStage.showAndWait(); // Show and wait for it to be closed
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Could not load the employee details window.");
         }
     }
 
@@ -174,7 +160,6 @@ public class EmployeeListWindow {
             showAlert(Alert.AlertType.INFORMATION, "Action Cancelled", "Add employee operation cancelled.");
         }
     }
-
 
     // Opens the HRUpdateEmployeeInformation window for the selected employee.
     // This method is triggered by double-clicking a row in the TableView.

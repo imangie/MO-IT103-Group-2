@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="600.0" stylesheets="@css/view_employee_details_window.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.motorphui.ViewEmployeeDetailsWindow">
+    <children>
+
+        <Label layoutX="50.0" layoutY="80.0" text="Employee #:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="110.0" text="Last Name:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="lastNameLabel" layoutX="198.0" layoutY="110.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="140.0" text="First Name:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="firstNameLabel" layoutX="198.0" layoutY="140.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="170.0" text="Birthday:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="birthdayLabel" layoutX="198.0" layoutY="170.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="200.0" text="Address:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="addressLabel" layoutX="198.0" layoutY="200.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="230.0" text="Phone #:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="phoneNumberLabel" layoutX="198.0" layoutY="230.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="260.0" text="SSS #:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="sssLabel" layoutX="198.0" layoutY="260.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="290.0" text="PhilHealth #:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="philHealthLabel" layoutX="198.0" layoutY="290.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="320.0" text="TIN #:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="tinLabel" layoutX="198.0" layoutY="320.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="350.0" text="Pag-Ibig #:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="pagIbigLabel" layoutX="198.0" layoutY="350.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="380.0" text="Status:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="statusLabel" layoutX="198.0" layoutY="380.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="410.0" text="Position:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="positionLabel" layoutX="198.0" layoutY="410.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="440.0" text="Immediate Supervisor:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="immediateSupervisorLabel" layoutX="198.0" layoutY="440.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="470.0" text="Basic Salary:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="basicSalaryLabel" layoutX="198.0" layoutY="470.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="500.0" text="Rice Subsidy:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="riceSubsidyLabel" layoutX="198.0" layoutY="500.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="530.0" text="Phone Allowance:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="phoneAllowanceLabel" layoutX="198.0" layoutY="530.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="560.0" text="Clothing Allowance:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="clothingAllowanceLabel" layoutX="198.0" layoutY="560.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="590.0" text="Gross Semi-Monthly:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="grossSemiMonthlyLabel" layoutX="198.0" layoutY="590.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Label layoutX="50.0" layoutY="620.0" text="Hourly Rate:">
+         <font>
+            <Font name="Poppins Bold" size="12.0" />
+         </font></Label>
+        <Label fx:id="hourlyRateLabel" layoutX="198.0" layoutY="620.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+
+        <Button fx:id="closeButton" layoutX="246.0" layoutY="659.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="26.0" prefWidth="106.0" text="Close">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Button>
+      <Label alignment="CENTER" layoutX="-1.0" layoutY="19.0" prefHeight="18.0" prefWidth="600.0" text="Employee Details">
+         <font>
+            <Font name="Poppins Bold" size="24.0" />
+         </font></Label>
+      <Label fx:id="employeeNumberLabel" layoutX="198.0" layoutY="80.0" text="N/A">
+         <font>
+            <Font name="Poppins Regular" size="12.0" />
+         </font></Label>
+    </children>
+</AnchorPane>
