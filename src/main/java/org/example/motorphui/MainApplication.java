@@ -19,7 +19,7 @@ public class  MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("dashboard.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("login.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 1440, 970); // Change to any preferred size
 
