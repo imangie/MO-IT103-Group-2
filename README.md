@@ -10,9 +10,3 @@ This project is currently ongoing and is being developed by Group 2:
 - Thriastan Jeanne Bosing
 
 ---
-
-## Login Information
-To access the system, use the following credentials:
-
-- **Username:** admin
-- **Password:** password
