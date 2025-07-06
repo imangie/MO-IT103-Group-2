@@ -23,6 +23,7 @@ The MotorPH Employee Management Payroll System is a Java-based desktop applicati
 ## Technologies Used
 - Java
 - JavaFX
+- FXML
 - IntelliJ IDEA
 
 ## Login Information
