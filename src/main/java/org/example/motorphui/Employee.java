@@ -31,7 +31,9 @@ public class Employee {
     private final StringProperty grossSemiMonthlyRate;
     private final StringProperty hourlyRate;
 
-    // Constructor
+    /**
+     * Constructs a new Employee object, initializing all of its details with the provided values.
+     */
     public Employee(String employeeNumber, String lastName, String firstName, String birthday, String address,
                     String phoneNumber, String sss, String philHealth, String tin, String pagIbig, String status,
                     String position, String immediateSupervisor, String basicSalary, String riceSubsidy,
@@ -57,7 +59,8 @@ public class Employee {
         this.hourlyRate = new SimpleStringProperty(hourlyRate);
     }
 
-    // Getters and Setters for all properties
+    // --- JavaFX Property Getters ---
+    // These methods return the actual StringProperty object, which is necessary for binding to JavaFX UI controls like TableView columns.
     public StringProperty employeeNumberProperty() { return employeeNumber; }
     public StringProperty lastNameProperty() { return lastName; }
     public StringProperty firstNameProperty() { return firstName; }
@@ -78,7 +81,8 @@ public class Employee {
     public StringProperty grossSemiMonthlyRateProperty() { return grossSemiMonthlyRate; }
     public StringProperty hourlyRateProperty() { return hourlyRate; }
 
-    // Getters for the fields
+    // --- Standard Value Getters ---
+    // These methods return the raw string value of each attribute.
     public String getEmployeeNumber() { return employeeNumber.get(); }
     public String getLastName() { return lastName.get(); }
     public String getFirstName() { return firstName.get(); }
@@ -99,7 +103,8 @@ public class Employee {
     public String getHourlyRate() { return hourlyRate.get(); }
     public String getBasicSalary() { return basicSalary.get(); }  // Getter for basicSalary
 
-    // Setters for all properties
+    // --- Standard Value Setters ---
+    // These methods are used to update the value of each employee attribute.
     public void setEmployeeNumber(String employeeNumber) { this.employeeNumber.set(employeeNumber); }
     public void setLastName(String lastName) { this.lastName.set(lastName); }
     public void setFirstName(String firstName) { this.firstName.set(firstName); }

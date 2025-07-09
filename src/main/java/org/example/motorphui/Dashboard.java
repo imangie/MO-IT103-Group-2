@@ -26,24 +26,36 @@ public class Dashboard {
     @FXML
     private Button logout_button;
 
+    /**
+     * Initializes the dashboard by loading the default employee list view upon startup.
+     */
     @FXML
     public void initialize() {
         loadView("employee_list.fxml");
         setActiveButton(employeeList);
     }
 
+    /**
+     * Loads the employee information update view when the button is clicked.
+     */
     @FXML
     private void onEmployeesClicked() {
         loadView("update_employee_information_window.fxml");
         setActiveButton(updateEmpInfo);
     }
 
+    /**
+     * Loads the employee list view for payroll purposes when the calculate payroll button is clicked.
+     */
     @FXML
     private void onPayrollClicked() {
         loadView("employee_list.fxml");
         setActiveButton(employeeList);
     }
 
+    /**
+     * Loads and displays a specified FXML view within the main content pane of the dashboard.
+     */
     private void loadView(String fxml) {
         try {
             AnchorPane pane = FXMLLoader.load(getClass().getResource(fxml));
@@ -60,6 +72,9 @@ public class Dashboard {
         }
     }
 
+    /**
+     * Manages the visual styling to highlight the currently selected navigation button.
+     */
     private void setActiveButton(Button active) {
         updateEmpInfo.getStyleClass().remove("menu-button-active");
         employeeList.getStyleClass().remove("menu-button-active");
@@ -69,6 +84,9 @@ public class Dashboard {
         }
     }
 
+    /**
+     * Handles the user logout by returning to the main login screen.
+     */
     @FXML
     private void onLogoutClicked() {
         try {

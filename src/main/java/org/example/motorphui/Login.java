@@ -38,6 +38,9 @@ public class Login {
     @FXML
     private CheckBox show_password_check;
 
+    /**
+     * Initializes the login form by syncing visible and hidden password fields and enabling toggle functionality.
+     */
     @FXML
     private void initialize() {
         password_field.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -62,6 +65,9 @@ public class Login {
         });
     }
 
+    /**
+     * Handles login logic: validates input, authenticates credentials, and loads the dashboard if successful.
+     */
     @FXML
     private void handleLoginButton(ActionEvent event) {
         String username = username_field.getText();
@@ -100,6 +106,9 @@ public class Login {
         }
     }
 
+    /**
+     * Displays an alert dialog with a given type, title, and message.
+     */
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

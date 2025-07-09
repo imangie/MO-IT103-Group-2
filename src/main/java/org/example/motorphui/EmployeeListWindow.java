@@ -39,6 +39,9 @@ public class EmployeeListWindow {
 
     private static final String EMPLOYEE_DATA_FILE = "src/main/resources/org/example/motorphui/data/motorph_employee_data.csv";
 
+    /**
+     * Initializes the TableView with employee data and sets up event listeners.
+     */
     public void initialize() {
         // Set up table column cell value factories
         empNumColumn.setCellValueFactory(cellData -> cellData.getValue().employeeNumberProperty());
@@ -60,6 +63,9 @@ public class EmployeeListWindow {
         });
     }
 
+    /**
+     * Opens the payroll window and displays the payslip for the selected employee.
+     */
     private void calculatePayrollForEmployee(Employee employee) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("payslip.fxml"));
@@ -77,6 +83,9 @@ public class EmployeeListWindow {
         }
     }
 
+    /**
+     * Handles the payroll calculation button click and shows the payslip for the selected employee.
+     */
     @FXML
     private void onCalculatePayroll() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
@@ -88,6 +97,9 @@ public class EmployeeListWindow {
         }
     }
 
+    /**
+     * Opens a modal window showing the details of the selected employee.
+     */
     @FXML
     private void handleViewEmployeeButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
@@ -116,18 +128,25 @@ public class EmployeeListWindow {
         }
     }
 
+    /**
+     * Adds a new employee to the table and saves the data to the CSV file.
+     */
     public void addEmployee(Employee employee) {
         employeeData.add(employee);
         saveEmployeesToCSV(EMPLOYEE_DATA_FILE);
         refreshTable();
     }
 
-    //Refreshes the TableView by reloading data from the CSV file.
-    //This method is public so it can be called from the other controllers.
+    /**
+     * Refreshes the TableView by reloading employee data from the CSV file.
+     */
     public void refreshTable() {
         loadEmployeesFromCSV();
     }
 
+    /**
+     * Prompts the user for confirmation and opens the Add Employee form if confirmed.
+     */
     @FXML
     public void openAddEmployeeWindow() {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
@@ -161,8 +180,9 @@ public class EmployeeListWindow {
         }
     }
 
-    // Opens the HRUpdateEmployeeInformation window for the selected employee.
-    // This method is triggered by double-clicking a row in the TableView.
+    /**
+     * Opens the update form for the selected employee when a table row is double-clicked.
+     */
     private void openUpdateEmployeeWindow() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
 
@@ -198,6 +218,9 @@ public class EmployeeListWindow {
         }
     }
 
+    /**
+     * Shows an alert dialog with the specified type, title, and message.
+     */
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -206,6 +229,9 @@ public class EmployeeListWindow {
         alert.showAndWait();
     }
 
+    /**
+     * Saves the current list of employees to a CSV file.
+     */
     private void saveEmployeesToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
@@ -240,6 +266,9 @@ public class EmployeeListWindow {
         }
     }
 
+    /**
+     * Loads employee data from a CSV file and populates the TableView.
+     */
     private void loadEmployeesFromCSV() {
         employeeData.clear(); // Clear existing data before loading new
         try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {

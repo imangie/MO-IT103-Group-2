@@ -38,7 +38,9 @@ public class ViewEmployeeDetailsWindow {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy");
 
-     // Populates the UI labels with the details of the given Employee object.
+    /**
+     * Shows the employee's full details in the labels.
+     */
     public void displayEmployeeDetails(Employee employee) {
         if (employee == null) {
             clearDetails();
@@ -77,7 +79,9 @@ public class ViewEmployeeDetailsWindow {
         hourlyRateLabel.setText(employee.getHourlyRate());
     }
 
-    // Clears all detail labels
+    /**
+     * Clears all the labels by setting them to "N/A".
+     */
     private void clearDetails() {
         employeeNumberLabel.setText("N/A");
         lastNameLabel.setText("N/A");
@@ -100,6 +104,9 @@ public class ViewEmployeeDetailsWindow {
         hourlyRateLabel.setText("N/A");
     }
 
+    /**
+     * Closes the details window.
+     */
     @FXML
     private void closeWindow() {
         // Get the current stage and close it

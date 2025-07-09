@@ -75,6 +75,9 @@ public class UpdateEmployeeInformationWindow {
 
     private Employee originalEmployeeData; // Store the original employee data for change tracking
 
+    /**
+     * Prevent editing on fields unless update mode is enabled.
+     */
     private void addDisableEditListeners(javafx.scene.control.TextInputControl field) {
         // Listener for mouse click (when they click on the field)
         field.setOnMousePressed(event -> {
@@ -94,11 +97,16 @@ public class UpdateEmployeeInformationWindow {
             }
         });
     }
-
+    /**
+     * Set the parent controller for this window.
+     */
     public void setParentController(EmployeeListWindow controller) {
         this.parentController = controller;
     }
 
+    /**
+     * Initialize the UI components and listeners.
+     */
     @FXML
     public void initialize() {
         root.setMinWidth(1440);
@@ -289,7 +297,9 @@ public class UpdateEmployeeInformationWindow {
             updateSaveButtonState();
         });
     }
-
+    /**
+     * Displays the details of the selected employee in the fields.
+     */
     public void displayEmployeeDetails(Employee employee) {
         // Store a copy of the original employee data
         this.originalEmployeeData = new Employee(employee.getEmployeeNumber(), employee.getLastName(), employee.getFirstName(),
@@ -333,6 +343,9 @@ public class UpdateEmployeeInformationWindow {
         updateSaveButtonState();
     }
 
+    /**
+     * Clears all employee detail fields.
+     */
     private void clearEmployeeDetails() {
         employeeNumberField.clear();
         lastNameField.clear();
@@ -358,7 +371,9 @@ public class UpdateEmployeeInformationWindow {
         updateSaveButtonState();
     }
 
-      // editable true to make fields editable, false to make them non-editable.
+    /**
+     * Enables or disables editing for the input fields.
+     */
     private void setFieldsEditable(boolean editable) {
         TextField[] textFields = {
                 lastNameField, firstNameField, addressField,
@@ -385,6 +400,9 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Loads employee data from the CSV file into the list and table.
+     */
     private void loadEmployeesFromCSV() {
         employeeList.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(EMPLOYEE_DATA_FILE))) {
@@ -424,6 +442,9 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Updates an employee’s record in the list and saves changes.
+     */
     public void updateEmployee(Employee updatedEmployee) {
         for (int i = 0; i < employeeList.size(); i++) {
             if (employeeList.get(i).getEmployeeNumber().equals(updatedEmployee.getEmployeeNumber())) {
@@ -435,6 +456,9 @@ public class UpdateEmployeeInformationWindow {
         refreshTable();
     }
 
+    /**
+     * Handles the Update button click, entering edit mode after confirmation.
+     */
     @FXML
     private void handleUpdateButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
@@ -472,6 +496,9 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Handles saving changes to an employee record after validation and confirmation.
+     */
     @FXML
     private void handleSaveButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
@@ -548,6 +575,9 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Handles cancelling edit mode and discards changes.
+     */
     @FXML
     private void handleCancelButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
@@ -560,6 +590,9 @@ public class UpdateEmployeeInformationWindow {
         exitEditMode();
     }
 
+    /**
+     * Exits edit mode and resets buttons and field states.
+     */
     private void exitEditMode() {
         setFieldsEditable(false);
         saveButton.setVisible(false);
@@ -578,6 +611,9 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Handles deleting an employee after confirmation.
+     */
     @FXML
     private void handleDeleteEmployeeButton() {
         Employee selectedEmployee = emp_table.getSelectionModel().getSelectedItem();
@@ -616,6 +652,9 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Refreshes the employee table and reselects the previously selected employee if possible.
+     */
     public void refreshTable() {
         loadEmployeesFromCSV();
         // After refreshing, re-select the employee if it still exists in the list
@@ -639,6 +678,9 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Saves the employee list to the CSV file.
+     */
     private void saveEmployeesToCSV(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("Employee #,Last Name,First Name,Birthday,Address,Phone Number,SSS #,PhilHealth #,TIN #,Pag-Ibig #,Status,Position,Immediate Supervisor,Basic Salary,Rice Subsidy,Phone Allowance,Clothing Allowance,Gross Semi-monthly Rate,Hourly Rate\n");
@@ -673,6 +715,9 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Shows an alert popup with given type, title, and message.
+     */
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -681,6 +726,9 @@ public class UpdateEmployeeInformationWindow {
         alert.showAndWait();
     }
 
+    /**
+     * Checks if a string is a valid double; shows error alert if not.
+     */
     private boolean isValidDouble(String text, String fieldName) {
         if (text.trim().isEmpty()) {
             return true; // Consider empty numeric fields as valid for now, or add a specific check if they are required.
@@ -694,11 +742,17 @@ public class UpdateEmployeeInformationWindow {
         }
     }
 
+    /**
+     * Enables or disables the Save button based on whether changes were made.
+     */
     private void updateSaveButtonState() {
         boolean changesMade = areFieldsModified();
         saveButton.setDisable(!changesMade); // Disable if no changes
     }
 
+    /**
+     * Checks if any fields have been changed compared to the original employee data.
+     */
     private boolean areFieldsModified() {
         if (originalEmployeeData == null) {
             return false; // No employee loaded, so no modifications possible
@@ -733,14 +787,18 @@ public class UpdateEmployeeInformationWindow {
         return false;
     }
 
-    //Safely compares two strings, treating null and empty strings as equivalent for form data.
+    /**
+     * Compares two strings safely, treating null or empty as equal.
+     */
     private boolean nullSafeEquals(String s1, String s2) {
         String trimmedS1 = (s1 == null || s1.trim().isEmpty()) ? null : s1.trim();
         String trimmedS2 = (s2 == null || s2.trim().isEmpty()) ? null : s2.trim();
         return Objects.equals(trimmedS1, trimmedS2);
     }
 
-   //Safely compares two numeric strings as Doubles, treating null/empty/invalid strings as null.
+    /**
+     * Compares two numeric strings as doubles safely, treating invalid or empty as equal.
+     */
     private boolean nullSafeNumericEquals(String s1, String s2) {
         Double d1 = null;
         Double d2 = null;

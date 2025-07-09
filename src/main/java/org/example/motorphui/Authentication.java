@@ -13,7 +13,9 @@ public class Authentication {
     private static final String CREDENTIALS_FILE_PATH = "/org/example/motorphui/data/motorph_employee_credentials.csv";
     private static final String HR_CREDENTIALS_FILE_PATH = "/org/example/motorphui/data/motorph_hr_credentials.csv";
 
-    // Method for HR Authentication
+    /**
+     * Verifies HR login credentials by comparing the provided username and password against the HR credentials CSV file.
+     */
     public static boolean authenticateHR(String username, String password) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Authentication.class.getResourceAsStream(HR_CREDENTIALS_FILE_PATH)))) {
             String line;
@@ -30,45 +32,5 @@ public class Authentication {
             e.printStackTrace();
         }
         return false;
-    }
-
-    // Method for Employee Authentication
-    public static boolean authenticate(String empId, String password) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                Authentication.class.getResourceAsStream(CREDENTIALS_FILE_PATH)))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length >= 2) {
-                    if (data[0].trim().equals(empId.trim()) && data[2].trim().equals(password.trim())) {
-                        return true; // Authentication successful
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false; // Authentication Failed
-    }
-
-    public static Employee getEmployeeData(String empId) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                Authentication.class.getResourceAsStream("/org/example/motorphui/data/motorph_employee_data.csv")))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 19 && data[0].trim().equals(empId.trim())) {
-                    return new Employee(
-                            data[0], data[1], data[2], data[3], data[4],
-                            data[5], data[6], data[7], data[8], data[9],
-                            data[10], data[11], data[12], data[13], data[14],
-                            data[15], data[16], data[17], data[18]
-                    );
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

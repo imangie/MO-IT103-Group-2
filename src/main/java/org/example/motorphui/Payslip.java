@@ -48,6 +48,9 @@ public class Payslip {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
+    /**
+     * Initializes the Payslip UI and sets up listeners for pay period and week selections.
+     */
     @FXML
     public void initialize() {
         populatePayPeriodChoiceBox();
@@ -62,6 +65,9 @@ public class Payslip {
         });
     }
 
+    /**
+     * Reads attendance records and populates the pay period dropdown with unique month-year entries.
+     */
     private void populatePayPeriodChoiceBox() {
         Set<YearMonth> uniqueMonthYears = new TreeSet<>();
         DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -113,11 +119,17 @@ public class Payslip {
         System.out.println("Available months loaded: " + formattedMonthYears);
     }
 
+    /**
+     * Populates the week dropdown with standard week options and clears previous selection.
+     */
     private void populateWeekChoiceBox() {
         WeekCHBox.setItems(FXCollections.observableArrayList("Week 1", "Week 2", "Week 3", "Week 4"));
         WeekCHBox.getSelectionModel().clearSelection(); // Reset selection
     }
 
+    /**
+     * Updates hours worked and pay details if employee, pay period, and week are selected.
+     */
     private void updateHoursIfReady() {
         String monthYear = PayPeriodCHBox.getValue();
         String week = WeekCHBox.getValue();
@@ -149,6 +161,9 @@ public class Payslip {
         }
     }
 
+    /**
+     * Sets the current employee and displays their details and calculated contributions.
+     */
     public void setEmployee(Employee employee) {
         this.employee = employee;
 
@@ -181,6 +196,9 @@ public class Payslip {
         DeductLabel.setText(String.format("Total Deductions: %.2f", totalDeductions));
     }
 
+    /**
+     * Updates the UI with the hours worked and recalculates gross pay, deductions, and net salary.
+     */
     public void setPayPeriodHours(double hours) {
         hoursWorkedLabel.setText("Hours Worked: " + String.format("%.2f", hours));
 
@@ -205,6 +223,9 @@ public class Payslip {
         }
     }
 
+    /**
+     * Calculates total hours worked by an employee between two dates based on attendance records.
+     */
     private double calculatePayPeriodHours(String empNumber, LocalDate startDate, LocalDate endDate) { // Modified signature
         double totalHours = 0.0;
 
@@ -249,6 +270,9 @@ public class Payslip {
         return totalHours;
     }
 
+    /**
+     * Converts a time string (HH:mm) to a decimal number representing hours.
+     */
     private double parseTimeToDecimal(String time) {
         String[] parts = time.split(":");
         int hours = Integer.parseInt(parts[0]);
@@ -256,6 +280,9 @@ public class Payslip {
         return hours + (minutes / 60.0);
     }
 
+    /**
+     * Safely parses a string to double, returns 0 if parsing fails.
+     */
     private double parseDoubleSafe(String s) {
         try {
             return Double.parseDouble(s.replace(",", "").trim());
@@ -265,6 +292,9 @@ public class Payslip {
         }
     }
 
+    /**
+     * Calculates SSS contribution based on the employee's basic salary.
+     */
     private double calculateSSSContribution(double basicSalary) {
         if (basicSalary < 3250) return 135.00;
         else if (basicSalary < 3750) return 157.50;
@@ -313,18 +343,27 @@ public class Payslip {
         else return 1125.00;
     }
 
+    /**
+     * Calculates PhilHealth contribution with a maximum cap based on basic salary.
+     */
     public static double calculatePhilHealthContribution(double basicSalary) {
         double premium = basicSalary * 0.03;
         if (premium > 1800) premium = 1800;
         return premium / 2;
     }
 
+    /**
+     * Calculates Pag-IBIG contribution based on salary brackets.
+     */
     public static double calculatePagibigContribution(double basicSalary) {
         if (basicSalary >= 1000 && basicSalary <= 1500) return basicSalary * 0.01;
         else if (basicSalary > 1500) return basicSalary * 0.02;
         else return 0;
     }
 
+    /**
+     * Calculates withholding tax after deducting mandatory contributions.
+     */
     public static double calculateWithholdingTax(double basicSalary, double sss, double philhealth, double pagibig) {
         double taxableIncome = basicSalary - (sss + philhealth + pagibig);
         double tax = 0;

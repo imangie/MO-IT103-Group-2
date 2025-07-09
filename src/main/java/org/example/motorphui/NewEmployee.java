@@ -38,10 +38,17 @@ public class NewEmployee {
     private boolean philHealthAlertShown = false;
     private boolean pagIbigAlertShown = false;
 
+    /**
+     * Sets the parent controller to allow refreshing the employee list after adding.
+     */
     public void SetParentController(EmployeeListWindow parentController) {
         this.parentController = parentController;
     }
 
+
+    /**
+     * Initializes the form with field validations, button states, and input restrictions.
+     */
     @FXML
     private void initialize() {
         addEmpButton.setDisable(true);
@@ -182,6 +189,9 @@ public class NewEmployee {
         });
     }
 
+    /**
+     * Handles the Add button click, validates input, confirms action, and saves the new employee.
+     */
     @FXML
     private void onAddButtonClick(ActionEvent event) {
         if (!allFieldsFilled()) {
@@ -231,6 +241,10 @@ public class NewEmployee {
         }
     }
 
+    /**
+     * Checks whether all required input fields are filled.
+     * return true if all fields are filled; false otherwise
+     */
     private boolean allFieldsFilled() {
         TextField[] fields = {employeeNumberField, lastNameField, firstNameField, addressField,
                 phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
@@ -245,6 +259,9 @@ public class NewEmployee {
         return birthdayField.getValue() != null;
     }
 
+    /**
+     * Clears all form input fields after successful employee addition.
+     */
     private void clearFields() {
         TextField[] fields = {employeeNumberField, lastNameField, firstNameField, addressField,
                 phoneNumberField, sssField, philHealthField, tinField, pagIbigField, positionField,
@@ -257,6 +274,9 @@ public class NewEmployee {
         birthdayField.setValue(null);
     }
 
+    /**
+     * Displays an alert dialog with the specified type, title, and message.
+     */
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
@@ -265,6 +285,9 @@ public class NewEmployee {
         alert.showAndWait();
     }
 
+    /**
+     * Handles the Cancel button click by closing the current window.
+     */
     @FXML
     private void handleCancel(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
