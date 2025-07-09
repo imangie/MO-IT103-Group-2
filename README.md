@@ -54,6 +54,6 @@ After logging in, users are directed to the Employee List dashboard. This view p
 ---
 
 ### Figure 3: Update Employee Information
-This screen allows HR staff to update existing employee information with validation checks before saving.
+This screen allows HR staff to update and delete existing employee information with validation checks before saving.
 
 ![Update Employee Info](src/main/resources/org/example/motorphui/screenshots/update_employee.png)
