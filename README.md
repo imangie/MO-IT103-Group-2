@@ -47,7 +47,7 @@ This is the application's welcome screen. Users must log in with valid credentia
 ---
 
 ### Figure 2: Employee List Dashboard
-After logging in, users are directed to the Employee List dashboard. This view provides access to employee data and actions like Add, Update, Delete, and Generate Payslip.
+After logging in, users are directed to the Employee List dashboard. This view provides access to employee data and actions like Add, View, and Generate Payslip.
 
 ![Employee List](src/main/resources/org/example/motorphui/screenshots/employee_list.png)
 
